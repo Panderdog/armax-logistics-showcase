@@ -91,7 +91,6 @@ const Services = () => {
                   </ul>
                   <Button
                     asChild
-                    className="bg-primary text-primary-foreground hover:bg-primary-dark"
                   >
                     <Link to="/contacts">Узнать подробнее</Link>
                   </Button>

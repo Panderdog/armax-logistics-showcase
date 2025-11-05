@@ -14,7 +14,6 @@ const Header = () => {
     { name: "О компании", href: "/about" },
     { name: "География", href: "/geography" },
     { name: "Отзывы", href: "/reviews" },
-    { name: "Компетентность", href: "/competence" },
     { name: "Контакты", href: "/contacts" },
   ];
 
@@ -47,7 +46,7 @@ const Header = () => {
         <div className="hidden lg:block">
           <Button
             asChild
-            className="bg-accent text-accent-foreground hover:bg-accent-hover transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+            className="transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
           >
             <Link to="/contacts">Отправить заявку</Link>
           </Button>
@@ -88,7 +87,7 @@ const Header = () => {
             <div className="pt-4">
               <Button
                 asChild
-                className="w-full bg-accent text-accent-foreground hover:bg-accent-hover"
+                className="w-full"
               >
                 <Link to="/contacts" onClick={() => setMobileMenuOpen(false)}>
                   Отправить заявку

@@ -17,33 +17,39 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 170 30% 15%;
 
-    --primary: 170 50% 25%;
+    /* Primary brand: #223A5E */
+    --primary: 216 47% 25%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 170 45% 35%;
-    --primary-dark: 170 55% 20%;
+    --primary-light: 216 50% 35%;
+    --primary-dark: 216 50% 18%;
 
     --secondary: 0 0% 96%;
-    --secondary-foreground: 170 50% 25%;
+    --secondary-foreground: 236 80% 25%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 170 20% 40%;
 
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 100%;
-    --accent-hover: 25 95% 48%;
+    /* Accent replaced from orange to #7ed0df */
+    --accent: 189 60% 68%;
+    --accent-foreground: 0 0% 10%;
+    --accent-hover: 189 60% 63%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 170 15% 90%;
     --input: 170 15% 90%;
-    --ring: 170 50% 25%;
+    --ring: 216 47% 25%;
 
     --radius: 0.75rem;
     
-    --gradient-primary: linear-gradient(135deg, hsl(170 50% 25%), hsl(170 45% 35%));
-    --gradient-hero: linear-gradient(135deg, hsl(170 50% 25% / 0.95), hsl(170 45% 30% / 0.9));
-    --shadow-glow: 0 10px 40px -10px hsl(170 50% 25% / 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(216 47% 25%), hsl(216 50% 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(216 47% 20% / 0.95), hsl(216 50% 25% / 0.9));
+    --shadow-glow: 0 10px 40px -10px hsl(216 47% 25% / 0.3);
+
+    /* Button color: #7ed0df */
+    --button: 189 60% 68%;
+    --button-foreground: 0 0% 10%;
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
@@ -73,10 +79,10 @@ All colors MUST be HSL.
     --popover: 170 25% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 170 45% 40%;
+    --primary: 216 60% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 170 40% 50%;
-    --primary-dark: 170 50% 30%;
+    --primary-light: 216 65% 55%;
+    --primary-dark: 216 55% 35%;
 
     --secondary: 170 20% 20%;
     --secondary-foreground: 0 0% 98%;
@@ -84,19 +90,23 @@ All colors MUST be HSL.
     --muted: 170 20% 20%;
     --muted-foreground: 170 10% 65%;
 
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 100%;
-    --accent-hover: 25 95% 58%;
+    --accent: 189 60% 68%;
+    --accent-foreground: 0 0% 10%;
+    --accent-hover: 189 60% 63%;
 
     --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 170 20% 25%;
     --input: 170 20% 25%;
-    --ring: 170 45% 40%;
+    --ring: 216 60% 45%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(170 45% 40%), hsl(170 40% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(170 50% 15% / 0.95), hsl(170 45% 20% / 0.9));
+    --gradient-primary: linear-gradient(135deg, hsl(216 60% 45%), hsl(216 65% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(216 45% 20% / 0.95), hsl(216 50% 25% / 0.9));
+
+    /* Button color in dark mode keeps the same hue for consistency */
+    --button: 189 60% 68%;
+    --button-foreground: 0 0% 10%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

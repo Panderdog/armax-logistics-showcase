@@ -29,7 +29,7 @@ const AboutPreview = () => {
               Мы специализируемся на международных перевозках грузов, обеспечивая надёжную доставку по всей Европе и Азии.
             </p>
             <p className="text-muted-foreground">
-              За 10 лет работы мы выстроили надёжную логистическую сеть, собрали команду профессионалов и заработали доверие сотен клиентов. Наша миссия — сделать международную логистику простой, прозрачной и эффективной.
+              За +15 лет работы мы выстроили надёжную логистическую сеть, собрали команду профессионалов и заработали доверие сотен клиентов. Наша миссия — сделать международную логистику простой, прозрачной и эффективной.
             </p>
 
             {/* Stats Grid */}
@@ -39,14 +39,14 @@ const AboutPreview = () => {
                 <div className="text-sm text-muted-foreground">стран партнёров</div>
               </div>
               <div className="p-4 rounded-lg border border-border">
-                <div className="text-3xl font-bold text-primary mb-1">10</div>
+                <div className="text-3xl font-bold text-primary mb-1">+15</div>
                 <div className="text-sm text-muted-foreground">лет на рынке</div>
               </div>
             </div>
 
             <Button
               asChild
-              className="bg-primary text-primary-foreground hover:bg-primary-dark transition-all duration-300 group mt-6"
+              className="transition-all duration-300 group mt-6"
             >
               <Link to="/about">
                 Подробнее о компании

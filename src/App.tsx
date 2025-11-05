@@ -11,7 +11,6 @@ import Services from "./pages/Services";
 import About from "./pages/About";
 import Geography from "./pages/Geography";
 import Reviews from "./pages/Reviews";
-import Competence from "./pages/Competence";
 import Contacts from "./pages/Contacts";
 import NotFound from "./pages/NotFound";
 
@@ -30,7 +29,6 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/geography" element={<Geography />} />
           <Route path="/reviews" element={<Reviews />} />
-          <Route path="/competence" element={<Competence />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

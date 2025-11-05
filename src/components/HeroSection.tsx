@@ -24,7 +24,7 @@ const HeroSection = () => {
             <Button
               asChild
               size="lg"
-              className="bg-accent text-accent-foreground hover:bg-accent-hover text-lg px-8 py-6 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 group"
+              className="text-lg px-8 py-6 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 group"
             >
               <Link to="/contacts">
                 Получить предложение
@@ -45,7 +45,7 @@ const HeroSection = () => {
         {/* Stats */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {[
-            { value: "10+", label: "лет опыта" },
+            { value: "+15", label: "лет опыта" },
             { value: "20+", label: "стран партнёров" },
             { value: "99%", label: "доставок вовремя" },
             { value: "5000+", label: "тонн грузов/год" },
