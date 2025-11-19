@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background is transparent by default -->
+  <defs>
+    <style>
+      .accent{fill:#FF7043}
+      .dark{fill:#0B1220}
+    </style>
+  </defs>
+
+  <!-- Geometric A with road/arrow motif -->
+  <!-- Outer A shape -->
+  <path class="dark" d="M32 6c1.1 0 2.1.6 2.6 1.6l20 40a3 3 0 0 1-2.7 4.3h-6.5a3 3 0 0 1-2.7-1.7l-3.7-7.8H25.1l-3.7 7.8a3 3 0 0 1-2.7 1.7H12.2a3 3 0 0 1-2.7-4.3l20-40A3 3 0 0 1 32 6Zm0 9.7L24.2 33h15.6L32 15.7Z"/>
+
+  <!-- Road stripe through the A -->
+  <rect class="accent" x="14" y="37" width="28" height="3" rx="1.5"/>
+  
+  <!-- Forward arrow detail to suggest movement -->
+  <polygon class="accent" points="42,37 48,38.5 42,40"/>
+</svg>
+

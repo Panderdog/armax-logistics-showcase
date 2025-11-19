@@ -4,38 +4,40 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary via-primary to-primary-dark">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/90 to-primary-dark/95" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070')] bg-cover bg-center opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/98 via-primary/95 to-primary-dark/98" />
+        {/* Subtle gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/30 via-transparent to-transparent" />
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 mx-auto px-4 py-20 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in">
+      <div className="container relative z-10 mx-auto px-6 pb-32 lg:px-8" style={{ paddingTop: '3em' }}>
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-[2.75rem] md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-8 animate-fade-in leading-[1.1] text-balance">
             Armax Logistics — надёжные международные перевозки без задержек
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-xl md:text-2xl lg:text-3xl text-primary-foreground/85 mb-12 animate-fade-in font-light leading-relaxed" style={{ animationDelay: '0.15s' }}>
             Организуем доставку по 20+ странам Европы и Азии
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row gap-5 justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Button
               asChild
               size="lg"
-              className="text-lg px-8 py-6 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 group"
+              className="text-base sm:text-lg px-10 py-7 h-auto group shadow-glow hover:scale-105 hover:-translate-y-1 transition-all duration-300 ease-out"
             >
               <Link to="/contacts">
                 Получить предложение
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="ml-2.5 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
               </Link>
             </Button>
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="text-lg px-8 py-6 bg-primary-foreground/10 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary backdrop-blur-sm transition-all duration-300"
+              className="text-base sm:text-lg px-10 py-7 h-auto bg-white/10 border-2 border-white/30 text-white hover:bg-white hover:text-primary hover:border-white hover:scale-105 hover:-translate-y-1 backdrop-blur-md transition-all duration-300 ease-out"
             >
               <Link to="/services">Наши услуги</Link>
             </Button>
@@ -43,29 +45,29 @@ const HeroSection = () => {
         </div>
 
         {/* Stats */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+        <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {[
-            { value: "+15", label: "лет опыта" },
+            { value: "15+", label: "лет опыта" },
             { value: "20+", label: "стран партнёров" },
             { value: "99%", label: "доставок вовремя" },
             { value: "5000+", label: "тонн грузов/год" },
           ].map((stat, index) => (
             <div
               key={index}
-              className="text-center p-6 rounded-lg bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 animate-fade-in"
-              style={{ animationDelay: `${0.6 + index * 0.1}s` }}
+              className="group text-center p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 animate-fade-in hover:bg-white/10 hover:border-white/30 hover:scale-105 hover:-translate-y-2 hover:shadow-large transition-all duration-500 ease-out cursor-default"
+              style={{ animationDelay: `${0.45 + index * 0.1}s` }}
             >
-              <div className="text-3xl md:text-4xl font-bold text-accent mb-2">{stat.value}</div>
-              <div className="text-sm text-primary-foreground/80">{stat.label}</div>
+              <div className="text-4xl md:text-5xl font-bold text-white group-hover:text-accent mb-3 tracking-tight group-hover:scale-110 transition-all duration-300">{stat.value}</div>
+              <div className="text-sm md:text-base text-white/70 group-hover:text-white font-medium transition-colors duration-300">{stat.label}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-        <div className="w-6 h-10 border-2 border-primary-foreground/30 rounded-full flex items-start justify-center p-2">
-          <div className="w-1 h-3 bg-accent rounded-full animate-pulse" />
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 animate-bounce opacity-70 hover:opacity-100 transition-opacity">
+        <div className="w-7 h-11 border-2 border-white/40 rounded-full flex items-start justify-center p-2">
+          <div className="w-1.5 h-3 bg-white/80 rounded-full animate-pulse" />
         </div>
       </div>
     </section>
