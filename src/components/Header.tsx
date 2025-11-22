@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   const navigation = [
     { name: "Главная", href: "/" },
@@ -16,8 +15,6 @@ const Header = () => {
     { name: "FAQ", href: "/faq" },
     { name: "Контакты", href: "/contacts" },
   ];
-
-  const isActive = (path: string) => location.pathname === path;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
@@ -33,13 +30,11 @@ const Header = () => {
             <Link
               key={item.name}
               to={item.href}
-              className={`px-4 py-2 text-[13px] font-medium transition-all duration-300 ease-out rounded-lg ${
-                isActive(item.href) 
-                  ? "text-foreground bg-secondary shadow-soft" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60 hover:scale-105 hover:-translate-y-0.5"
-              }`}
+              className="group relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ease-out rounded-lg text-muted-foreground hover:text-foreground hover:[text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]"
             >
               {item.name}
+              {/* Animated underline */}
+              <span className="absolute bottom-1 left-4 right-4 h-[2px] bg-[#223A5E] origin-right scale-x-0 transition-transform duration-300 ease-out group-hover:origin-left group-hover:scale-x-100"></span>
             </Link>
           ))}
         </div>
@@ -76,11 +71,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`block rounded-md px-3 py-2 text-base font-medium transition-all duration-300 ease-out ${
-                  isActive(item.href)
-                    ? "bg-primary/10 text-primary shadow-soft"
-                    : "text-foreground hover:bg-secondary hover:translate-x-1 hover:shadow-soft"
-                }`}
+                className="block rounded-md px-3 py-2 text-base font-medium transition-all duration-300 ease-out text-foreground hover:bg-secondary hover:translate-x-1 hover:shadow-soft"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
