@@ -72,11 +72,11 @@ const About = () => {
               </p>
             </div>
             <div className="relative animate-fade-in group cursor-pointer" style={{ animationDelay: '0.2s' }}>
-              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large group-hover:shadow-glow transition-all duration-500 group-hover:scale-[1.02]">
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large group-hover:shadow-glow transition-all duration-500">
                 <img
                   src="/images/tlk.png"
                   alt="Парголовский таможенный и логистический комплекс"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  className="w-full h-full object-cover"
                   style={{ objectPosition: '85% center' }}
                 />
               </div>

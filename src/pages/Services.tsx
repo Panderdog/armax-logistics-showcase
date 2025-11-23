@@ -72,11 +72,11 @@ const Services = () => {
                 }`}
               >
                 <div className={`${index % 2 === 1 ? "lg:order-2" : ""} animate-fade-in group cursor-pointer`}>
-                  <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large group-hover:shadow-glow transition-all duration-500 group-hover:scale-[1.02]">
+                  <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large group-hover:shadow-glow transition-all duration-500">
                     <img
                       src={service.image}
                       alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 </div>

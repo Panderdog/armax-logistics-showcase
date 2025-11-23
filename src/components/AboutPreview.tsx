@@ -13,7 +13,7 @@ const AboutPreview = () => {
               <img
                 src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070"
                 alt="Logistics"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                className="w-full h-full object-cover"
               />
             </div>
             {/* Decorative elements with subtle colors */}
