@@ -42,7 +42,7 @@ All colors MUST be HSL.
     --input: 220 13% 91%;
     --ring: 14 90% 53%;
 
-    --radius: 0.875rem; /* Slightly larger radius for premium feel */
+    --radius: 0.4921875rem; /* Slightly larger radius for premium feel */
     --header-height: 4.5rem; /* Header height for viewport calculations */
     
     --gradient-primary: linear-gradient(135deg, hsl(221 39% 11%), hsl(220 13% 18%));
@@ -221,5 +221,43 @@ All colors MUST be HSL.
   
   .button-glow-hover:hover {
     filter: brightness(1.1);
+  }
+  
+  /* Marquee animations */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  @keyframes marquee-reverse {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+  
+  .animate-marquee-reverse {
+    animation: marquee-reverse 30s linear infinite;
+  }
+  
+  /* Pause on hover */
+  .marquee-track:hover {
+    animation-play-state: paused;
   }
 }

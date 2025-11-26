@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: [
-          "Inter",
+          "Plus Jakarta Sans",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -24,6 +24,12 @@ export default {
           "Helvetica Neue",
           "Arial",
           "Noto Sans",
+          "sans-serif",
+        ],
+        display: [
+          "Plus Jakarta Sans",
+          "ui-sans-serif",
+          "system-ui",
           "sans-serif",
         ],
       },

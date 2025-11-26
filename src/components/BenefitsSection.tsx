@@ -25,9 +25,14 @@ const BenefitsSection = () => {
   ];
 
   return (
-    <section className="py-24 lg:py-32 bg-gradient-to-b from-background via-secondary/30 to-background">
-      <div className="container mx-auto px-6 lg:px-8">
-        <div className="text-center mb-20 max-w-3xl mx-auto">
+    <section className="py-16 lg:py-20 bg-secondary/60 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--accent)/0.08),transparent)]" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-12 max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
             Почему выбирают нас
           </h2>

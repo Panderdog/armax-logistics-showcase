@@ -1,235 +1,230 @@
-import { Package, Ship, Truck, Globe, CheckCircle2, ArrowRight } from "lucide-react";
+import { Globe, Ship, Truck, Plane, Train, CheckCircle2, ArrowRight, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
+import LogisticsMap from "@/components/LogisticsMap";
 
 const Geography = () => {
-  const asianCountries = [
-    { name: "Китай", emphasis: true },
-    { name: "Вьетнам", emphasis: false },
-    { name: "Южная Корея", emphasis: false },
-    { name: "Индонезия", emphasis: false },
-    { name: "Таиланд", emphasis: false },
-    { name: "Малайзия", emphasis: false },
-    { name: "Индия", emphasis: false },
-    { name: "Япония", emphasis: false },
-  ];
-
   const routes = [
     {
       from: "Китай",
       to: "Россия",
-      modes: ["Авто", "ЖД", "Море", "Авиа"],
-      description: "Основное направление с оптимизированными сроками доставки",
+      modes: [
+        { name: "Море", icon: Ship, time: "25-35 дней" },
+        { name: "ЖД", icon: Train, time: "18-22 дня" },
+        { name: "Авто", icon: Truck, time: "12-16 дней" },
+        { name: "Авиа", icon: Plane, time: "3-5 дней" },
+      ],
+      description: "Основное направление с оптимизированными сроками",
+      color: "from-red-500 to-orange-500",
     },
     {
       from: "Индия",
       to: "Россия",
-      modes: ["Море", "Авиа", "ЖД"],
-      description: "Мультимодальные перевозки из крупнейшего промышленного региона Южной Азии",
+      modes: [
+        { name: "Море", icon: Ship, time: "30-40 дней" },
+        { name: "Авиа", icon: Plane, time: "4-6 дней" },
+      ],
+      description: "Мультимодальные перевозки из Южной Азии",
+      color: "from-orange-500 to-amber-500",
     },
     {
       from: "Вьетнам / Корея",
       to: "Россия",
-      modes: ["Море", "Авиа"],
-      description: "Морские и авиаперевозки из промышленных центров Юго-Восточной Азии",
+      modes: [
+        { name: "Море", icon: Ship, time: "28-35 дней" },
+        { name: "Авиа", icon: Plane, time: "4-5 дней" },
+      ],
+      description: "Из промышленных центров Юго-Восточной Азии",
+      color: "from-emerald-500 to-teal-500",
     },
     {
       from: "Европа",
       to: "Россия",
-      modes: ["Море", "Авто"],
+      modes: [
+        { name: "Море", icon: Ship, time: "20-30 дней" },
+        { name: "Авто", icon: Truck, time: "8-12 дней" },
+      ],
       description: "Комбинированные перевозки через Турцию",
+      color: "from-blue-500 to-indigo-500",
     },
+  ];
+
+  const countries = [
+    { name: "Китай", flag: "🇨🇳", highlight: true },
+    { name: "Вьетнам", flag: "🇻🇳", highlight: false },
+    { name: "Южная Корея", flag: "🇰🇷", highlight: false },
+    { name: "Индия", flag: "🇮🇳", highlight: false },
+    { name: "Индонезия", flag: "🇮🇩", highlight: false },
+    { name: "Таиланд", flag: "🇹🇭", highlight: false },
+    { name: "Малайзия", flag: "🇲🇾", highlight: false },
+    { name: "Япония", flag: "🇯🇵", highlight: false },
+    { name: "Турция", flag: "🇹🇷", highlight: false },
+    { name: "Германия", flag: "🇩🇪", highlight: false },
+    { name: "Италия", flag: "🇮🇹", highlight: false },
+    { name: "Нидерланды", flag: "🇳🇱", highlight: false },
   ];
 
   const advantages = [
     {
-      title: "Прямые контракты с перевозчиками",
-      description: "Работаем напрямую с проверенными азиатскими партнёрами без посредников",
+      title: "Прямые контракты",
+      description: "Работаем напрямую с азиатскими партнёрами без посредников",
+      icon: CheckCircle2,
     },
     {
       title: "Оптимальные сроки",
-      description: "Отработанные маршруты и отлаженная логистика сокращают время доставки",
+      description: "Отработанные маршруты сокращают время доставки",
+      icon: CheckCircle2,
     },
     {
-      title: "Таможенное оформление",
-      description: "Полное сопровождение грузов на всех этапах, включая таможенную очистку",
+      title: "Полное сопровождение",
+      description: "Таможня, документы, доставка до двери",
+      icon: CheckCircle2,
     },
     {
-      title: "Мультимодальные решения",
-      description: "Комбинируем виды транспорта для достижения лучшего соотношения цена/скорость",
+      title: "Гибкие решения",
+      description: "Комбинируем транспорт для лучшего соотношения цена/скорость",
+      icon: CheckCircle2,
     },
   ];
 
   return (
     <>
       <SEO
-        title="География перевозок из Азии и Китая"
-        description="Armax Logistics специализируется на перевозках из Азии: Китай, Вьетнам, Южная Корея, Индонезия. Надёжная логистика с оптимальными сроками доставки. Также работаем с Европой через турецких партнёров."
-        keywords="перевозки из Китая, логистика из Азии, доставка из Вьетнама, перевозки из Кореи, грузоперевозки Азия Россия, международная логистика"
+        title="География перевозок"
+        description="Armax Logistics специализируется на перевозках из Азии: Китай, Вьетнам, Южная Корея. Надёжная логистика с оптимальными сроками."
+        keywords="перевозки из Китая, логистика из Азии, доставка из Вьетнама, перевозки из Кореи"
         canonicalUrl="/geography"
         structuredData={organizationSchema}
       />
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
+          <div className="absolute top-0 left-1/3 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]" />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fade-in leading-[1.1] text-balance">
-                География наших перевозок
+              <span className="inline-block px-4 py-1.5 mb-8 text-sm font-medium text-accent bg-accent/20 rounded-full border border-accent/30 backdrop-blur-sm animate-fade-in">
+                <MapPin className="inline h-4 w-4 mr-1" />
+                География
+              </span>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
+                Азия → Россия
+                <br />
+                <span className="text-accent">кратчайшим путём</span>
               </h1>
-              <p className="text-xl md:text-2xl lg:text-3xl text-primary-foreground/85 font-light animate-fade-in leading-relaxed mb-8" style={{ animationDelay: '0.15s' }}>
-                Надёжные логистические решения для поставок из Азии
-              </p>
-              <p className="text-lg md:text-xl text-primary-foreground/75 font-light animate-fade-in leading-relaxed" style={{ animationDelay: '0.3s' }}>
-                Специализируемся на перевозках из Китая и других стран Азиатско-Тихоокеанского региона с оптимальными сроками и прозрачным ценообразованием
+              <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
+                Специализируемся на перевозках из Китая и стран АТР. Все виды транспорта, оптимальные маршруты.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Main Focus - Asia Section */}
-        <section className="py-24 lg:py-32 bg-gradient-to-b from-secondary/50 via-secondary/30 to-background">
+        {/* Interactive Map */}
+        <section className="py-16 lg:py-20 bg-gradient-to-b from-background to-secondary/30">
           <div className="container mx-auto px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
-                  Азия — наше основное направление
-                </h2>
-                <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-3xl mx-auto">
-                  Мы специализируемся на организации грузоперевозок из стран Азии, 
-                  предоставляя комплексные логистические решения для вашего бизнеса
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-                {/* China Focus */}
-                <div className="group p-10 lg:p-12 rounded-3xl bg-gradient-to-br from-accent/10 via-accent/5 to-background border-2 border-accent/30 hover:border-accent/50 transition-all duration-500 ease-out hover:shadow-large hover:-translate-y-2 animate-fade-in">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="p-4 rounded-2xl bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300">
-                      <Globe className="h-10 w-10 text-accent" strokeWidth={1.5} />
-                    </div>
-                    <h3 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                      Китай
-                    </h3>
-                  </div>
-                  <p className="text-muted-foreground text-base leading-relaxed mb-6">
-                    Китай — ключевое направление нашей деятельности. Мы работаем со всеми крупными промышленными регионами КНР, 
-                    обеспечивая надёжную доставку грузов любой сложности.
-                  </p>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-foreground/80">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" strokeWidth={2} />
-                      <span className="text-[15px]">Прямые контакты с китайскими поставщиками</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-foreground/80">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" strokeWidth={2} />
-                      <span className="text-[15px]">Консолидация грузов на складах в Китае</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-foreground/80">
-                      <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" strokeWidth={2} />
-                      <span className="text-[15px]">Все виды транспорта: авто, ЖД, море, авиа</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Other Asian Countries */}
-                <div className="group p-10 lg:p-12 rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 ease-out hover:shadow-large hover:-translate-y-2 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="p-4 rounded-2xl bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300">
-                      <Package className="h-10 w-10 text-accent" strokeWidth={1.5} />
-                    </div>
-                    <h3 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                      Другие страны Азии
-                    </h3>
-                  </div>
-                  <p className="text-muted-foreground text-base leading-relaxed mb-6">
-                    Помимо Китая, мы организуем перевозки из ключевых промышленных центров Азии
-                  </p>
-                  <div className="grid grid-cols-2 gap-3">
-                    {asianCountries.filter(c => !c.emphasis).map((country, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-foreground/80 text-[15px]">
-                        <div className="h-2 w-2 rounded-full bg-accent/60 flex-shrink-0" />
-                        {country.name}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Route Schema */}
-              <div className="p-10 lg:p-12 rounded-3xl bg-gradient-to-br from-secondary/50 to-background border border-border/50 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-8 text-center">
-                  Основные логистические маршруты
-                </h3>
-                <div className="space-y-6">
-                  {routes.map((route, index) => (
-                    <div
-                      key={index}
-                      className="group flex flex-col md:flex-row md:items-center gap-6 p-6 rounded-2xl bg-background/50 border border-border/30 hover:border-accent/30 transition-all duration-300 hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="text-center">
-                          <div className="text-lg lg:text-xl font-bold text-foreground whitespace-nowrap">
-                            {route.from}
-                          </div>
-                        </div>
-                        <ArrowRight className="h-6 w-6 text-accent flex-shrink-0 group-hover:translate-x-1 transition-transform duration-300" strokeWidth={2} />
-                        <div className="text-center">
-                          <div className="text-lg lg:text-xl font-bold text-foreground whitespace-nowrap">
-                            {route.to}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {route.modes.map((mode, idx) => (
-                          <div key={idx} className="px-4 py-2 rounded-lg bg-accent/10 text-accent text-sm font-semibold border border-accent/20">
-                            {mode}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex-1 md:text-right">
-                        <p className="text-muted-foreground text-sm">{route.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Advantages Section */}
-        <section className="py-24 lg:py-32">
-          <div className="container mx-auto px-6 lg:px-8">
-            <div className="text-center mb-16 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
-                Преимущества логистики из Азии с нами
+            <div className="text-center mb-12">
+              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+                Интерактивная карта
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 tracking-tight">
+                Наши маршруты
               </h2>
-              <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-                Многолетний опыт работы с азиатскими партнёрами и глубокое понимание специфики региона
+              <p className="text-lg text-muted-foreground font-light max-w-2xl mx-auto">
+                Исследуйте логистические маршруты из Азии и Европы
               </p>
             </div>
+            <LogisticsMap />
+          </div>
+        </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-6xl mx-auto">
-              {advantages.map((advantage, index) => (
+        {/* Countries Grid */}
+        <section className="py-20 lg:py-28 bg-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+                20+ стран
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+                Откуда доставляем
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 lg:gap-6 max-w-6xl mx-auto">
+              {countries.map((country, index) => (
                 <div
                   key={index}
-                  className="group p-8 lg:p-10 rounded-2xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 ease-out hover:shadow-large hover:-translate-y-2 animate-fade-in cursor-default"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className={`group p-6 rounded-2xl text-center transition-all duration-500 cursor-default ${
+                    country.highlight
+                      ? "bg-gradient-to-br from-accent to-accent-hover text-white shadow-glow"
+                      : "bg-card border border-border/50 hover:border-accent/30 hover:shadow-large hover:-translate-y-1"
+                  }`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300 flex-shrink-0">
-                      <CheckCircle2 className="h-7 w-7 text-accent" strokeWidth={2} />
+                  <div className="text-4xl mb-3">{country.flag}</div>
+                  <div className={`font-semibold ${country.highlight ? "text-white" : "text-foreground group-hover:text-accent transition-colors"}`}>
+                    {country.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Routes Section */}
+        <section className="py-20 lg:py-28 bg-secondary/30">
+          <div className="container mx-auto px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+                Маршруты
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+                Основные направления
+              </h2>
+              <p className="text-lg text-muted-foreground font-light">
+                Выберите оптимальный вид транспорта под ваши задачи
+              </p>
+            </div>
+
+            <div className="space-y-6 max-w-5xl mx-auto">
+              {routes.map((route, index) => (
+                <div
+                  key={index}
+                  className="group p-8 lg:p-10 rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+                    {/* Route info */}
+                    <div className="flex items-center gap-4 lg:min-w-[200px]">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${route.color}`}>
+                        <Globe className="h-6 w-6 text-white" strokeWidth={1.5} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-foreground">
+                          {route.from}
+                          <ArrowRight className="h-5 w-5 text-accent" />
+                          {route.to}
+                        </div>
+                        <div className="text-sm text-muted-foreground">{route.description}</div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl lg:text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors duration-300">
-                        {advantage.title}
-                      </h3>
-                      <p className="text-muted-foreground group-hover:text-foreground text-[15px] leading-relaxed transition-colors duration-300">
-                        {advantage.description}
-                      </p>
+
+                    {/* Transport modes */}
+                    <div className="flex flex-wrap gap-3 lg:flex-1">
+                      {route.modes.map((mode, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-3 px-5 py-3 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors"
+                        >
+                          <mode.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
+                          <div>
+                            <div className="font-medium text-foreground">{mode.name}</div>
+                            <div className="text-xs text-muted-foreground">{mode.time}</div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -238,64 +233,105 @@ const Geography = () => {
           </div>
         </section>
 
-        {/* Europe Through Turkey Section */}
-        <section className="py-24 lg:py-32 bg-gradient-to-b from-secondary/30 to-background">
+        {/* China Focus */}
+        <section className="py-20 lg:py-28 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto">
-              <div className="p-10 lg:p-12 rounded-3xl bg-card border border-border/50 animate-fade-in">
-                <div className="flex flex-col lg:flex-row gap-8 items-center">
-                  <div className="flex-shrink-0">
-                    <div className="p-6 rounded-2xl bg-accent/10">
-                      <Ship className="h-16 w-16 text-accent" strokeWidth={1.5} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
+              {/* Content */}
+              <div>
+                <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+                  🇨🇳 Ключевое направление
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+                  Китай — наша специализация
+                </h2>
+                <p className="text-lg text-muted-foreground font-light mb-8 leading-relaxed">
+                  Работаем со всеми крупными промышленными регионами КНР. Прямые контакты с китайскими поставщиками, консолидация грузов на складах в Китае, все виды транспорта.
+                </p>
+                
+                <div className="space-y-4 mb-8">
+                  {advantages.map((item, index) => (
+                    <div key={index} className="flex items-start gap-4 group">
+                      <div className="p-2 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                        <item.icon className="h-5 w-5" strokeWidth={2} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-foreground group-hover:text-accent transition-colors">
+                          {item.title}
+                        </div>
+                        <div className="text-sm text-muted-foreground">{item.description}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                      Европа через партнёров в Турции
-                    </h2>
-                    <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                      Благодаря сотрудничеству с надёжными турецкими логистическими компаниями, 
-                      мы также организуем доставку грузов из стран Европы.
-                    </p>
-                    <p className="text-base text-muted-foreground leading-relaxed">
-                      Наши партнёры в Турции обеспечивают качественное сопровождение грузов, 
-                      что позволяет нам предлагать конкурентные условия для европейских направлений.
-                    </p>
-                  </div>
+                  ))}
                 </div>
+
+                <Button asChild size="lg" className="group">
+                  <Link to="/contacts">
+                    Рассчитать доставку из Китая
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  { value: "25+", label: "городов КНР", desc: "работаем напрямую" },
+                  { value: "15", label: "дней", desc: "среднее время ЖД" },
+                  { value: "1000+", label: "контейнеров", desc: "в год из Китая" },
+                  { value: "24/7", label: "поддержка", desc: "на русском языке" },
+                ].map((stat, index) => (
+                  <div
+                    key={index}
+                    className="group p-8 rounded-2xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large hover:-translate-y-1 text-center"
+                  >
+                    <div className="text-4xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
+                      {stat.value}
+                    </div>
+                    <div className="font-semibold text-foreground mb-1">{stat.label}</div>
+                    <div className="text-sm text-muted-foreground">{stat.desc}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-24 lg:py-32">
-          <div className="container mx-auto px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="p-12 lg:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark text-primary-foreground animate-fade-in">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
-                  Готовы организовать вашу перевозку?
-                </h2>
-                <p className="text-xl md:text-2xl text-primary-foreground/85 font-light mb-10 leading-relaxed">
-                  Свяжитесь с нами для расчёта стоимости доставки и консультации по оптимальному маршруту
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    asChild 
-                    size="lg" 
-                    className="bg-white text-primary hover:bg-white/90 font-semibold text-lg px-8 py-6 h-auto"
-                  >
-                    <Link to="/contacts">Рассчитать доставку</Link>
-                  </Button>
-                  <Button 
-                    asChild 
-                    size="lg" 
-                    variant="outline"
-                    className="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-lg px-8 py-6 h-auto"
-                  >
-                    <Link to="/contacts">Связаться с нами</Link>
-                  </Button>
-                </div>
+        {/* CTA */}
+        <section className="py-20 lg:py-28 bg-primary relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+                Нужна доставка из Азии?
+              </h2>
+              <p className="text-xl text-white/80 font-light mb-10">
+                Рассчитаем стоимость и предложим оптимальный маршрут за 30 минут
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group shadow-glow"
+                >
+                  <Link to="/contacts">
+                    Рассчитать доставку
+                    <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-white/30 text-white hover:bg-white hover:text-primary text-lg px-10 py-7 h-auto"
+                >
+                  <a href="tel:+78126440291">
+                    Позвонить
+                  </a>
+                </Button>
               </div>
             </div>
           </div>

@@ -29,9 +29,9 @@ const HowWeWorkSection = () => {
   ];
 
   return (
-    <section className="py-24 lg:py-32 bg-gradient-to-b from-background via-secondary/30 to-background">
+    <section className="py-16 lg:py-20 bg-gradient-to-b from-background via-secondary/30 to-background">
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="text-center mb-20 max-w-3xl mx-auto">
+        <div className="text-center mb-12 max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance">
             Как мы работаем
           </h2>

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const navigation = [
     { name: "Главная", href: "/" },
@@ -26,17 +27,30 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex lg:items-center lg:gap-1">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className="group relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ease-out rounded-lg text-muted-foreground hover:text-foreground hover:[text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]"
-            >
-              {item.name}
-              {/* Animated underline */}
-              <span className="absolute bottom-1 left-4 right-4 h-[2px] bg-[#223A5E] origin-right scale-x-0 transition-transform duration-300 ease-out group-hover:origin-left group-hover:scale-x-100"></span>
-            </Link>
-          ))}
+          {navigation.map((item) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`group relative px-4 py-2 text-[13px] font-medium transition-all duration-300 ease-out rounded-lg ${
+                  isActive 
+                    ? 'text-foreground [text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]' 
+                    : 'text-muted-foreground hover:text-foreground hover:[text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]'
+                }`}
+              >
+                {item.name}
+                {/* Underline: static for active, animated for inactive */}
+                <span 
+                  className={`absolute bottom-1 left-4 right-4 h-[2px] bg-[#223A5E] ${
+                    isActive 
+                      ? 'scale-x-100' 
+                      : 'origin-right scale-x-0 transition-transform duration-300 ease-out group-hover:origin-left group-hover:scale-x-100'
+                  }`}
+                ></span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* CTA Button */}
@@ -67,16 +81,21 @@ const Header = () => {
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-border bg-background">
           <div className="space-y-1 px-4 pb-3 pt-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="block rounded-md px-3 py-2 text-base font-medium transition-all duration-300 ease-out text-foreground hover:bg-secondary hover:translate-x-1 hover:shadow-soft"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`block rounded-md px-3 py-2 text-base font-medium transition-all duration-300 ease-out text-foreground hover:bg-secondary hover:translate-x-1 hover:shadow-soft ${
+                    isActive ? 'border-l-4 border-[#223A5E]' : ''
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
             <div className="pt-4">
               <Button
                 asChild

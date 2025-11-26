@@ -1,7 +1,10 @@
 import HeroSection from "@/components/HeroSection";
-import BenefitsSection from "@/components/BenefitsSection";
-import AboutPreview from "@/components/AboutPreview";
-import HowWeWorkSection from "@/components/HowWeWorkSection";
+import StatsSection from "@/components/StatsSection";
+import BentoGrid from "@/components/BentoGrid";
+import MarqueePartners from "@/components/MarqueePartners";
+import ProcessSection from "@/components/ProcessSection";
+import TestimonialsPreview from "@/components/TestimonialsPreview";
+import CTASection from "@/components/CTASection";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
 
@@ -17,9 +20,12 @@ const Index = () => {
       />
       <div>
         <HeroSection />
-        <BenefitsSection />
-        <HowWeWorkSection />
-        <AboutPreview />
+        <StatsSection />
+        <BentoGrid />
+        <MarqueePartners />
+        <ProcessSection />
+        <TestimonialsPreview />
+        <CTASection />
       </div>
     </>
   );
