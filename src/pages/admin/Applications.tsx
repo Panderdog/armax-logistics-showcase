@@ -35,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Search, 
   MoreHorizontal, 
@@ -47,7 +48,8 @@ import {
   Mail,
   Phone,
   Building2,
-  Package
+  Package,
+  RefreshCw
 } from 'lucide-react';
 
 type ApplicationStatus = 'new' | 'in_progress' | 'completed' | 'cancelled';
@@ -55,17 +57,17 @@ type ApplicationStatus = 'new' | 'in_progress' | 'completed' | 'cancelled';
 interface Application {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string;
   company?: string;
-  service: string;
+  service?: string;
   message: string;
   status: ApplicationStatus;
   createdAt: string;
 }
 
 const Applications = () => {
-  const { applications, updateApplicationStatus, deleteApplication } = useAdmin();
+  const { applications, applicationsLoading, refreshApplications, updateApplicationStatus, deleteApplication } = useAdmin();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
@@ -76,9 +78,9 @@ const Applications = () => {
   const filteredApplications = applications.filter(app => {
     const matchesSearch = 
       app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (app.email?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
       app.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.service.toLowerCase().includes(searchQuery.toLowerCase());
+      (app.service?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
     
@@ -138,16 +140,16 @@ const Applications = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (applicationToDelete) {
-      deleteApplication(applicationToDelete.id);
+      await deleteApplication(applicationToDelete.id);
       setIsDeleteDialogOpen(false);
       setApplicationToDelete(null);
     }
   };
 
-  const handleStatusChange = (id: string, status: ApplicationStatus) => {
-    updateApplicationStatus(id, status);
+  const handleStatusChange = async (id: string, status: ApplicationStatus) => {
+    await updateApplicationStatus(id, status);
   };
 
   const stats = {
@@ -160,11 +162,22 @@ const Applications = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Заявки</h1>
-        <p className="text-muted-foreground mt-1">
-          Управление заявками клиентов
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Заявки</h1>
+          <p className="text-muted-foreground mt-1">
+            Управление заявками клиентов
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => refreshApplications()}
+          disabled={applicationsLoading}
+        >
+          <RefreshCw className={`h-4 w-4 mr-2 ${applicationsLoading ? 'animate-spin' : ''}`} />
+          Обновить
+        </Button>
       </div>
 
       {/* Stats */}
@@ -261,7 +274,19 @@ const Applications = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {filteredApplications.length === 0 ? (
+          {applicationsLoading ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center space-x-4">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-4 w-[200px]" />
+                    <Skeleton className="h-4 w-[150px]" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredApplications.length === 0 ? (
             <div className="text-center py-12">
               <Package className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
               <p className="text-muted-foreground">Заявок не найдено</p>
@@ -271,7 +296,7 @@ const Applications = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Клиент</TableHead>
-                  <TableHead>Услуга</TableHead>
+                  <TableHead>Сообщение</TableHead>
                   <TableHead>Статус</TableHead>
                   <TableHead>Дата</TableHead>
                   <TableHead className="text-right">Действия</TableHead>
@@ -283,11 +308,11 @@ const Applications = () => {
                     <TableCell>
                       <div className="space-y-1">
                         <p className="font-medium">{application.name}</p>
-                        <p className="text-xs text-muted-foreground">{application.email}</p>
+                        <p className="text-xs text-muted-foreground">{application.email || application.phone}</p>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <p className="text-sm">{application.service}</p>
+                      <p className="text-sm line-clamp-1 max-w-[200px]">{application.message}</p>
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(application.status)}
@@ -376,18 +401,6 @@ const Applications = () => {
 
                 <div className="flex items-start gap-3">
                   <div className="p-2 rounded-lg bg-secondary">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <a href={`mailto:${selectedApplication.email}`} className="font-medium text-accent hover:underline">
-                      {selectedApplication.email}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-secondary">
                     <Phone className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div className="flex-1">
@@ -398,15 +411,19 @@ const Applications = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-secondary">
-                    <Package className="h-4 w-4 text-muted-foreground" />
+                {selectedApplication.email && (
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-secondary">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <a href={`mailto:${selectedApplication.email}`} className="font-medium text-accent hover:underline">
+                        {selectedApplication.email}
+                      </a>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Услуга</p>
-                    <p className="font-medium">{selectedApplication.service}</p>
-                  </div>
-                </div>
+                )}
               </div>
 
               <div className="space-y-2">

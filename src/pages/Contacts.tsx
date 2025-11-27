@@ -2,10 +2,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Phone, Mail, MessageCircle, Clock, Send, ArrowRight, CheckCircle } from "lucide-react";
+import { MapPin, Phone, Mail, MessageCircle, Clock, Send, ArrowRight, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import SEO from "@/components/SEO";
 import { localBusinessSchema } from "@/lib/schema";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+
+interface FormErrors {
+  name?: string;
+  phone?: string;
+  email?: string;
+  message?: string;
+}
 
 const Contacts = () => {
   const [formData, setFormData] = useState({
@@ -14,22 +22,108 @@ const Contacts = () => {
     email: "",
     message: "",
   });
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    // Validate name (required)
+    if (!formData.name.trim()) {
+      newErrors.name = "Пожалуйста, введите ваше имя";
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = "Имя должно содержать минимум 2 символа";
+    }
+
+    // Validate phone (required)
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Пожалуйста, введите номер телефона";
+    } else {
+      // Remove all non-digit characters for validation
+      const phoneDigits = formData.phone.replace(/\D/g, "");
+      if (phoneDigits.length < 10) {
+        newErrors.phone = "Введите корректный номер телефона";
+      }
+    }
+
+    // Validate email (optional but must be valid if provided)
+    if (formData.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        newErrors.email = "Введите корректный email адрес";
+      }
+    }
+
+    // Validate message (required)
+    if (!formData.message.trim()) {
+      newErrors.message = "Пожалуйста, опишите ваш запрос";
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = "Сообщение должно содержать минимум 10 символов";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
+
+    // Validate form before submitting
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast.success("Спасибо! Мы свяжемся с вами в ближайшее время.");
-    setFormData({ name: "", phone: "", email: "", message: "" });
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    
-    setTimeout(() => setIsSubmitted(false), 5000);
+
+    try {
+      // Check if Supabase is configured
+      if (!supabase || !isSupabaseConfigured) {
+        throw new Error("База данных не настроена. Пожалуйста, свяжитесь с нами по телефону.");
+      }
+
+      const { error } = await supabase.from("applications").insert({
+        name: formData.name.trim(),
+        email: formData.email.trim() || null,
+        phone: formData.phone.trim(),
+        message: formData.message.trim(),
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Спасибо! Мы свяжемся с вами в ближайшее время.");
+      setFormData({ name: "", phone: "", email: "", message: "" });
+      setErrors({});
+      setIsSubmitted(true);
+
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже.";
+      setSubmitError(errorMessage);
+      toast.error("Ошибка при отправке заявки");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData({ ...formData, [field]: value });
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: undefined });
+    }
+    // Clear submit error when user modifies form
+    if (submitError) {
+      setSubmitError(null);
+    }
   };
 
   const contactMethods = [
@@ -246,17 +340,35 @@ const Contacts = () => {
                       </div>
                       
                       <form onSubmit={handleSubmit} className="space-y-6">
+                        {submitError && (
+                          <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3">
+                            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium text-destructive">Ошибка отправки</p>
+                              <p className="text-sm text-destructive/80 mt-1">{submitError}</p>
+                            </div>
+                          </div>
+                        )}
+
                         <div>
                           <label className="block text-sm font-semibold text-foreground mb-3">
                             Ваше имя *
                           </label>
                           <Input
-                            required
                             value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            onChange={(e) => handleInputChange("name", e.target.value)}
                             placeholder="Как к вам обращаться?"
-                            className="h-14 rounded-xl bg-secondary/50 border-border/50 focus:border-accent"
+                            className={`h-14 rounded-xl bg-secondary/50 border-border/50 focus:border-accent ${
+                              errors.name ? "border-destructive focus:border-destructive" : ""
+                            }`}
+                            disabled={isSubmitting}
                           />
+                          {errors.name && (
+                            <p className="text-sm text-destructive mt-2 flex items-center gap-1">
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.name}
+                            </p>
+                          )}
                         </div>
                         
                         <div>
@@ -264,13 +376,21 @@ const Contacts = () => {
                             Телефон *
                           </label>
                           <Input
-                            required
                             type="tel"
                             value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            onChange={(e) => handleInputChange("phone", e.target.value)}
                             placeholder="+7 (___) ___-__-__"
-                            className="h-14 rounded-xl bg-secondary/50 border-border/50 focus:border-accent"
+                            className={`h-14 rounded-xl bg-secondary/50 border-border/50 focus:border-accent ${
+                              errors.phone ? "border-destructive focus:border-destructive" : ""
+                            }`}
+                            disabled={isSubmitting}
                           />
+                          {errors.phone && (
+                            <p className="text-sm text-destructive mt-2 flex items-center gap-1">
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.phone}
+                            </p>
+                          )}
                         </div>
                         
                         <div>
@@ -280,10 +400,19 @@ const Contacts = () => {
                           <Input
                             type="email"
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onChange={(e) => handleInputChange("email", e.target.value)}
                             placeholder="your@email.com"
-                            className="h-14 rounded-xl bg-secondary/50 border-border/50 focus:border-accent"
+                            className={`h-14 rounded-xl bg-secondary/50 border-border/50 focus:border-accent ${
+                              errors.email ? "border-destructive focus:border-destructive" : ""
+                            }`}
+                            disabled={isSubmitting}
                           />
+                          {errors.email && (
+                            <p className="text-sm text-destructive mt-2 flex items-center gap-1">
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.email}
+                            </p>
+                          )}
                         </div>
                         
                         <div>
@@ -291,13 +420,21 @@ const Contacts = () => {
                             Что нужно доставить? *
                           </label>
                           <Textarea
-                            required
                             value={formData.message}
-                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                            onChange={(e) => handleInputChange("message", e.target.value)}
                             placeholder="Опишите груз, откуда и куда нужна доставка"
                             rows={5}
-                            className="resize-none rounded-xl bg-secondary/50 border-border/50 focus:border-accent"
+                            className={`resize-none rounded-xl bg-secondary/50 border-border/50 focus:border-accent ${
+                              errors.message ? "border-destructive focus:border-destructive" : ""
+                            }`}
+                            disabled={isSubmitting}
                           />
+                          {errors.message && (
+                            <p className="text-sm text-destructive mt-2 flex items-center gap-1">
+                              <AlertCircle className="h-4 w-4" />
+                              {errors.message}
+                            </p>
+                          )}
                         </div>
                         
                         <Button

@@ -1,18 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-// Hardcoded admin credentials (in production, use Supabase or proper auth)
-const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  password: 'armax2024'
-};
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 interface Application {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string;
   company?: string;
-  service: string;
+  service?: string;
   message: string;
   status: 'new' | 'in_progress' | 'completed' | 'cancelled';
   createdAt: string;
@@ -33,12 +28,15 @@ interface NewsItem {
 
 interface AdminContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => boolean;
-  logout: () => void;
+  isAuthLoading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
   applications: Application[];
+  applicationsLoading: boolean;
+  refreshApplications: () => Promise<void>;
   addApplication: (application: Omit<Application, 'id' | 'createdAt' | 'status'>) => void;
-  updateApplicationStatus: (id: string, status: Application['status']) => void;
-  deleteApplication: (id: string) => void;
+  updateApplicationStatus: (id: string, status: Application['status']) => Promise<void>;
+  deleteApplication: (id: string) => Promise<void>;
   news: NewsItem[];
   addNews: (news: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateNews: (id: string, news: Partial<NewsItem>) => void;
@@ -227,41 +225,114 @@ function generateSlug(title: string): string {
 export { generateSlug };
 
 export function AdminProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('armax_admin_auth') === 'true';
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   
-  const [applications, setApplications] = useState<Application[]>(() => {
-    const saved = localStorage.getItem('armax_applications');
-    return saved ? JSON.parse(saved) : demoApplications;
-  });
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [applicationsLoading, setApplicationsLoading] = useState(true);
   
   const [news, setNews] = useState<NewsItem[]>(() => {
     const saved = localStorage.getItem('armax_news_v2');
     return saved ? JSON.parse(saved) : demoNews;
   });
 
-  // Persist data to localStorage
+  // Check auth state on mount
   useEffect(() => {
-    localStorage.setItem('armax_applications', JSON.stringify(applications));
-  }, [applications]);
+    if (!supabase || !isSupabaseConfigured) {
+      setIsAuthLoading(false);
+      return;
+    }
 
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+      setIsAuthLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Fetch applications from Supabase
+  const fetchApplications = useCallback(async () => {
+    if (!supabase || !isSupabaseConfigured) {
+      setApplicationsLoading(false);
+      return;
+    }
+
+    setApplicationsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('applications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching applications:', error);
+        return;
+      }
+
+      // Map Supabase data to Application interface
+      const mappedApplications: Application[] = (data || []).map(app => ({
+        id: app.id,
+        name: app.name,
+        email: app.email,
+        phone: app.phone,
+        message: app.message,
+        status: app.status as Application['status'],
+        createdAt: app.created_at,
+      }));
+
+      setApplications(mappedApplications);
+    } catch (error) {
+      console.error('Error fetching applications:', error);
+    } finally {
+      setApplicationsLoading(false);
+    }
+  }, []);
+
+  // Load applications on mount and when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchApplications();
+    }
+  }, [isAuthenticated, fetchApplications]);
+
+  // Persist news to localStorage
   useEffect(() => {
     localStorage.setItem('armax_news_v2', JSON.stringify(news));
   }, [news]);
 
-  const login = (username: string, password: string): boolean => {
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      setIsAuthenticated(true);
-      localStorage.setItem('armax_admin_auth', 'true');
-      return true;
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    if (!supabase || !isSupabaseConfigured) {
+      return { success: false, error: 'База данных не настроена' };
     }
-    return false;
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Произошла ошибка при входе' };
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (supabase && isSupabaseConfigured) {
+      await supabase.auth.signOut();
+    }
     setIsAuthenticated(false);
-    localStorage.removeItem('armax_admin_auth');
   };
 
   const addApplication = (application: Omit<Application, 'id' | 'createdAt' | 'status'>) => {
@@ -274,14 +345,58 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     setApplications(prev => [newApplication, ...prev]);
   };
 
-  const updateApplicationStatus = (id: string, status: Application['status']) => {
-    setApplications(prev => 
-      prev.map(app => app.id === id ? { ...app, status } : app)
-    );
+  const updateApplicationStatus = async (id: string, status: Application['status']) => {
+    if (!supabase || !isSupabaseConfigured) {
+      // Fallback to local update
+      setApplications(prev => 
+        prev.map(app => app.id === id ? { ...app, status } : app)
+      );
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .update({ status })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating application status:', error);
+        return;
+      }
+
+      // Update local state
+      setApplications(prev => 
+        prev.map(app => app.id === id ? { ...app, status } : app)
+      );
+    } catch (error) {
+      console.error('Error updating application status:', error);
+    }
   };
 
-  const deleteApplication = (id: string) => {
-    setApplications(prev => prev.filter(app => app.id !== id));
+  const deleteApplication = async (id: string) => {
+    if (!supabase || !isSupabaseConfigured) {
+      // Fallback to local delete
+      setApplications(prev => prev.filter(app => app.id !== id));
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting application:', error);
+        return;
+      }
+
+      // Update local state
+      setApplications(prev => prev.filter(app => app.id !== id));
+    } catch (error) {
+      console.error('Error deleting application:', error);
+    }
   };
 
   const addNews = (newsItem: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -328,9 +443,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   return (
     <AdminContext.Provider value={{
       isAuthenticated,
+      isAuthLoading,
       login,
       logout,
       applications,
+      applicationsLoading,
+      refreshApplications: fetchApplications,
       addApplication,
       updateApplicationStatus,
       deleteApplication,
