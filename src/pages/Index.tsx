@@ -2,6 +2,7 @@ import HeroSection from "@/components/HeroSection";
 import StatsSection from "@/components/StatsSection";
 import BentoGrid from "@/components/BentoGrid";
 import MarqueePartners from "@/components/MarqueePartners";
+import NewsCarousel from "@/components/NewsCarousel";
 import ProcessSection from "@/components/ProcessSection";
 import TestimonialsPreview from "@/components/TestimonialsPreview";
 import CTASection from "@/components/CTASection";
@@ -25,6 +26,7 @@ const Index = () => {
         <MarqueePartners />
         <ProcessSection />
         <TestimonialsPreview />
+        <NewsCarousel />
         <CTASection />
       </div>
     </>

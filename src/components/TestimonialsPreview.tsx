@@ -50,7 +50,7 @@ const TestimonialsPreview = () => {
               Нам доверяют
             </h2>
             <p className="text-lg text-muted-foreground font-light leading-relaxed">
-              Более 500 компаний выбрали нас в качестве надёжного логистического партнёра
+              Более 500 компаний выбрали нас в качестве надёжного<br />логистического партнёра
             </p>
           </div>
           <Button asChild variant="outline" size="lg" className="group w-fit">

@@ -20,7 +20,9 @@ const BentoGrid = () => {
             логистических услуг
           </h2>
           <p className="text-lg text-muted-foreground font-light leading-relaxed">
-            От забора груза до доставки получателю — берём на себя всю логистику и таможенное оформление
+            От забора груза до доставки получателю — берём на себя всю
+            <br />
+            логистику и таможенное оформление
           </p>
         </div>
 
@@ -65,7 +67,7 @@ const BentoGrid = () => {
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Автоперевозки</h3>
               <p className="text-white/80 text-sm">
-                Доставка по всей Европе и СНГ
+                Доставка из Азии по России и СНГ
               </p>
             </div>
           </div>

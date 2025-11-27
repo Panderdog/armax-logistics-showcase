@@ -2,10 +2,10 @@ const partners = [
   { name: "MAERSK", image: "/images/containers-cropped/maersk.png" },
   { name: "MSC", image: "/images/containers-cropped/msc.png" },
   { name: "CMA CGM", image: "/images/containers-cropped/cma-cgm.png" },
-  { name: "FESCO", image: "/images/containers-cropped/fesco.png" },
   { name: "OOCL", image: "/images/containers-cropped/oocl.png" },
-  { name: "Hapag-Lloyd", image: "/images/containers-cropped/hapag-lloyd.png" },
   { name: "ONE", image: "/images/containers-cropped/one-big.png" },
+  { name: "FESCO", image: "/images/containers-cropped/fesco.png" },
+  { name: "Hapag-Lloyd", image: "/images/containers-cropped/hapag-lloyd.png" },
   { name: "Evergreen", image: "/images/containers-cropped/evergreen.png" },
   { name: "Yang Ming", image: "/images/containers-cropped/yang ming.png" },
 ];
