@@ -304,7 +304,11 @@ const Applications = () => {
               </TableHeader>
               <TableBody>
                 {filteredApplications.map((application) => (
-                  <TableRow key={application.id} className="group">
+                  <TableRow 
+                    key={application.id} 
+                    className="group cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => handleViewApplication(application)}
+                  >
                     <TableCell>
                       <div className="space-y-1">
                         <p className="font-medium">{application.name}</p>
@@ -322,7 +326,7 @@ const Applications = () => {
                         {formatDate(application.createdAt)}
                       </p>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">

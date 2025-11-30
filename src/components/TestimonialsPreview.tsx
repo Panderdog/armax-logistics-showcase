@@ -34,7 +34,7 @@ const testimonials = [
 
 const TestimonialsPreview = () => {
   return (
-    <section className="py-20 lg:py-28 bg-secondary/30 relative overflow-hidden">
+    <section className="py-20 lg:py-20 bg-secondary/30 relative overflow-hidden">
       {/* Decorative background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_120%,hsl(var(--accent)/0.05),transparent)]" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />

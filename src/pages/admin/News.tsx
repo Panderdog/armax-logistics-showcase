@@ -63,7 +63,7 @@ const emptyFormData: NewsFormData = {
 };
 
 const News = () => {
-  const { news, addNews, updateNews, deleteNews } = useAdmin();
+  const { news, newsLoading, addNews, updateNews, deleteNews, refreshNews } = useAdmin();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,6 +73,7 @@ const News = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [newsToDelete, setNewsToDelete] = useState<{ id: string; title: string } | null>(null);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Check URL for create action
   useEffect(() => {
@@ -136,14 +137,24 @@ const News = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (newsToDelete) {
-      deleteNews(newsToDelete.id);
-      toast({
-        description: 'Новость удалена',
-      });
-      setIsDeleteDialogOpen(false);
-      setNewsToDelete(null);
+      setIsSaving(true);
+      try {
+        await deleteNews(newsToDelete.id);
+        toast({
+          description: 'Новость удалена',
+        });
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          description: 'Ошибка при удалении новости',
+        });
+      } finally {
+        setIsSaving(false);
+        setIsDeleteDialogOpen(false);
+        setNewsToDelete(null);
+      }
     }
   };
 
@@ -164,7 +175,7 @@ const News = () => {
     setSlugManuallyEdited(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.title.trim()) {
       toast({
         variant: 'destructive',
@@ -196,21 +207,31 @@ const News = () => {
       published: formData.published
     };
 
-    if (editingId) {
-      updateNews(editingId, newsData);
-      toast({
-        description: 'Новость обновлена',
-      });
-    } else {
-      addNews(newsData);
-      toast({
-        description: 'Новость создана',
-      });
-    }
+    setIsSaving(true);
+    try {
+      if (editingId) {
+        await updateNews(editingId, newsData);
+        toast({
+          description: 'Новость обновлена',
+        });
+      } else {
+        await addNews(newsData);
+        toast({
+          description: 'Новость создана',
+        });
+      }
 
-    setIsEditorMode(false);
-    setEditingId(null);
-    setFormData(emptyFormData);
+      setIsEditorMode(false);
+      setEditingId(null);
+      setFormData(emptyFormData);
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Ошибка при сохранении новости',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -368,11 +389,18 @@ const News = () => {
                 </Label>
               </div>
               <div className="flex gap-3">
-                <Button variant="outline" onClick={handleCancel}>
+                <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
                   Отмена
                 </Button>
-                <Button onClick={handleSave}>
-                  {editingId ? 'Сохранить изменения' : 'Создать новость'}
+                <Button onClick={handleSave} disabled={isSaving}>
+                  {isSaving ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Сохранение...
+                    </>
+                  ) : (
+                    editingId ? 'Сохранить изменения' : 'Создать новость'
+                  )}
                 </Button>
               </div>
             </div>
@@ -464,10 +492,16 @@ const News = () => {
             Управление публикациями
           </p>
         </div>
-        <Button onClick={handleCreateNew}>
-          <Plus className="h-4 w-4 mr-2" />
-          Создать новость
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={refreshNews} disabled={newsLoading}>
+            <RefreshCw className={`h-4 w-4 mr-2 ${newsLoading ? 'animate-spin' : ''}`} />
+            Обновить
+          </Button>
+          <Button onClick={handleCreateNew}>
+            <Plus className="h-4 w-4 mr-2" />
+            Создать новость
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -645,11 +679,18 @@ const News = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={isSaving}>
               Отмена
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
-              Удалить
+            <Button variant="destructive" onClick={confirmDelete} disabled={isSaving}>
+              {isSaving ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Удаление...
+                </>
+              ) : (
+                'Удалить'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MessageSquare, Calculator, Truck, CheckCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const steps = [
   {
@@ -44,10 +44,11 @@ const steps = [
 
 const ProcessSection = () => {
   const [activeStep, setActiveStep] = useState(1);
+  const { openApplicationModal } = useApplicationModal();
   const currentStep = steps.find((s) => s.id === activeStep) || steps[0];
 
   return (
-    <section className="py-20 lg:py-28 bg-background relative overflow-hidden">
+    <section className="py-20 lg:py-20 bg-background relative overflow-hidden">
       {/* Subtle background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--accent)/0.05),transparent)]" />
       
@@ -184,11 +185,9 @@ const ProcessSection = () => {
 
               {/* CTA */}
               {activeStep === 1 && (
-                <Button asChild size="lg" className="group">
-                  <Link to="/contacts">
-                    Оставить заявку
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                <Button size="lg" className="group" onClick={openApplicationModal}>
+                  Оставить заявку
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               )}
             </div>

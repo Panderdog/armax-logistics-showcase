@@ -38,52 +38,18 @@ interface AdminContextType {
   updateApplicationStatus: (id: string, status: Application['status']) => Promise<void>;
   deleteApplication: (id: string) => Promise<void>;
   news: NewsItem[];
-  addNews: (news: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateNews: (id: string, news: Partial<NewsItem>) => void;
-  deleteNews: (id: string) => void;
+  newsLoading: boolean;
+  refreshNews: () => Promise<void>;
+  addNews: (news: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateNews: (id: string, news: Partial<NewsItem>) => Promise<void>;
+  deleteNews: (id: string) => Promise<void>;
   getPublishedNews: () => NewsItem[];
   getNewsBySlug: (slug: string) => NewsItem | undefined;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-// Demo data for initial state
-const demoApplications: Application[] = [
-  {
-    id: '1',
-    name: 'Иван Петров',
-    email: 'ivan@company.ru',
-    phone: '+7 (999) 123-45-67',
-    company: 'ООО "ТрансЛогистика"',
-    service: 'Морские перевозки',
-    message: 'Нужна доставка контейнера из Шанхая в Владивосток. Объём: 40 футов.',
-    status: 'new',
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: '2',
-    name: 'Мария Сидорова',
-    email: 'maria@trade.com',
-    phone: '+7 (495) 987-65-43',
-    company: 'ИП Сидорова М.А.',
-    service: 'Таможенное оформление',
-    message: 'Требуется помощь с таможенным оформлением грузов из Китая.',
-    status: 'in_progress',
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: '3',
-    name: 'Алексей Козлов',
-    email: 'alexey@import.ru',
-    phone: '+7 (812) 555-33-22',
-    company: 'ООО "Импорт Групп"',
-    service: 'Авиаперевозки',
-    message: 'Срочная доставка документов из Сеула.',
-    status: 'completed',
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
-  }
-];
-
+// Demo data for initial state (fallback when Supabase is not configured)
 const demoNews: NewsItem[] = [
   {
     id: '1',
@@ -146,33 +112,6 @@ const demoNews: NewsItem[] = [
   },
   {
     id: '3',
-    title: 'Новые тарифы на авиаперевозки с января 2025',
-    slug: 'novye-tarify-aviaperervozki-2025',
-    previewText: 'Информируем об обновлении тарифов на авиадоставку грузов из Азии. Новые условия вступают в силу с 1 января 2025 года.',
-    content: `# Обновление тарифов на авиаперевозки
-
-Уведомляем наших клиентов об изменении тарифов на авиаперевозки с 1 января 2025 года.
-
-## Что изменится
-
-Новые тарифы разработаны с учётом текущей рыночной ситуации и позволят нам сохранить высокое качество услуг.
-
-### Основные изменения:
-- Обновлены базовые ставки для направлений из Китая, Кореи и Японии
-- Введены специальные условия для постоянных клиентов
-- Добавлены новые опции экспресс-доставки
-
-## Как узнать новые цены
-
-Для получения актуальных расценок обратитесь к нашим менеджерам. Мы подготовим индивидуальное предложение с учётом объёмов и регулярности ваших отправок.`,
-    previewImage: '/images/airplane.webp',
-    tags: ['тарифы', 'авиаперевозки', '2025'],
-    published: false,
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
-  },
-  {
-    id: '4',
     title: 'Расширение складской сети в Москве',
     slug: 'rasshirenie-skladskoj-seti-moskva',
     previewText: 'Открыли новый распределительный центр в Москве площадью 5000 м². Теперь доставка по столице ещё быстрее.',
@@ -224,6 +163,33 @@ function generateSlug(title: string): string {
 
 export { generateSlug };
 
+// Helper to map Supabase news row to NewsItem interface
+function mapNewsRow(row: {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  preview_text: string;
+  preview_image: string | null;
+  tags: string[];
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}): NewsItem {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    content: row.content,
+    previewText: row.preview_text,
+    previewImage: row.preview_image || undefined,
+    tags: row.tags || [],
+    published: row.published,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -231,10 +197,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [applications, setApplications] = useState<Application[]>([]);
   const [applicationsLoading, setApplicationsLoading] = useState(true);
   
-  const [news, setNews] = useState<NewsItem[]>(() => {
-    const saved = localStorage.getItem('armax_news_v2');
-    return saved ? JSON.parse(saved) : demoNews;
-  });
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
 
   // Check auth state on mount
   useEffect(() => {
@@ -295,17 +259,54 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Load applications on mount and when authenticated
+  // Fetch news from Supabase
+  const fetchNews = useCallback(async () => {
+    if (!supabase || !isSupabaseConfigured) {
+      // Fallback to demo data if Supabase is not configured
+      setNews(demoNews);
+      setNewsLoading(false);
+      return;
+    }
+
+    setNewsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching news:', error);
+        // Fallback to demo data on error
+        setNews(demoNews);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        setNews(data.map(mapNewsRow));
+      } else {
+        // If no news in database, use demo data
+        setNews(demoNews);
+      }
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      setNews(demoNews);
+    } finally {
+      setNewsLoading(false);
+    }
+  }, []);
+
+  // Load applications when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       fetchApplications();
     }
   }, [isAuthenticated, fetchApplications]);
 
-  // Persist news to localStorage
+  // Load news on mount (published news are public)
   useEffect(() => {
-    localStorage.setItem('armax_news_v2', JSON.stringify(news));
-  }, [news]);
+    fetchNews();
+  }, [fetchNews]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     if (!supabase || !isSupabaseConfigured) {
@@ -399,35 +400,124 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addNews = (newsItem: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const now = new Date().toISOString();
-    const newNewsItem: NewsItem = {
-      ...newsItem,
-      id: Date.now().toString(),
-      slug: newsItem.slug || generateSlug(newsItem.title),
-      createdAt: now,
-      updatedAt: now
-    };
-    setNews(prev => [newNewsItem, ...prev]);
+  const addNews = async (newsItem: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const slug = newsItem.slug || generateSlug(newsItem.title);
+
+    if (!supabase || !isSupabaseConfigured) {
+      // Fallback to local state
+      const now = new Date().toISOString();
+      const newNewsItem: NewsItem = {
+        ...newsItem,
+        id: Date.now().toString(),
+        slug,
+        createdAt: now,
+        updatedAt: now
+      };
+      setNews(prev => [newNewsItem, ...prev]);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('news')
+        .insert({
+          title: newsItem.title,
+          slug,
+          content: newsItem.content,
+          preview_text: newsItem.previewText,
+          preview_image: newsItem.previewImage || null,
+          tags: newsItem.tags,
+          published: newsItem.published,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error adding news:', error);
+        return;
+      }
+
+      if (data) {
+        setNews(prev => [mapNewsRow(data), ...prev]);
+      }
+    } catch (error) {
+      console.error('Error adding news:', error);
+    }
   };
 
-  const updateNews = (id: string, updatedNews: Partial<NewsItem>) => {
-    setNews(prev => 
-      prev.map(item => {
-        if (item.id === id) {
-          return { 
-            ...item, 
-            ...updatedNews,
-            updatedAt: new Date().toISOString()
-          };
-        }
-        return item;
-      })
-    );
+  const updateNews = async (id: string, updatedNews: Partial<NewsItem>) => {
+    if (!supabase || !isSupabaseConfigured) {
+      // Fallback to local update
+      setNews(prev => 
+        prev.map(item => {
+          if (item.id === id) {
+            return { 
+              ...item, 
+              ...updatedNews,
+              updatedAt: new Date().toISOString()
+            };
+          }
+          return item;
+        })
+      );
+      return;
+    }
+
+    try {
+      // Map NewsItem fields to database columns
+      const updateData: Record<string, unknown> = {};
+      if (updatedNews.title !== undefined) updateData.title = updatedNews.title;
+      if (updatedNews.slug !== undefined) updateData.slug = updatedNews.slug;
+      if (updatedNews.content !== undefined) updateData.content = updatedNews.content;
+      if (updatedNews.previewText !== undefined) updateData.preview_text = updatedNews.previewText;
+      if (updatedNews.previewImage !== undefined) updateData.preview_image = updatedNews.previewImage;
+      if (updatedNews.tags !== undefined) updateData.tags = updatedNews.tags;
+      if (updatedNews.published !== undefined) updateData.published = updatedNews.published;
+
+      const { data, error } = await supabase
+        .from('news')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating news:', error);
+        return;
+      }
+
+      if (data) {
+        setNews(prev => 
+          prev.map(item => item.id === id ? mapNewsRow(data) : item)
+        );
+      }
+    } catch (error) {
+      console.error('Error updating news:', error);
+    }
   };
 
-  const deleteNews = (id: string) => {
-    setNews(prev => prev.filter(item => item.id !== id));
+  const deleteNews = async (id: string) => {
+    if (!supabase || !isSupabaseConfigured) {
+      // Fallback to local delete
+      setNews(prev => prev.filter(item => item.id !== id));
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('news')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting news:', error);
+        return;
+      }
+
+      setNews(prev => prev.filter(item => item.id !== id));
+    } catch (error) {
+      console.error('Error deleting news:', error);
+    }
   };
 
   const getPublishedNews = () => {
@@ -453,6 +543,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       updateApplicationStatus,
       deleteApplication,
       news,
+      newsLoading,
+      refreshNews: fetchNews,
       addNews,
       updateNews,
       deleteNews,

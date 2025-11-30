@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { openApplicationModal } = useApplicationModal();
 
   const navigation = [
     { name: "Главная", href: "/" },
@@ -22,7 +24,11 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto flex items-center justify-between px-6 py-4 lg:px-8">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link 
+          to="/" 
+          className="flex items-center"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
           <img src="/logo.svg" alt="Armax Logistics" className="h-9 w-auto" />
         </Link>
 
@@ -57,10 +63,10 @@ const Header = () => {
         {/* CTA Button */}
         <div className="hidden lg:block">
           <Button
-            asChild
             size="default"
+            onClick={openApplicationModal}
           >
-            <Link to="/contacts">Отправить заявку</Link>
+            Отправить заявку
           </Button>
         </div>
 
@@ -99,12 +105,13 @@ const Header = () => {
             })}
             <div className="pt-4">
               <Button
-                asChild
                 className="w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openApplicationModal();
+                }}
               >
-                <Link to="/contacts" onClick={() => setMobileMenuOpen(false)}>
-                  Отправить заявку
-                </Link>
+                Отправить заявку
               </Button>
             </div>
           </div>

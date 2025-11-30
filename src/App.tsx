@@ -18,6 +18,7 @@ import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 import NewsList from "./pages/NewsList";
 import NewsArticle from "./pages/NewsArticle";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // Admin imports
 import { AdminProvider } from "./contexts/AdminContext";
@@ -26,6 +27,9 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import Dashboard from "./pages/admin/Dashboard";
 import Applications from "./pages/admin/Applications";
 import News from "./pages/admin/News";
+
+// Modal imports
+import { ApplicationModalProvider } from "./contexts/ApplicationModalContext";
 
 const queryClient = new QueryClient();
 
@@ -55,8 +59,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <ScrollToTop />
-          <MainLayout>
+          <ApplicationModalProvider>
+            <ScrollToTop />
+            <MainLayout>
             <Routes>
               {/* Public routes */}
               <Route path="/" element={<Index />} />
@@ -68,6 +73,7 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/news" element={<NewsList />} />
               <Route path="/news/:slug" element={<NewsArticle />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
               
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
@@ -79,6 +85,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </MainLayout>
+          </ApplicationModalProvider>
         </BrowserRouter>
       </AdminProvider>
     </TooltipProvider>

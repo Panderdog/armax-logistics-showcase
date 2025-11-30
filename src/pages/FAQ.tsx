@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { ChevronDown, HelpCircle, Phone, MessageCircle, ArrowRight, Search } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 interface FAQItem {
   question: string;
@@ -15,6 +15,7 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const { openApplicationModal } = useApplicationModal();
 
   const categories = [
     { id: "all", name: "Все вопросы" },
@@ -129,7 +130,7 @@ const FAQ = () => {
         </section>
 
         {/* FAQ Content */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               {/* Search and filters */}
@@ -235,11 +236,9 @@ const FAQ = () => {
                       +7 (812) 644-02-91
                     </a>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="group">
-                    <Link to="/contacts">
-                      Написать нам
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </Link>
+                  <Button size="lg" variant="outline" className="group" onClick={openApplicationModal}>
+                    Написать нам
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </div>
               </div>

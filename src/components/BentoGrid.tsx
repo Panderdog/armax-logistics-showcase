@@ -3,10 +3,7 @@ import { Link } from "react-router-dom";
 
 const BentoGrid = () => {
   return (
-    <section className="py-20 lg:py-28 bg-background relative overflow-hidden">
-      {/* Subtle background decoration */}
-      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-accent/5 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" />
+    <section className="py-20 lg:py-20 bg-background relative overflow-hidden">
       
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         {/* Section header */}
@@ -114,30 +111,38 @@ const BentoGrid = () => {
           </Link>
 
           {/* Страхование */}
-          <div className="group relative rounded-3xl overflow-hidden bg-card border border-border/50 p-6 lg:p-8 hover:border-accent/30 hover:shadow-large transition-all duration-500 cursor-pointer">
-            <div className="h-full flex flex-col">
-              <div className="mb-4 inline-flex p-3 rounded-xl bg-accent/10 text-accent w-fit group-hover:bg-accent group-hover:text-white transition-colors duration-500">
+          <div className="group relative rounded-3xl overflow-hidden p-6 lg:p-8 hover:shadow-xl transition-all duration-500 cursor-pointer bg-gradient-to-br from-amber-50 via-orange-100 to-rose-100 border-2 border-accent/30 hover:border-accent/60">
+            {/* Decorative glow */}
+            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-accent/30 rounded-full blur-3xl" />
+            <div className="absolute -top-4 -left-4 w-24 h-24 bg-orange-300/20 rounded-full blur-2xl" />
+            
+            <div className="relative h-full flex flex-col">
+              <div className="mb-4 inline-flex p-3 rounded-xl bg-accent/15 text-accent w-fit group-hover:bg-accent group-hover:text-white transition-colors duration-500 group-hover:shadow-lg group-hover:shadow-accent/30">
                 <Shield className="h-6 w-6" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+              <h3 className="text-xl font-bold text-accent mb-2">
                 Страхование
               </h3>
-              <p className="text-muted-foreground text-sm flex-1">
+              <p className="text-foreground/70 text-sm flex-1">
                 100% защита груза
               </p>
             </div>
           </div>
 
           {/* Персональный менеджер */}
-          <div className="group relative rounded-3xl overflow-hidden bg-card border border-border/50 p-6 lg:p-8 hover:border-accent/30 hover:shadow-large transition-all duration-500 cursor-pointer">
-            <div className="h-full flex flex-col">
-              <div className="mb-4 inline-flex p-3 rounded-xl bg-accent/10 text-accent w-fit group-hover:bg-accent group-hover:text-white transition-colors duration-500">
+          <div className="group relative rounded-3xl overflow-hidden p-6 lg:p-8 hover:shadow-xl transition-all duration-500 cursor-pointer bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 border-2 border-primary/20 hover:border-primary/40">
+            {/* Decorative glow */}
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-primary/20 rounded-full blur-3xl" />
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-indigo-300/20 rounded-full blur-2xl" />
+            
+            <div className="relative h-full flex flex-col">
+              <div className="mb-4 inline-flex p-3 rounded-xl bg-primary/15 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-colors duration-500 group-hover:shadow-lg group-hover:shadow-primary/30">
                 <HeadphonesIcon className="h-6 w-6" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                 Поддержка 24/7
               </h3>
-              <p className="text-muted-foreground text-sm flex-1">
+              <p className="text-foreground/70 text-sm flex-1">
                 Личный менеджер
               </p>
             </div>

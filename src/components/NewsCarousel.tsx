@@ -52,7 +52,7 @@ const NewsCarousel = () => {
   if (news.length === 0) return null;
 
   return (
-    <section className="py-20 lg:py-28 bg-background overflow-hidden">
+    <section className="py-20 lg:py-20 bg-background overflow-hidden">
       <div className="container mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 lg:mb-16">

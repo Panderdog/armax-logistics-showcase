@@ -4,9 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, ArrowRight, Newspaper } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { useApplicationModal } from '@/contexts/ApplicationModalContext';
 
 const NewsList = () => {
   const { getPublishedNews } = useAdmin();
+  const { openApplicationModal } = useApplicationModal();
   const news = getPublishedNews();
 
   const formatDate = (dateString: string) => {
@@ -32,7 +34,7 @@ const NewsList = () => {
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
           {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/images/ship.jpg')] bg-cover bg-center opacity-15" />
+          <div className="absolute inset-0 bg-[url('/images/ship.jpg')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
           <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-accent/10 rounded-full blur-[100px]" />
@@ -48,7 +50,7 @@ const NewsList = () => {
                 <span className="text-accent">от Armax</span>
               </h1>
               <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
-                Следите за последними событиями, новыми маршрутами и развитием компании
+                Следите за последними событиями, новыми маршрутами<br />и развитием компании
               </p>
             </div>
           </div>
@@ -56,7 +58,7 @@ const NewsList = () => {
 
         {news.length === 0 ? (
           /* Empty State */
-          <section className="py-20 lg:py-28 bg-background">
+          <section className="py-20 lg:py-20 bg-background">
             <div className="container mx-auto px-6 lg:px-8">
               <div className="text-center py-20">
                 <div className="w-24 h-24 mx-auto mb-8 rounded-3xl bg-secondary flex items-center justify-center">
@@ -66,8 +68,8 @@ const NewsList = () => {
                 <p className="text-muted-foreground mb-8 max-w-md mx-auto">
                   Скоро здесь появятся актуальные публикации о нашей работе и новых услугах
                 </p>
-                <Button asChild>
-                  <Link to="/contacts">Связаться с нами</Link>
+                <Button onClick={openApplicationModal}>
+                  Связаться с нами
                 </Button>
               </div>
             </div>
@@ -76,7 +78,7 @@ const NewsList = () => {
           <>
             {/* Featured News */}
             {featuredNews && (
-              <section className="py-20 lg:py-28 bg-background">
+              <section className="py-20 lg:py-20 bg-background">
                 <div className="container mx-auto px-6 lg:px-8">
                   <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                     {/* Image */}
@@ -94,18 +96,18 @@ const NewsList = () => {
                           </div>
                         )}
                       </div>
-                      {/* Floating date card */}
-                      <div className="absolute -bottom-6 -right-6 bg-card rounded-2xl shadow-large border border-border/50 p-6">
-                        <div className="text-sm text-muted-foreground mb-1">Опубликовано</div>
-                        <div className="text-lg font-bold text-foreground">{formatDate(featuredNews.createdAt)}</div>
-                      </div>
                     </Link>
 
                     {/* Content */}
                     <div className="space-y-6">
-                      <span className="inline-block px-4 py-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                        Последняя новость
-                      </span>
+                      <div className="flex items-center gap-4">
+                        <span className="inline-block px-4 py-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+                          Последняя новость
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDate(featuredNews.createdAt)}
+                        </span>
+                      </div>
                       <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
                         <Link 
                           to={`/news/${featuredNews.slug}`}
@@ -140,7 +142,7 @@ const NewsList = () => {
 
             {/* Other News Grid */}
             {otherNews.length > 0 && (
-              <section className="py-20 lg:py-28 bg-secondary/30">
+              <section className="py-20 lg:py-20 bg-secondary/30">
                 <div className="container mx-auto px-6 lg:px-8">
                   <div className="text-center max-w-3xl mx-auto mb-16">
                     <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
@@ -231,7 +233,7 @@ const NewsList = () => {
             )}
 
             {/* CTA Section */}
-            <section className="py-20 lg:py-28 bg-background">
+            <section className="py-20 lg:py-20 bg-background">
               <div className="container mx-auto px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
                   <div className="relative p-12 lg:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark overflow-hidden">
@@ -247,14 +249,12 @@ const NewsList = () => {
                         Расскажите о вашей задаче — мы предложим оптимальное решение по доставке груза
                       </p>
                       <Button
-                        asChild
                         size="lg"
                         className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group"
+                        onClick={openApplicationModal}
                       >
-                        <Link to="/contacts">
-                          Связаться с нами
-                          <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                        </Link>
+                        Связаться с нами
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                       </Button>
                     </div>
                   </div>

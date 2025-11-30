@@ -182,7 +182,7 @@ const Contacts = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-15" />
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-0 left-1/3 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
           
@@ -238,7 +238,7 @@ const Contacts = () => {
         </section>
 
         {/* Main Content */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 max-w-6xl mx-auto">
               {/* Left side - Messengers & Info */}
@@ -457,7 +457,10 @@ const Contacts = () => {
                         </Button>
                         
                         <p className="text-xs text-muted-foreground text-center">
-                          Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
+                          Нажимая кнопку, вы соглашаетесь с{" "}
+                          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+                            политикой конфиденциальности
+                          </a>
                         </p>
                       </form>
                     </>

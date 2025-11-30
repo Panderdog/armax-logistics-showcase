@@ -4,8 +4,11 @@ import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import LogisticsMap from "@/components/LogisticsMap";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const Geography = () => {
+  const { openApplicationModal } = useApplicationModal();
+
   const routes = [
     {
       from: "Китай",
@@ -101,7 +104,7 @@ const Geography = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-0 left-1/3 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]" />
@@ -113,12 +116,12 @@ const Geography = () => {
                 География
               </span>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
-                Азия → Россия
+                Международная география
                 <br />
-                <span className="text-accent">кратчайшим путём</span>
+                <span className="text-accent">поставок</span>
               </h1>
               <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
-                Специализируемся на перевозках из Китая и стран АТР. Все виды транспорта, оптимальные маршруты.
+                Организуем поставки из Азии, Европы, Турции и других регионов. Все виды транспорта, оптимальные маршруты.
               </p>
             </div>
           </div>
@@ -143,7 +146,7 @@ const Geography = () => {
         </section>
 
         {/* Countries Grid */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
@@ -175,7 +178,7 @@ const Geography = () => {
         </section>
 
         {/* Routes Section */}
-        <section className="py-20 lg:py-28 bg-secondary/30">
+        <section className="py-20 lg:py-20 bg-secondary/30">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
@@ -234,7 +237,7 @@ const Geography = () => {
         </section>
 
         {/* China Focus */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
               {/* Content */}
@@ -265,11 +268,9 @@ const Geography = () => {
                   ))}
                 </div>
 
-                <Button asChild size="lg" className="group">
-                  <Link to="/contacts">
-                    Рассчитать доставку из Китая
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                <Button size="lg" className="group" onClick={openApplicationModal}>
+                  Рассчитать доставку из Китая
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </div>
 
@@ -298,8 +299,8 @@ const Geography = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-20 lg:py-28 bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
+        <section className="py-20 lg:py-20 bg-primary relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
           
@@ -313,14 +314,12 @@ const Geography = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
-                  asChild
                   size="lg"
                   className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group shadow-glow"
+                  onClick={openApplicationModal}
                 >
-                  <Link to="/contacts">
-                    Рассчитать доставку
-                    <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
-                  </Link>
+                  Рассчитать доставку
+                  <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
                 </Button>
                 <Button
                   asChild

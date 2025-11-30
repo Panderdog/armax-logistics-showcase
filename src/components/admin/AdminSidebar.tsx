@@ -46,11 +46,8 @@ const AdminSidebar = () => {
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-card">
       {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b border-border px-6">
-        <Link to="/admin" className="flex items-center gap-3">
+        <Link to="/admin" className="flex items-center">
           <img src="/logo.svg" alt="Armax" className="h-8 w-auto" />
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            Admin
-          </span>
         </Link>
       </div>
 

@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const { openApplicationModal } = useApplicationModal();
 
   useEffect(() => {
     // Preload video on mount for faster display
@@ -79,14 +81,12 @@ const HeroSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Button
-              asChild
               size="lg"
               className="text-base px-8 py-6 h-auto group shadow-glow hover:shadow-[0_20px_60px_-10px_hsl(14_90%_53%/0.5)] hover:scale-105 transition-all duration-500"
+              onClick={openApplicationModal}
             >
-              <Link to="/contacts">
-                Получить предложение
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
-              </Link>
+              Получить предложение
+              <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
             </Button>
             <Button
               asChild
@@ -130,14 +130,12 @@ const HeroSection = () => {
           </p>
           <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Button
-              asChild
               size="lg"
               className="text-base lg:text-lg px-8 lg:px-10 py-6 lg:py-7 h-auto group shadow-glow hover:shadow-[0_20px_60px_-10px_hsl(14_90%_53%/0.5)] hover:scale-105 transition-all duration-500"
+              onClick={openApplicationModal}
             >
-              <Link to="/contacts">
-                Рассчитать доставку
-                <ArrowRight className="ml-3 h-5 w-5 lg:h-6 lg:w-6 transition-transform duration-300 group-hover:translate-x-2" />
-              </Link>
+              Рассчитать доставку
+              <ArrowRight className="ml-3 h-5 w-5 lg:h-6 lg:w-6 transition-transform duration-300 group-hover:translate-x-2" />
             </Button>
           </div>
         </div>

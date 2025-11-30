@@ -1,5 +1,6 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useAdmin } from '@/contexts/AdminContext';
+import { useApplicationModal } from '@/contexts/ApplicationModalContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, ArrowLeft, Tag, ArrowRight, Newspaper } from 'lucide-react';
@@ -38,6 +39,7 @@ function parseContent(content: string): string {
 const NewsArticle = () => {
   const { slug } = useParams<{ slug: string }>();
   const { getNewsBySlug, getPublishedNews } = useAdmin();
+  const { openApplicationModal } = useApplicationModal();
   
   const article = slug ? getNewsBySlug(slug) : undefined;
   const allNews = getPublishedNews();
@@ -167,11 +169,9 @@ const NewsArticle = () => {
                   Свяжитесь с нами для расчёта стоимости доставки
                 </p>
               </div>
-              <Button asChild size="lg" className="group">
-                <Link to="/contacts">
-                  Связаться
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Link>
+              <Button size="lg" className="group" onClick={openApplicationModal}>
+                Связаться
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </div>
           </div>
@@ -179,7 +179,7 @@ const NewsArticle = () => {
 
         {/* Other News */}
         {otherNews.length > 0 && (
-          <section className="py-20 lg:py-28 bg-background">
+          <section className="py-20 lg:py-20 bg-background">
             <div className="container mx-auto px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto mb-16">
                 <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">

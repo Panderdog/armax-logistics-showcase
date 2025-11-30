@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Truck, Ship, Plane, FileCheck, ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const Services = () => {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [activeService, setActiveService] = useState(0);
+  const { openApplicationModal } = useApplicationModal();
 
   const services = [
     {
+      id: "sea",
       icon: Ship,
       title: "Морские перевозки",
       shortTitle: "Море",
@@ -27,6 +32,7 @@ const Services = () => {
       bgColor: "bg-blue-500/10",
     },
     {
+      id: "auto",
       icon: Truck,
       title: "Автоперевозки",
       shortTitle: "Авто",
@@ -44,6 +50,7 @@ const Services = () => {
       bgColor: "bg-accent/10",
     },
     {
+      id: "aviation",
       icon: Plane,
       title: "Авиадоставка",
       shortTitle: "Авиа",
@@ -61,6 +68,7 @@ const Services = () => {
       bgColor: "bg-violet-500/10",
     },
     {
+      id: "customs",
       icon: FileCheck,
       title: "Таможенное оформление",
       shortTitle: "Таможня",
@@ -79,6 +87,61 @@ const Services = () => {
     },
   ];
 
+  // Плавная анимация прокрутки с easing
+  const smoothScrollTo = (targetPosition: number, duration: number = 1000) => {
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    let start: number | null = null;
+
+    const easeInOutCubic = (t: number): number => {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+
+    const animation = (currentTime: number) => {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const progress = Math.min(timeElapsed / duration, 1);
+      const ease = easeInOutCubic(progress);
+      
+      window.scrollTo(0, startPosition + distance * ease);
+      
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
+  // Обработка параметра service из URL (location.key меняется при каждой навигации)
+  useEffect(() => {
+    const serviceParam = searchParams.get('service');
+    if (serviceParam) {
+      const serviceIndex = services.findIndex(s => s.id === serviceParam);
+      if (serviceIndex !== -1) {
+        setActiveService(serviceIndex);
+        // Прокручиваем к секции с контентом услуги после загрузки
+        setTimeout(() => {
+          const serviceSection = document.getElementById('service-content');
+          if (serviceSection) {
+            const targetPosition = serviceSection.getBoundingClientRect().top + window.pageYOffset - 96;
+            smoothScrollTo(targetPosition, 1200);
+          }
+        }, 150);
+      }
+    }
+  }, [searchParams, location.key]);
+
+  const handleServiceClick = (index: number) => {
+    setActiveService(index);
+    // Плавная прокрутка к секции с контентом услуги
+    const serviceSection = document.getElementById('service-content');
+    if (serviceSection) {
+      const targetPosition = serviceSection.getBoundingClientRect().top + window.pageYOffset - 96;
+      smoothScrollTo(targetPosition, 800);
+    }
+  };
+
   const currentService = services[activeService];
 
   return (
@@ -93,7 +156,7 @@ const Services = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/images/port-by-air.webp')] bg-cover bg-center opacity-15" />
+          <div className="absolute inset-0 bg-[url('/images/port-by-air.webp')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
           
@@ -108,21 +171,21 @@ const Services = () => {
                 <span className="text-accent">решения под ключ</span>
               </h1>
               <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
-                От забора груза до доставки получателю — берём на себя всё
+                Мы управляем логистикой — вы управляете бизнесом.
               </p>
             </div>
           </div>
         </section>
 
         {/* Interactive Services Section */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             {/* Service tabs */}
             <div className="flex flex-wrap gap-3 mb-12 lg:mb-16">
               {services.map((service, index) => (
                 <button
-                  key={index}
-                  onClick={() => setActiveService(index)}
+                  key={service.id}
+                  onClick={() => handleServiceClick(index)}
                   className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-500 ${
                     activeService === index
                       ? `bg-gradient-to-r ${service.color} text-white shadow-large`
@@ -137,7 +200,7 @@ const Services = () => {
             </div>
 
             {/* Service content */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div id="service-content" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center scroll-mt-24">
               {/* Image */}
               <div className="relative group">
                 <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large">
@@ -148,14 +211,10 @@ const Services = () => {
                     style={activeService === 0 ? { objectPosition: 'right' } : undefined}
                   />
                 </div>
-                {/* Floating stats cards */}
+                {/* Floating stats card */}
                 <div className="absolute -bottom-6 -right-6 bg-card rounded-2xl shadow-large border border-border/50 p-6 animate-fade-in">
                   <div className="text-sm text-muted-foreground mb-1">Сроки</div>
                   <div className="text-2xl font-bold text-foreground">{currentService.stats.time}</div>
-                </div>
-                <div className="absolute -top-6 -left-6 bg-card rounded-2xl shadow-large border border-border/50 p-6 animate-fade-in">
-                  <div className="text-sm text-muted-foreground mb-1">Стоимость</div>
-                  <div className="text-2xl font-bold text-accent">{currentService.stats.price}</div>
                 </div>
               </div>
 
@@ -190,11 +249,9 @@ const Services = () => {
                   ))}
                 </div>
 
-                <Button asChild size="lg" className="group mt-4">
-                  <Link to="/contacts">
-                    Заказать услугу
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                <Button size="lg" className="group mt-4" onClick={openApplicationModal}>
+                  Заказать услугу
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </div>
             </div>
@@ -202,7 +259,7 @@ const Services = () => {
         </section>
 
         {/* All Services Overview */}
-        <section className="py-20 lg:py-28 bg-secondary/30">
+        <section className="py-20 lg:py-20 bg-secondary/30">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
@@ -219,8 +276,8 @@ const Services = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
               {services.map((service, index) => (
                 <div
-                  key={index}
-                  onClick={() => setActiveService(index)}
+                  key={service.id}
+                  onClick={() => handleServiceClick(index)}
                   className="group relative p-8 lg:p-10 rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large hover:-translate-y-2 cursor-pointer overflow-hidden"
                 >
                   {/* Background gradient on hover */}
@@ -255,7 +312,7 @@ const Services = () => {
         </section>
 
         {/* Why Choose Us */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
               <div>
@@ -301,7 +358,7 @@ const Services = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-20 lg:py-28 bg-primary relative overflow-hidden">
+        <section className="py-20 lg:py-20 bg-primary relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
@@ -315,14 +372,12 @@ const Services = () => {
                 Получите расчёт стоимости доставки за 30 минут
               </p>
               <Button
-                asChild
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group shadow-glow"
+                onClick={openApplicationModal}
               >
-                <Link to="/contacts">
-                  Рассчитать доставку
-                  <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
-                </Link>
+                Рассчитать доставку
+                <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
               </Button>
             </div>
           </div>

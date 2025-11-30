@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowRight, Phone, Mail, MessageCircle } from "lucide-react";
+import { ArrowRight, Phone, Mail, MessageCircle, Send } from "lucide-react";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const CTASection = () => {
+  const { openApplicationModal } = useApplicationModal();
+
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background image with overlay */}
@@ -35,14 +37,12 @@ const CTASection = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button
-              asChild
               size="lg"
               className="text-lg px-10 py-7 h-auto group shadow-glow hover:shadow-[0_20px_60px_-10px_hsl(14_90%_53%/0.5)] hover:scale-105 transition-all duration-500"
+              onClick={openApplicationModal}
             >
-              <Link to="/contacts">
-                Получить расчёт бесплатно
-                <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
-              </Link>
+              Получить расчёт бесплатно
+              <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
             </Button>
             <Button
               asChild
@@ -81,6 +81,15 @@ const CTASection = () => {
             >
               <MessageCircle className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
               <span>WhatsApp</span>
+            </a>
+            <a 
+              href="https://t.me/armaxlogistics" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-white transition-colors group"
+            >
+              <Send className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
+              <span>Telegram</span>
             </a>
           </div>
         </div>

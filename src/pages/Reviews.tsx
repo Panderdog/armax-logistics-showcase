@@ -1,10 +1,12 @@
 import { Star, Quote, ArrowRight, TrendingUp, CheckCircle, Clock, Building2 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
+import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const Reviews = () => {
+  const { openApplicationModal } = useApplicationModal();
+
   const testimonials = [
     {
       name: "Александр Петров",
@@ -104,7 +106,7 @@ const Reviews = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-15" />
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
           
@@ -120,7 +122,7 @@ const Reviews = () => {
                 <span className="text-accent">500+ компаний</span>
               </h1>
               <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
-                Реальные истории успешного сотрудничества и решённых задач
+                Реальные истории успешного сотрудничества<br />и решённых задач
               </p>
             </div>
           </div>
@@ -145,7 +147,7 @@ const Reviews = () => {
         </section>
 
         {/* Testimonials Grid */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
@@ -203,7 +205,7 @@ const Reviews = () => {
         </section>
 
         {/* Case Studies */}
-        <section className="py-20 lg:py-28 bg-secondary/30">
+        <section className="py-20 lg:py-20 bg-secondary/30">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
@@ -276,7 +278,7 @@ const Reviews = () => {
         </section>
 
         {/* CTA */}
-        <section className="py-20 lg:py-28 bg-background">
+        <section className="py-20 lg:py-20 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               <div className="relative p-12 lg:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark overflow-hidden text-center">
@@ -292,14 +294,12 @@ const Reviews = () => {
                     Присоединяйтесь к 500+ компаниям, которые доверяют нам свою логистику
                   </p>
                   <Button
-                    asChild
                     size="lg"
                     className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group"
+                    onClick={openApplicationModal}
                   >
-                    <Link to="/contacts">
-                      Получить предложение
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </Link>
+                    Получить предложение
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </div>
               </div>

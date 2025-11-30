@@ -22,7 +22,7 @@ const stats: StatItem[] = [
     suffix: "+",
     label: "стран партнёров",
     icon: Globe,
-    description: "Европа, Азия, СНГ",
+    description: "Азия, Европа, СНГ",
   },
   {
     value: 5000,
@@ -107,7 +107,6 @@ const StatsSection = () => {
       className="relative py-24 lg:py-32 bg-primary overflow-hidden"
     >
       {/* Atmospheric background */}
-      <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-15" />
       <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary/90 to-primary" />
       
       {/* Animated gradient orb */}
