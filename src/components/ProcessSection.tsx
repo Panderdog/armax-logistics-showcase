@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageSquare, Calculator, Truck, CheckCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
@@ -44,11 +44,253 @@ const steps = [
 
 const ProcessSection = () => {
   const [activeStep, setActiveStep] = useState(1);
+  const stepRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const scrollFrameRef = useRef<number | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const isScrollLockedRef = useRef(false);
+  const canLockRef = useRef(true);
+  const manualOverrideRef = useRef(false);
+  const ignoreViewportSyncRef = useRef(false);
+  const touchStartYRef = useRef<number | null>(null);
+  const wheelDeltaRef = useRef(0);
+  const touchDeltaRef = useRef(0);
+  const stepScrollEnabledRef = useRef(true);
+  const stepEnableTimeoutRef = useRef<number | null>(null);
+  const scrollCooldownRef = useRef(false);
+  const [isScrollLocked, setIsScrollLocked] = useState(false);
   const { openApplicationModal } = useApplicationModal();
   const currentStep = steps.find((s) => s.id === activeStep) || steps[0];
 
+  useEffect(() => {
+    const updateActiveStepByScroll = () => {
+      if (!isScrollLockedRef.current) return;
+      if (ignoreViewportSyncRef.current) return;
+      const viewportHeight = window.innerHeight;
+      const zoneTop = viewportHeight * 0.35;
+      const zoneBottom = viewportHeight * 0.65;
+      const zoneCenter = viewportHeight * 0.5;
+
+      let bestStepId: number | null = null;
+      let bestDistance = Number.POSITIVE_INFINITY;
+
+      stepRefs.current.forEach((el, index) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const isInComfortZone = rect.top < zoneBottom && rect.bottom > zoneTop;
+        if (!isInComfortZone) return;
+
+        const elementCenter = rect.top + rect.height / 2;
+        const distanceToCenter = Math.abs(elementCenter - zoneCenter);
+
+        if (distanceToCenter < bestDistance) {
+          bestDistance = distanceToCenter;
+          bestStepId = steps[index]?.id ?? null;
+        }
+      });
+
+      if (bestStepId !== null) {
+        setActiveStep((prev) => (prev === bestStepId ? prev : bestStepId));
+      }
+    };
+
+    const handleScroll = () => {
+      if (scrollFrameRef.current) {
+        cancelAnimationFrame(scrollFrameRef.current);
+      }
+      scrollFrameRef.current = requestAnimationFrame(updateActiveStepByScroll);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      if (scrollFrameRef.current) {
+        cancelAnimationFrame(scrollFrameRef.current);
+      }
+      if (stepEnableTimeoutRef.current) {
+        clearTimeout(stepEnableTimeoutRef.current);
+      }
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const lockIfCentered = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const zoneTop = viewportHeight * -0.1;
+      const zoneBottom = viewportHeight * 0.9;
+
+      const isOutsideComfort = rect.bottom < zoneTop || rect.top > zoneBottom;
+      if (isOutsideComfort) {
+        if (isScrollLockedRef.current) {
+          isScrollLockedRef.current = false;
+          setIsScrollLocked(false);
+          stepScrollEnabledRef.current = true;
+          wheelDeltaRef.current = 0;
+          touchDeltaRef.current = 0;
+          if (stepEnableTimeoutRef.current) {
+            clearTimeout(stepEnableTimeoutRef.current);
+          }
+        }
+        canLockRef.current = true;
+        ignoreViewportSyncRef.current = false;
+        manualOverrideRef.current = false;
+      }
+
+      // Лочим только когда почти весь блок в кадре, иначе даём странице скроллиться свободно.
+      if (manualOverrideRef.current) return;
+      const shouldLock = rect.top <= zoneTop && rect.bottom >= zoneBottom;
+      if (shouldLock && canLockRef.current && !isScrollLockedRef.current) {
+        canLockRef.current = false;
+        ignoreViewportSyncRef.current = true;
+        isScrollLockedRef.current = true;
+        setIsScrollLocked(true);
+        stepScrollEnabledRef.current = false;
+        if (stepEnableTimeoutRef.current) {
+          clearTimeout(stepEnableTimeoutRef.current);
+        }
+        stepEnableTimeoutRef.current = window.setTimeout(() => {
+          stepScrollEnabledRef.current = true;
+        }, 220);
+      }
+    };
+
+    lockIfCentered();
+    window.addEventListener("scroll", lockIfCentered, { passive: true });
+    window.addEventListener("resize", lockIfCentered);
+
+    return () => {
+      window.removeEventListener("scroll", lockIfCentered);
+      window.removeEventListener("resize", lockIfCentered);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isScrollLocked) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      isScrollLockedRef.current = true;
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        isScrollLockedRef.current = false;
+      };
+    }
+    isScrollLockedRef.current = false;
+  }, [isScrollLocked]);
+
+  useEffect(() => {
+    const unlockAndNudge = (direction: 1 | -1) => {
+      isScrollLockedRef.current = false;
+      setIsScrollLocked(false);
+      ignoreViewportSyncRef.current = true;
+      setTimeout(() => {
+        if (!sectionRef.current) return;
+        const rect = sectionRef.current.getBoundingClientRect();
+        const currentScroll = window.scrollY;
+        const viewportHeight = window.innerHeight;
+        const nudge = 12;
+
+        if (direction > 0) {
+          // После последней карты плавно выводим секцию за пределы экрана вниз.
+          const target = currentScroll + rect.bottom - viewportHeight + nudge;
+          window.scrollTo({ top: target, behavior: "smooth" });
+        } else {
+          // При выходе вверх также мягко выталкиваем секцию.
+          const target = currentScroll + rect.top - nudge;
+          window.scrollTo({ top: target, behavior: "smooth" });
+        }
+      }, 0);
+    };
+
+    const scheduleCooldown = () => {
+      scrollCooldownRef.current = true;
+      setTimeout(() => {
+        scrollCooldownRef.current = false;
+      }, 280);
+    };
+
+    const handleStepScroll = (direction: 1 | -1) => {
+      if (!stepScrollEnabledRef.current) return;
+      if (scrollCooldownRef.current) return;
+      scheduleCooldown();
+      setActiveStep((prev) => {
+        const next = Math.min(steps.length, Math.max(1, prev + direction));
+        if (next === prev) {
+          if (prev === steps.length && direction > 0) {
+            unlockAndNudge(1);
+          } else if (prev === 1 && direction < 0) {
+            unlockAndNudge(-1);
+          }
+          return prev;
+        }
+        return next;
+      });
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (!isScrollLockedRef.current) return;
+      const deltaY = event.deltaY;
+      if (Math.abs(deltaY) < 2) return;
+      event.preventDefault();
+
+      const direction = deltaY > 0 ? 1 : -1;
+      if (Math.sign(wheelDeltaRef.current) !== direction) {
+        wheelDeltaRef.current = 0;
+      }
+      wheelDeltaRef.current += deltaY;
+
+      const threshold = 140;
+      if (Math.abs(wheelDeltaRef.current) >= threshold) {
+        wheelDeltaRef.current = 0;
+        handleStepScroll(direction);
+      }
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (!isScrollLockedRef.current) return;
+      touchStartYRef.current = event.touches[0]?.clientY ?? null;
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (!isScrollLockedRef.current) return;
+      if (touchStartYRef.current === null) return;
+      const deltaY = touchStartYRef.current - (event.touches[0]?.clientY ?? touchStartYRef.current);
+      if (Math.abs(deltaY) < 6) return;
+      event.preventDefault();
+
+      const direction = deltaY > 0 ? 1 : -1;
+      if (Math.sign(touchDeltaRef.current) !== direction) {
+        touchDeltaRef.current = 0;
+      }
+      touchDeltaRef.current += deltaY;
+
+      const threshold = 80;
+      if (Math.abs(touchDeltaRef.current) >= threshold) {
+        touchDeltaRef.current = 0;
+        handleStepScroll(direction);
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
+
   return (
-    <section className="py-20 lg:py-20 bg-background relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-20 lg:py-20 bg-background relative overflow-hidden"
+    >
       {/* Subtle background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--accent)/0.05),transparent)]" />
       
@@ -73,11 +315,19 @@ const ProcessSection = () => {
             {steps.map((step) => (
               <button
                 key={step.id}
-                onClick={() => setActiveStep(step.id)}
-                className={`w-full text-left p-6 rounded-2xl border transition-all duration-500 group ${
+                ref={(el) => {
+                  stepRefs.current[step.id - 1] = el;
+                }}
+                onClick={() => {
+                  if (!isScrollLockedRef.current) {
+                    manualOverrideRef.current = true;
+                  }
+                  setActiveStep(step.id);
+                }}
+                className={`w-full text-left p-6 rounded-2xl border transition-all duration-500 ease-out group ${
                   activeStep === step.id
-                    ? "bg-card border-accent/30 shadow-large"
-                    : "bg-transparent border-border/50 hover:border-border hover:bg-card/50"
+                    ? "bg-card border-accent/30 shadow-large scale-[1.01] opacity-100"
+                    : "bg-transparent border-border/50 hover:border-border hover:bg-card/50 opacity-70 hover:opacity-100"
                 }`}
               >
                 <div className="flex items-center gap-5">
