@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Truck, Ship, Plane, FileCheck, ArrowRight, Check, ChevronRight } from "lucide-react";
+import { Truck, Ship, Plane, Train, Package, FileCheck, Warehouse, Shield, ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams, useLocation } from "react-router-dom";
 import SEO from "@/components/SEO";
@@ -16,76 +16,156 @@ const Services = () => {
     {
       id: "sea",
       icon: Ship,
-      title: "Морские перевозки",
+      title: "Морские перевозки из Азии и Турции",
       shortTitle: "Море",
-      description: "Контейнерные перевозки морем из ключевых портов Азии. Работаем с ведущими мировыми линиями для обеспечения оптимальных ставок и сроков.",
+      subtitle: "Надёжная доставка контейнеров с оптимальными сроками и тарифами.",
+      description: "Организуем полный цикл морской перевозки: забор груза, документация, подбор линий, контроль на каждом этапе. Работаем с FCL, LCL и мультимодальными схемами, обеспечивая стабильные сроки и выгодную стоимость доставки.",
       features: [
         "FCL и LCL контейнеры",
         "Мультимодальные перевозки",
-        "Консолидация грузов в Китае",
-        "Страхование грузов",
-        "Доставка до двери",
+        "Консолидация грузов",
+        "Подбор оптимальных линий",
+        "Контроль на каждом этапе",
       ],
-      stats: { time: "от 25 дней", price: "от $1500" },
-      image: "/images/port-by-air.webp",
-      color: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-500/10",
+      image: "/images/service-images/sea-service.webp",
+      color: "from-blue-700 to-blue-500",
+      bgColor: "bg-blue-700/10",
+    },
+    {
+      id: "aviation",
+      icon: Plane,
+      title: "Авиаперевозки грузов",
+      shortTitle: "Авиа",
+      subtitle: "Самый быстрый способ международной доставки.",
+      description: "Полная организация воздушной логистики: приём груза, подготовка документов, контроль расписаний и отправок. Используем проверенные авиалинии, обеспечиваем точные сроки, безопасность и прозрачный контроль движения.",
+      features: [
+        "Проверенные авиалинии",
+        "Точные сроки доставки",
+        "Контроль расписаний",
+        "Безопасность груза",
+        "Прозрачный мониторинг",
+      ],
+      image: "/images/service-images/air-service.webp",
+      color: "from-sky-500 to-blue-500",
+      bgColor: "bg-sky-500/10",
     },
     {
       id: "auto",
       icon: Truck,
-      title: "Автоперевозки",
+      title: "Автоперевозки из Азии, Турции и Европы",
       shortTitle: "Авто",
-      description: "Надёжная доставка грузов автотранспортом по Европе, СНГ и России. Работаем с проверенными перевозчиками и обеспечиваем полный контроль.",
+      subtitle: "Быстрая доставка оптимальным маршрутом «до двери».",
+      description: "Автомобильная логистика обеспечивает точные сроки, гибкость маршрутов и оптимальное сочетание стоимости и скорости. Формируем индивидуальные схемы движения, контролируем груз на всех этапах и обеспечиваем стабильный сервис.",
       features: [
-        "FTL и LTL перевозки",
-        "Температурный режим",
-        "Сборные грузы",
-        "Экспресс-доставка",
-        "GPS-мониторинг",
+        "Гибкость маршрутов",
+        "Доставка «до двери»",
+        "Индивидуальные схемы",
+        "Контроль на всех этапах",
+        "Стабильный сервис",
       ],
-      stats: { time: "от 5 дней", price: "от $800" },
       image: "/images/truck.webp",
       color: "from-accent to-orange-500",
       bgColor: "bg-accent/10",
     },
     {
-      id: "aviation",
-      icon: Plane,
-      title: "Авиадоставка",
-      shortTitle: "Авиа",
-      description: "Быстрая доставка срочных грузов авиатранспортом из любой точки мира. Идеально для срочных и ценных отправлений.",
+      id: "railway",
+      icon: Train,
+      title: "Железнодорожные перевозки из Китая",
+      shortTitle: "ЖД",
+      subtitle: "Сбалансированное решение по срокам и стоимости.",
+      description: "ЖД-перевозки обеспечивают устойчивые сроки (28–35 дней), высокую надёжность и минимальную зависимость от внешних факторов. Организуем бронирование контейнеров, оформление документов и полное сопровождение до российских терминалов.",
       features: [
-        "Срочные отправки",
-        "Опасные грузы (DGR)",
-        "Чартерные рейсы",
-        "Door-to-door сервис",
-        "Отслеживание 24/7",
+        "Сроки 28–35 дней",
+        "Высокая надёжность",
+        "Бронирование контейнеров",
+        "Оформление документов",
+        "Сопровождение до терминала",
       ],
-      stats: { time: "от 3 дней", price: "от $3000" },
-      image: "/images/airplane.webp",
-      color: "from-violet-500 to-purple-500",
-      bgColor: "bg-violet-500/10",
+      image: "/images/service-images/train-service.webp",
+      color: "from-amber-500 to-yellow-500",
+      bgColor: "bg-amber-500/10",
+    },
+    {
+      id: "consolidated",
+      icon: Package,
+      title: "Международные перевозки сборных грузов",
+      shortTitle: "Сборные",
+      subtitle: "Экономичная доставка небольших партий товаров.",
+      description: "Консолидация грузов от 1 коробки до нескольких паллет на зарубежных складах и отправка морем, авто или ЖД. Комплексное документальное сопровождение и оптимизация стоимости без потери сроков и надёжности поставок.",
+      features: [
+        "От 1 коробки до паллет",
+        "Консолидация на складах",
+        "Доставка морем, авто, ЖД",
+        "Документальное сопровождение",
+        "Оптимизация стоимости",
+      ],
+      image: "/images/service-images/sbor-service.webp",
+      color: "from-rose-500 to-pink-500",
+      bgColor: "bg-rose-500/10",
     },
     {
       id: "customs",
       icon: FileCheck,
-      title: "Таможенное оформление",
+      title: "Таможенное оформление «под ключ»",
       shortTitle: "Таможня",
-      description: "Полное сопровождение грузов через таможню. Наш офис расположен в здании таможенного поста — решаем вопросы оперативно.",
+      subtitle: "Быстрое и безопасное прохождение таможенных процедур.",
+      description: "Готовим декларации, подбираем коды ТН ВЭД, рассчитываем платежи, оформляем разрешительные документы и представляем ваши интересы в таможенных органах. Сопровождаем досмотры и экспертизы, минимизируем риски задержек.",
       features: [
-        "ВЭД консалтинг",
-        "Декларирование",
-        "Сертификация товаров",
-        "Валютный контроль",
-        "Получение разрешений",
+        "Подготовка деклараций",
+        "Подбор кодов ТН ВЭД",
+        "Расчёт платежей",
+        "Разрешительные документы",
+        "Представительство в органах",
       ],
-      stats: { time: "от 1 дня", price: "от $200" },
       image: "/images/customs.png",
       color: "from-emerald-500 to-teal-500",
       bgColor: "bg-emerald-500/10",
     },
+    {
+      id: "warehouse",
+      icon: Warehouse,
+      title: "Ответственное хранение грузов",
+      shortTitle: "Склад",
+      subtitle: "Современный складской комплекс в Санкт-Петербурге.",
+      description: "Приёмка, размещение, хранение, ПРР, комплектация, переупаковка и маркировка, включая таможенный склад. Контроль условий хранения, безопасность и оперативная обработка заявок.",
+      features: [
+        "Приёмка и размещение",
+        "Комплектация заказов",
+        "Переупаковка и маркировка",
+        "Таможенный склад",
+        "Контроль условий хранения",
+      ],
+      image: "/images/service-images/sklad1-service.webp",
+      color: "from-indigo-500 to-blue-500",
+      bgColor: "bg-indigo-500/10",
+    },
+    {
+      id: "insurance",
+      icon: Shield,
+      title: "Страхование грузов",
+      shortTitle: "Страхование",
+      subtitle: "Финансовая защита товаров при перевозке и хранении.",
+      description: "Оформляем страховое покрытие от утраты, повреждения и частичной гибели груза при перевозке и складской обработке. Работаем с проверенными страховыми компаниями, предлагаем прозрачные тарифы и подбор оптимального полиса под задачу.",
+      features: [
+        "Защита от утраты",
+        "Защита от повреждения",
+        "Проверенные компании",
+        "Прозрачные тарифы",
+        "Подбор оптимального полиса",
+      ],
+      image: "/images/service-images/safe1-service.webp",
+      color: "from-cyan-500 to-sky-500",
+      bgColor: "bg-cyan-500/10",
+    },
   ];
+
+  // Предзагрузка всех изображений услуг
+  useEffect(() => {
+    services.forEach(service => {
+      const img = new Image();
+      img.src = service.image;
+    });
+  }, []);
 
   // Плавная анимация прокрутки с easing
   const smoothScrollTo = (targetPosition: number, duration: number = 1000) => {
@@ -124,8 +204,9 @@ const Services = () => {
         setTimeout(() => {
           const serviceSection = document.getElementById('service-content');
           if (serviceSection) {
-            const targetPosition = serviceSection.getBoundingClientRect().top + window.pageYOffset - 96;
-            smoothScrollTo(targetPosition, 1200);
+            const stickyOffset = 250; // header (64) + sticky tabs (~130) + visual gap (56)
+            const targetPosition = serviceSection.getBoundingClientRect().top + window.pageYOffset - stickyOffset;
+            smoothScrollTo(targetPosition, 800);
           }
         }, 150);
       }
@@ -134,11 +215,16 @@ const Services = () => {
 
   const handleServiceClick = (index: number) => {
     setActiveService(index);
-    // Плавная прокрутка к секции с контентом услуги
+    // Скроллим только если карточка не полностью видна
     const serviceSection = document.getElementById('service-content');
     if (serviceSection) {
-      const targetPosition = serviceSection.getBoundingClientRect().top + window.pageYOffset - 96;
-      smoothScrollTo(targetPosition, 800);
+      const rect = serviceSection.getBoundingClientRect();
+      const stickyOffset = 250; // header (64) + sticky tabs (~130) + visual gap (56)
+      // Если верх карточки выше sticky элементов или карточка ниже viewport
+      if (rect.top < stickyOffset || rect.top > window.innerHeight) {
+        const targetPosition = serviceSection.getBoundingClientRect().top + window.pageYOffset - stickyOffset;
+        smoothScrollTo(targetPosition, 500);
+      }
     }
   };
 
@@ -177,82 +263,92 @@ const Services = () => {
           </div>
         </section>
 
-        {/* Interactive Services Section */}
-        <section className="py-20 lg:py-20 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
-            {/* Service tabs */}
-            <div className="flex flex-wrap gap-3 mb-12 lg:mb-16">
+        {/* Sticky Service Tabs */}
+        <div className="sticky top-16 z-40 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-sm">
+          <div className="container mx-auto px-6 lg:px-8 py-4">
+            <div className="flex flex-wrap gap-2 lg:gap-3">
               {services.map((service, index) => (
                 <button
                   key={service.id}
                   onClick={() => handleServiceClick(index)}
-                  className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-500 ${
+                  className={`flex items-center gap-2 lg:gap-3 px-4 lg:px-6 py-3 lg:py-4 rounded-xl lg:rounded-2xl font-medium transition-all duration-300 ${
                     activeService === index
                       ? `bg-gradient-to-r ${service.color} text-white shadow-large`
                       : "bg-card border border-border/50 text-muted-foreground hover:border-accent/30 hover:text-foreground"
                   }`}
                 >
-                  <service.icon className="h-5 w-5" strokeWidth={1.5} />
-                  <span className="hidden sm:inline">{service.title}</span>
-                  <span className="sm:hidden">{service.shortTitle}</span>
+                  <service.icon className="h-4 w-4 lg:h-5 lg:w-5" strokeWidth={1.5} />
+                  <span className="hidden lg:inline text-sm">{service.title}</span>
+                  <span className="lg:hidden text-sm">{service.shortTitle}</span>
                 </button>
               ))}
             </div>
+          </div>
+        </div>
 
-            {/* Service content */}
-            <div id="service-content" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center scroll-mt-24">
-              {/* Image */}
-              <div className="relative group">
-                <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large">
-                  <img
-                    src={currentService.image}
-                    alt={currentService.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={activeService === 0 ? { objectPosition: 'right' } : undefined}
-                  />
-                </div>
-                {/* Floating stats card */}
-                <div className="absolute -bottom-6 -right-6 bg-card rounded-2xl shadow-large border border-border/50 p-6 animate-fade-in">
-                  <div className="text-sm text-muted-foreground mb-1">Сроки</div>
-                  <div className="text-2xl font-bold text-foreground">{currentService.stats.time}</div>
-                </div>
-              </div>
+        {/* Interactive Services Section */}
+        <section className="py-6 lg:py-10 bg-background">
+          <div className="container mx-auto px-6 lg:px-8">
 
-              {/* Content */}
-              <div className="space-y-8">
-                <div className={`inline-flex p-5 rounded-2xl ${currentService.bgColor}`}>
-                  <currentService.icon className={`h-10 w-10 bg-gradient-to-r ${currentService.color} bg-clip-text text-transparent`} strokeWidth={1.5} style={{ color: 'currentColor' }} />
+            {/* Service content - card style */}
+            <div id="service-content" className="bg-card rounded-2xl lg:rounded-3xl border border-border/50 shadow-large overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+                {/* Image - compact */}
+                <div className="lg:col-span-4 relative">
+                  <div className="aspect-[16/10] lg:aspect-auto lg:absolute lg:inset-0">
+                    <img
+                      src={currentService.image}
+                      alt={currentService.title}
+                      className="w-full h-full object-cover"
+                      style={{ 
+                        objectPosition: currentService.id === 'sea' ? 'right' : 
+                                        currentService.id === 'customs' ? '35% center' : 'center'
+                      }}
+                    />
+                  </div>
                 </div>
-                
-                <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
-                  {currentService.title}
-                </h2>
-                
-                <p className="text-lg text-muted-foreground font-light leading-relaxed">
-                  {currentService.description}
-                </p>
 
-                {/* Features */}
-                <div className="space-y-4">
-                  {currentService.features.map((feature, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-4 p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors group cursor-default"
-                    >
-                      <div className={`p-2 rounded-lg bg-gradient-to-r ${currentService.color}`}>
-                        <Check className="h-4 w-4 text-white" strokeWidth={2} />
-                      </div>
-                      <span className="text-foreground font-medium group-hover:text-accent transition-colors">
-                        {feature}
-                      </span>
+                {/* Content */}
+                <div className="lg:col-span-8 p-6 lg:p-10 flex flex-col justify-center">
+                  {/* Header with icon */}
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className={`p-3 rounded-xl bg-gradient-to-br ${currentService.color} shadow-md flex-shrink-0`}>
+                      <currentService.icon className="h-6 w-6 text-white" strokeWidth={1.5} />
                     </div>
-                  ))}
-                </div>
+                    <div>
+                      <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground tracking-tight">
+                        {currentService.title}
+                      </h2>
+                      <p className="text-base lg:text-lg text-accent font-medium mt-1">
+                        {currentService.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Description */}
+                  <p className="text-sm lg:text-base text-muted-foreground font-light leading-relaxed mb-5">
+                    {currentService.description}
+                  </p>
 
-                <Button size="lg" className="group mt-4" onClick={openApplicationModal}>
-                  Заказать услугу
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Button>
+                  {/* Features - inline compact */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {currentService.features.map((feature, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/70 text-sm"
+                      >
+                        <Check className={`h-4 w-4 text-accent`} strokeWidth={2} />
+                        <span className="text-foreground font-medium">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <Button size="lg" className="group w-full sm:w-fit" onClick={openApplicationModal}>
+                    Заказать услугу
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -273,37 +369,30 @@ const Services = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
               {services.map((service, index) => (
                 <div
                   key={service.id}
                   onClick={() => handleServiceClick(index)}
-                  className="group relative p-8 lg:p-10 rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large hover:-translate-y-2 cursor-pointer overflow-hidden"
+                  className="group relative p-6 lg:p-8 rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large hover:-translate-y-2 cursor-pointer overflow-hidden"
                 >
                   {/* Background gradient on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
                   
-                  <div className="relative flex items-start gap-6">
-                    <div className={`flex-shrink-0 p-4 rounded-2xl bg-gradient-to-br ${service.color}`}>
-                      <service.icon className="h-8 w-8 text-white" strokeWidth={1.5} />
+                  <div className="relative flex flex-col h-full">
+                    <div className={`flex-shrink-0 p-4 rounded-2xl bg-gradient-to-br ${service.color} w-fit mb-5`}>
+                      <service.icon className="h-7 w-7 text-white" strokeWidth={1.5} />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors">
-                        {service.title}
-                      </h3>
-                      <p className="text-muted-foreground mb-4 line-clamp-2">
-                        {service.description}
-                      </p>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="text-muted-foreground">
-                          Сроки: <span className="text-foreground font-medium">{service.stats.time}</span>
-                        </span>
-                        <span className="text-muted-foreground">
-                          От: <span className="text-accent font-medium">{service.stats.price}</span>
-                        </span>
-                      </div>
+                    <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3 flex-1">
+                      {service.subtitle}
+                    </p>
+                    <div className="flex items-center text-sm text-accent font-medium group-hover:translate-x-1 transition-transform">
+                      Подробнее
+                      <ChevronRight className="h-4 w-4 ml-1" />
                     </div>
-                    <ChevronRight className="h-6 w-6 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all flex-shrink-0" />
                   </div>
                 </div>
               ))}

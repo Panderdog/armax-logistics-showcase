@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { MessageSquare, Calculator, Truck, CheckCircle, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { MessageSquare, Calculator, Truck, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+
+// Unified design tokens
+const RADIUS = "rounded-2xl"; // 16px
+const RADIUS_SM = "rounded-xl"; // 12px
 
 const steps = [
   {
@@ -11,7 +15,8 @@ const steps = [
     shortDesc: "Расскажите о грузе",
     description: "Свяжитесь с нами любым удобным способом: форма на сайте, телефон, Telegram, WhatsApp или email. Опишите ваш груз, откуда и куда нужна доставка.",
     time: "5 минут",
-    color: "from-blue-500 to-cyan-500",
+    gradient: "from-[#F34D1B] to-orange-500",
+    ctaText: "Оставить заявку",
   },
   {
     id: 2,
@@ -20,7 +25,8 @@ const steps = [
     shortDesc: "Получите предложение",
     description: "Рассчитаем оптимальный маршрут и стоимость. Подберём транспорт под ваши задачи. Предложим несколько вариантов на выбор.",
     time: "от 1 до 3 дней",
-    color: "from-accent to-orange-500",
+    gradient: "from-orange-500 to-[#F34D1B]",
+    ctaText: "Запросить расчёт",
   },
   {
     id: 3,
@@ -29,7 +35,8 @@ const steps = [
     shortDesc: "Отправляем груз",
     description: "Организуем забор груза, транспортировку и таможенное оформление. Контролируем каждый этап. Вы знаете статус доставки в реальном времени.",
     time: "от 3 дней",
-    color: "from-emerald-500 to-teal-500",
+    gradient: "from-[#F34D1B] to-orange-600",
+    ctaText: "Организовать отправку",
   },
   {
     id: 4,
@@ -38,408 +45,253 @@ const steps = [
     shortDesc: "Груз у вас",
     description: "Доставляем груз точно в срок. Предоставляем полный пакет документов.",
     time: "по договору",
-    color: "from-violet-500 to-purple-500",
+    gradient: "from-orange-500 to-[#F34D1B]",
+    ctaText: "Связаться с нами",
   },
 ];
 
 const ProcessSection = () => {
   const [activeStep, setActiveStep] = useState(1);
-  const stepRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const scrollFrameRef = useRef<number | null>(null);
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const isScrollLockedRef = useRef(false);
-  const canLockRef = useRef(true);
-  const manualOverrideRef = useRef(false);
-  const ignoreViewportSyncRef = useRef(false);
-  const touchStartYRef = useRef<number | null>(null);
-  const wheelDeltaRef = useRef(0);
-  const touchDeltaRef = useRef(0);
-  const stepScrollEnabledRef = useRef(true);
-  const stepEnableTimeoutRef = useRef<number | null>(null);
-  const scrollCooldownRef = useRef(false);
-  const [isScrollLocked, setIsScrollLocked] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [displayStep, setDisplayStep] = useState(1);
   const { openApplicationModal } = useApplicationModal();
-  const currentStep = steps.find((s) => s.id === activeStep) || steps[0];
+  const currentStep = steps.find((s) => s.id === displayStep) || steps[0];
 
-  useEffect(() => {
-    const updateActiveStepByScroll = () => {
-      if (!isScrollLockedRef.current) return;
-      if (ignoreViewportSyncRef.current) return;
-      const viewportHeight = window.innerHeight;
-      const zoneTop = viewportHeight * 0.35;
-      const zoneBottom = viewportHeight * 0.65;
-      const zoneCenter = viewportHeight * 0.5;
-
-      let bestStepId: number | null = null;
-      let bestDistance = Number.POSITIVE_INFINITY;
-
-      stepRefs.current.forEach((el, index) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const isInComfortZone = rect.top < zoneBottom && rect.bottom > zoneTop;
-        if (!isInComfortZone) return;
-
-        const elementCenter = rect.top + rect.height / 2;
-        const distanceToCenter = Math.abs(elementCenter - zoneCenter);
-
-        if (distanceToCenter < bestDistance) {
-          bestDistance = distanceToCenter;
-          bestStepId = steps[index]?.id ?? null;
-        }
-      });
-
-      if (bestStepId !== null) {
-        setActiveStep((prev) => (prev === bestStepId ? prev : bestStepId));
-      }
-    };
-
-    const handleScroll = () => {
-      if (scrollFrameRef.current) {
-        cancelAnimationFrame(scrollFrameRef.current);
-      }
-      scrollFrameRef.current = requestAnimationFrame(updateActiveStepByScroll);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-
-    return () => {
-      if (scrollFrameRef.current) {
-        cancelAnimationFrame(scrollFrameRef.current);
-      }
-      if (stepEnableTimeoutRef.current) {
-        clearTimeout(stepEnableTimeoutRef.current);
-      }
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const lockIfCentered = () => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const zoneTop = viewportHeight * -0.1;
-      const zoneBottom = viewportHeight * 0.9;
-
-      const isOutsideComfort = rect.bottom < zoneTop || rect.top > zoneBottom;
-      if (isOutsideComfort) {
-        if (isScrollLockedRef.current) {
-          isScrollLockedRef.current = false;
-          setIsScrollLocked(false);
-          stepScrollEnabledRef.current = true;
-          wheelDeltaRef.current = 0;
-          touchDeltaRef.current = 0;
-          if (stepEnableTimeoutRef.current) {
-            clearTimeout(stepEnableTimeoutRef.current);
-          }
-        }
-        canLockRef.current = true;
-        ignoreViewportSyncRef.current = false;
-        manualOverrideRef.current = false;
-      }
-
-      // Лочим только когда почти весь блок в кадре, иначе даём странице скроллиться свободно.
-      if (manualOverrideRef.current) return;
-      const shouldLock = rect.top <= zoneTop && rect.bottom >= zoneBottom;
-      if (shouldLock && canLockRef.current && !isScrollLockedRef.current) {
-        canLockRef.current = false;
-        ignoreViewportSyncRef.current = true;
-        isScrollLockedRef.current = true;
-        setIsScrollLocked(true);
-        stepScrollEnabledRef.current = false;
-        if (stepEnableTimeoutRef.current) {
-          clearTimeout(stepEnableTimeoutRef.current);
-        }
-        stepEnableTimeoutRef.current = window.setTimeout(() => {
-          stepScrollEnabledRef.current = true;
-        }, 220);
-      }
-    };
-
-    lockIfCentered();
-    window.addEventListener("scroll", lockIfCentered, { passive: true });
-    window.addEventListener("resize", lockIfCentered);
-
-    return () => {
-      window.removeEventListener("scroll", lockIfCentered);
-      window.removeEventListener("resize", lockIfCentered);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isScrollLocked) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      isScrollLockedRef.current = true;
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        isScrollLockedRef.current = false;
-      };
-    }
-    isScrollLockedRef.current = false;
-  }, [isScrollLocked]);
-
-  useEffect(() => {
-    const unlockAndNudge = (direction: 1 | -1) => {
-      isScrollLockedRef.current = false;
-      setIsScrollLocked(false);
-      ignoreViewportSyncRef.current = true;
-      setTimeout(() => {
-        if (!sectionRef.current) return;
-        const rect = sectionRef.current.getBoundingClientRect();
-        const currentScroll = window.scrollY;
-        const viewportHeight = window.innerHeight;
-        const nudge = 12;
-
-        if (direction > 0) {
-          // После последней карты плавно выводим секцию за пределы экрана вниз.
-          const target = currentScroll + rect.bottom - viewportHeight + nudge;
-          window.scrollTo({ top: target, behavior: "smooth" });
-        } else {
-          // При выходе вверх также мягко выталкиваем секцию.
-          const target = currentScroll + rect.top - nudge;
-          window.scrollTo({ top: target, behavior: "smooth" });
-        }
-      }, 0);
-    };
-
-    const scheduleCooldown = () => {
-      scrollCooldownRef.current = true;
-      setTimeout(() => {
-        scrollCooldownRef.current = false;
-      }, 280);
-    };
-
-    const handleStepScroll = (direction: 1 | -1) => {
-      if (!stepScrollEnabledRef.current) return;
-      if (scrollCooldownRef.current) return;
-      scheduleCooldown();
-      setActiveStep((prev) => {
-        const next = Math.min(steps.length, Math.max(1, prev + direction));
-        if (next === prev) {
-          if (prev === steps.length && direction > 0) {
-            unlockAndNudge(1);
-          } else if (prev === 1 && direction < 0) {
-            unlockAndNudge(-1);
-          }
-          return prev;
-        }
-        return next;
-      });
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      if (!isScrollLockedRef.current) return;
-      const deltaY = event.deltaY;
-      if (Math.abs(deltaY) < 2) return;
-      event.preventDefault();
-
-      const direction = deltaY > 0 ? 1 : -1;
-      if (Math.sign(wheelDeltaRef.current) !== direction) {
-        wheelDeltaRef.current = 0;
-      }
-      wheelDeltaRef.current += deltaY;
-
-      const threshold = 140;
-      if (Math.abs(wheelDeltaRef.current) >= threshold) {
-        wheelDeltaRef.current = 0;
-        handleStepScroll(direction);
-      }
-    };
-
-    const onTouchStart = (event: TouchEvent) => {
-      if (!isScrollLockedRef.current) return;
-      touchStartYRef.current = event.touches[0]?.clientY ?? null;
-    };
-
-    const onTouchMove = (event: TouchEvent) => {
-      if (!isScrollLockedRef.current) return;
-      if (touchStartYRef.current === null) return;
-      const deltaY = touchStartYRef.current - (event.touches[0]?.clientY ?? touchStartYRef.current);
-      if (Math.abs(deltaY) < 6) return;
-      event.preventDefault();
-
-      const direction = deltaY > 0 ? 1 : -1;
-      if (Math.sign(touchDeltaRef.current) !== direction) {
-        touchDeltaRef.current = 0;
-      }
-      touchDeltaRef.current += deltaY;
-
-      const threshold = 80;
-      if (Math.abs(touchDeltaRef.current) >= threshold) {
-        touchDeltaRef.current = 0;
-        handleStepScroll(direction);
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-    };
-  }, []);
+  const handleStepChange = (newStep: number) => {
+    if (newStep === activeStep || isAnimating) return;
+    
+    setIsAnimating(true);
+    setActiveStep(newStep);
+    
+    setTimeout(() => {
+      setDisplayStep(newStep);
+      setTimeout(() => setIsAnimating(false), 250);
+    }, 120);
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-20 lg:py-20 bg-background relative overflow-hidden"
-    >
-      {/* Subtle background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(var(--accent)/0.05),transparent)]" />
+    <section className="relative py-24 lg:py-32 overflow-hidden">
+      {/* Dark premium background */}
+      <div className="absolute inset-0 bg-[#0B0F18]" />
+      
+      {/* Single subtle ambient glow - warm orange */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-r from-[#F34D1B]/[0.03] via-orange-500/[0.015] to-[#F34D1B]/[0.03] rounded-full blur-[150px]" />
+      
+      {/* Subtle grid pattern */}
+      <div 
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)`,
+          backgroundSize: '80px 80px'
+        }}
+      />
       
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-            Простой процесс
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 tracking-tight">
-            Как мы работаем
+          <div className={`inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm ${RADIUS_SM} border border-white/[0.06]`}>
+            <Sparkles className="w-4 h-4 text-[#F34D1B]" />
+            <span className="text-zinc-300">
+              Простой процесс
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+            <span className="text-white">Как мы </span>
+            <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
+              работаем
+            </span>
           </h2>
-          <p className="text-lg text-muted-foreground font-light leading-relaxed">
+          <p className="text-lg lg:text-xl text-zinc-400 font-light leading-relaxed max-w-2xl mx-auto">
             4 шага от заявки до получения груза. Быстро, понятно, прозрачно.
           </p>
         </div>
 
-        {/* Process visualization */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-6xl mx-auto">
+        {/* Process visualization - equal height columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr,minmax(0,360px)] gap-8 lg:gap-20 items-stretch max-w-[1080px] mx-auto">
           {/* Left side - Steps navigation */}
-          <div className="space-y-4">
-            {steps.map((step) => (
-              <button
-                key={step.id}
-                ref={(el) => {
-                  stepRefs.current[step.id - 1] = el;
-                }}
-                onClick={() => {
-                  if (!isScrollLockedRef.current) {
-                    manualOverrideRef.current = true;
-                  }
-                  setActiveStep(step.id);
-                }}
-                className={`w-full text-left p-6 rounded-2xl border transition-all duration-500 ease-out group ${
-                  activeStep === step.id
-                    ? "bg-card border-accent/30 shadow-large scale-[1.01] opacity-100"
-                    : "bg-transparent border-border/50 hover:border-border hover:bg-card/50 opacity-70 hover:opacity-100"
-                }`}
-              >
-                <div className="flex items-center gap-5">
-                  {/* Step number with gradient */}
-                  <div
-                    className={`relative flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${
-                      activeStep === step.id
-                        ? `bg-gradient-to-br ${step.color} shadow-medium`
-                        : "bg-secondary"
-                    }`}
-                  >
-                    <step.icon
-                      className={`h-6 w-6 transition-colors ${
-                        activeStep === step.id ? "text-white" : "text-muted-foreground"
-                      }`}
-                      strokeWidth={1.5}
-                    />
-                    {activeStep === step.id && (
-                      <div className="absolute inset-0 rounded-2xl bg-white/20 animate-pulse" />
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <span
-                        className={`text-sm font-medium ${
-                          activeStep === step.id ? "text-accent" : "text-muted-foreground"
+          <div className="flex flex-col gap-3">
+            {steps.map((step) => {
+              const isActive = activeStep === step.id;
+              
+              return (
+                <button
+                  key={step.id}
+                  onClick={() => handleStepChange(step.id)}
+                  className={`w-full text-left p-5 ${RADIUS} border transition-all duration-300 group relative overflow-hidden ${
+                    isActive
+                      ? "bg-white/[0.04] border-[#F34D1B]/20"
+                      : "bg-white/[0.025] border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.08]"
+                  }`}
+                  style={{
+                    // Warm orange glow for active - NOT blue
+                    boxShadow: isActive 
+                      ? '0 0 20px rgba(243,77,27,0.08), 0 0 40px rgba(243,77,27,0.04)' 
+                      : 'none'
+                  }}
+                >
+                  <div className="flex items-center gap-4 relative z-10">
+                    {/* Step icon */}
+                    <div className="relative flex-shrink-0">
+                      <div
+                        className={`w-12 h-12 ${RADIUS} flex items-center justify-center transition-all duration-300 ${
+                          isActive
+                            ? `bg-gradient-to-br ${step.gradient}`
+                            : "bg-zinc-800/70"
                         }`}
+                        style={{
+                          // Soft orange glow for active icon
+                          boxShadow: isActive 
+                            ? '0 0 8px rgba(243,77,27,0.2), 0 0 16px rgba(243,77,27,0.1)' 
+                            : 'none'
+                        }}
                       >
-                        Шаг {step.id}
-                      </span>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          activeStep === step.id
-                            ? "bg-accent/10 text-accent"
-                            : "bg-secondary text-muted-foreground"
-                        }`}
-                      >
-                        {step.time}
-                      </span>
+                        <step.icon
+                          className={`h-5 w-5 transition-all duration-300 ${
+                            isActive 
+                              ? "text-white" 
+                              : "text-zinc-400 group-hover:text-zinc-300"
+                          }`}
+                          strokeWidth={1.5}
+                        />
+                      </div>
                     </div>
-                    <h3
-                      className={`text-xl font-bold tracking-tight transition-colors ${
-                        activeStep === step.id ? "text-foreground" : "text-foreground/70"
-                      }`}
-                    >
-                      {step.title}
-                    </h3>
-                    <p
-                      className={`text-sm mt-1 ${
-                        activeStep === step.id ? "text-muted-foreground" : "text-muted-foreground/60"
-                      }`}
-                    >
-                      {step.shortDesc}
-                    </p>
-                  </div>
 
-                  {/* Arrow */}
-                  <ArrowRight
-                    className={`h-5 w-5 flex-shrink-0 transition-all duration-300 ${
-                      activeStep === step.id
-                        ? "text-accent translate-x-1"
-                        : "text-muted-foreground/30 group-hover:text-muted-foreground"
-                    }`}
-                  />
-                </div>
-              </button>
-            ))}
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span
+                          className={`text-[11px] font-medium uppercase tracking-wider transition-colors duration-300 ${
+                            isActive 
+                              ? "text-[#F34D1B]" 
+                              : "text-zinc-500 group-hover:text-zinc-400"
+                          }`}
+                        >
+                          Шаг {step.id}
+                        </span>
+                        <span
+                          className={`text-[11px] px-2.5 py-1 ${RADIUS_SM} font-medium transition-all duration-300 ${
+                            isActive
+                              ? "bg-white/[0.06] text-white/60"
+                              : "bg-zinc-800/50 text-zinc-500"
+                          }`}
+                        >
+                          {step.time}
+                        </span>
+                      </div>
+                      <h3
+                        className={`text-base font-semibold tracking-tight transition-colors duration-300 ${
+                          isActive ? "text-white" : "text-zinc-300 group-hover:text-white"
+                        }`}
+                      >
+                        {step.title}
+                      </h3>
+                      <p
+                        className={`text-sm mt-0.5 transition-colors duration-300 ${
+                          isActive ? "text-zinc-400" : "text-zinc-500 group-hover:text-zinc-400"
+                        }`}
+                      >
+                        {step.shortDesc}
+                      </p>
+                    </div>
+
+                    {/* Arrow - visible hover */}
+                    <div className={`flex-shrink-0 w-8 h-8 ${RADIUS_SM} flex items-center justify-center transition-all duration-300 ${
+                      isActive
+                        ? "bg-white/[0.06]"
+                        : "bg-white/[0.03] group-hover:bg-[#F34D1B]/10"
+                    }`}>
+                      <ArrowRight
+                        className={`h-4 w-4 transition-all duration-300 ${
+                          isActive
+                            ? "text-white/80 translate-x-0.5"
+                            : "text-zinc-500 group-hover:text-[#F34D1B] group-hover:translate-x-0.5"
+                        }`}
+                      />
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+            
+            {/* Progress indicator - macOS style */}
+            <div className="hidden lg:flex items-center gap-1.5 pt-8 pl-1">
+              <div className="flex-1 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#F34D1B] to-orange-500 rounded-full transition-all duration-400"
+                  style={{ width: `${(activeStep / steps.length) * 100}%` }}
+                />
+              </div>
+              <span className="text-xs text-zinc-500 tabular-nums ml-2">
+                {activeStep}/{steps.length}
+              </span>
+            </div>
           </div>
 
-          {/* Right side - Active step details */}
-          <div className="relative">
-            {/* Decorative elements */}
-            <div className={`absolute -inset-4 rounded-3xl bg-gradient-to-br ${currentStep.color} opacity-10 blur-3xl`} />
-            
-            <div className="relative bg-card rounded-3xl border border-border/50 p-8 lg:p-12 shadow-large">
-              {/* Large step number */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 rounded-2xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center shadow-glow">
-                <span className="text-3xl font-bold text-white">
-                  {currentStep.id.toString().padStart(2, "0")}
-                </span>
+          {/* Right side - Active step details - stretches to match left column */}
+          <div className="relative flex flex-col lg:-mt-3">
+            {/* Main card - fills height */}
+            <div className={`relative ${RADIUS} border border-white/[0.03] overflow-hidden flex-1 flex flex-col`}>
+              {/* Very subtle top accent line */}
+              <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r ${currentStep.gradient} opacity-15`} />
+              
+              {/* Card content - distributed vertically, reduced top padding */}
+              <div className="relative bg-white/[0.02] pt-5 lg:pt-6 pb-7 lg:pb-8 px-7 lg:px-8 flex-1 flex flex-col justify-center">
+                {/* Header with icon and step number */}
+                <div className={`flex items-center gap-4 mb-6 transition-all duration-400 ease-out ${
+                  isAnimating ? 'opacity-0 translate-y-2 scale-95' : 'opacity-100 translate-y-0 scale-100'
+                }`}>
+                  {/* Step number - on the left, bolder */}
+                  <span className="text-lg font-bold text-white/30">
+                    {currentStep.id.toString().padStart(2, "0")}
+                  </span>
+                  
+                  {/* Icon with soft glow */}
+                  <div 
+                    className={`relative inline-flex p-3 ${RADIUS} bg-gradient-to-br ${currentStep.gradient}`}
+                    style={{
+                      boxShadow: '0 0 8px rgba(243,77,27,0.15), 0 0 16px rgba(243,77,27,0.08)'
+                    }}
+                  >
+                    <currentStep.icon className="h-5 w-5 text-white" strokeWidth={1.5} />
+                  </div>
+                </div>
+
+                {/* Content with fade + slide animation */}
+                <div className={`transition-all duration-400 ease-out ${
+                  isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
+                }`}>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-4 tracking-tight leading-tight">
+                    {currentStep.title}
+                  </h3>
+                  <p className="text-sm lg:text-base text-zinc-400 leading-relaxed mb-6">
+                    {currentStep.description}
+                  </p>
+
+                  {/* Time indicator */}
+                  <div className={`flex items-center gap-3 mb-6 p-3.5 ${RADIUS} bg-white/[0.025] border border-white/[0.03]`}>
+                    <div className="relative">
+                      <div className={`w-2 h-2 rounded-full bg-gradient-to-br ${currentStep.gradient}`} />
+                      <div className={`absolute inset-0 w-2 h-2 rounded-full bg-gradient-to-br ${currentStep.gradient} animate-ping opacity-30`} />
+                    </div>
+                    <span className="text-sm text-zinc-400">
+                      Среднее время: <span className="text-white font-medium">{currentStep.time}</span>
+                    </span>
+                  </div>
+
+                  {/* CTA button - wider */}
+                  <Button 
+                    size="lg" 
+                    className={`group relative overflow-hidden bg-gradient-to-r ${currentStep.gradient} hover:opacity-90 border-0 text-white font-semibold px-7 py-4 text-sm ${RADIUS} transition-all duration-300`}
+                    onClick={openApplicationModal}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      {currentStep.ctaText}
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-600" />
+                  </Button>
+                </div>
               </div>
-
-              {/* Icon */}
-              <div className={`mb-8 inline-flex p-5 rounded-2xl bg-gradient-to-br ${currentStep.color}`}>
-                <currentStep.icon className="h-10 w-10 text-white" strokeWidth={1.5} />
-              </div>
-
-              {/* Content */}
-              <h3 className="text-3xl lg:text-4xl font-bold text-foreground mb-4 tracking-tight">
-                {currentStep.title}
-              </h3>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                {currentStep.description}
-              </p>
-
-              {/* Time indicator */}
-              <div className="flex items-center gap-3 mb-8 p-4 rounded-xl bg-secondary/50">
-                <div className={`w-3 h-3 rounded-full bg-gradient-to-br ${currentStep.color} animate-pulse`} />
-                <span className="text-sm text-muted-foreground">
-                  Среднее время: <strong className="text-foreground">{currentStep.time}</strong>
-                </span>
-              </div>
-
-              {/* CTA */}
-              {activeStep === 1 && (
-                <Button size="lg" className="group" onClick={openApplicationModal}>
-                  Оставить заявку
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Button>
-              )}
             </div>
           </div>
         </div>
@@ -449,4 +301,3 @@ const ProcessSection = () => {
 };
 
 export default ProcessSection;
-
