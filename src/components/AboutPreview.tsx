@@ -30,17 +30,17 @@ const AboutPreview = () => {
               Мы специализируемся на международных перевозках грузов, обеспечивая надёжную доставку по всей Европе и Азии.
             </p>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-              За 15+ лет работы мы выстроили надёжную логистическую сеть, собрали команду профессионалов и заработали доверие сотен клиентов. Наша миссия — сделать международную логистику простой, прозрачной и эффективной.
+              За 16+ лет работы мы выстроили надёжную логистическую сеть, собрали команду профессионалов и заработали доверие сотен клиентов. Наша миссия — сделать международную логистику простой, прозрачной и эффективной.
             </p>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-6 pt-4">
               <div className="group p-6 lg:p-8 rounded-2xl border border-border/50 bg-gradient-to-br from-secondary/50 to-background hover:border-accent/30 hover:scale-105 hover:-translate-y-2 transition-all duration-500 ease-out hover:shadow-large cursor-default">
-                <div className="text-4xl lg:text-5xl font-bold text-foreground mb-2 tracking-tight group-hover:text-accent group-hover:scale-110 transition-all duration-300">20+</div>
-                <div className="text-sm lg:text-base text-muted-foreground group-hover:text-foreground font-medium transition-colors duration-300">стран партнёров</div>
+                <div className="text-4xl lg:text-5xl font-bold text-foreground mb-2 tracking-tight group-hover:text-accent group-hover:scale-110 transition-all duration-300">1 000+</div>
+                <div className="text-sm lg:text-base text-muted-foreground group-hover:text-foreground font-medium transition-colors duration-300">деклараций в 2025</div>
               </div>
               <div className="group p-6 lg:p-8 rounded-2xl border border-border/50 bg-gradient-to-br from-secondary/50 to-background hover:border-accent/30 hover:scale-105 hover:-translate-y-2 transition-all duration-500 ease-out hover:shadow-large cursor-default">
-                <div className="text-4xl lg:text-5xl font-bold text-foreground mb-2 tracking-tight group-hover:text-accent group-hover:scale-110 transition-all duration-300">15+</div>
+                <div className="text-4xl lg:text-5xl font-bold text-foreground mb-2 tracking-tight group-hover:text-accent group-hover:scale-110 transition-all duration-300">16+</div>
                 <div className="text-sm lg:text-base text-muted-foreground group-hover:text-foreground font-medium transition-colors duration-300">лет на рынке</div>
               </div>
             </div>

@@ -16,8 +16,13 @@ const Footer = () => {
               <img src={armaxLogo} alt="Armax Logistics" className="h-9 w-auto brightness-0 invert" />
             </Link>
             <p className="text-[15px] text-primary-foreground/70 leading-relaxed font-light">
-              Надёжные международные перевозки по Европе и Азии
+              Импорт в Россию из Азии, Турции и Европы
             </p>
+            <div className="mt-4 pt-4 border-t border-primary-foreground/10">
+              <p className="text-sm text-primary-foreground/50 font-light">
+                Работаем с 2009 года
+              </p>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -67,29 +72,43 @@ const Footer = () => {
             <h3 className="mb-6 text-base font-bold tracking-wide">Услуги</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/services?service=auto" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
-                  <span className="relative">Международные автоперевозки
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/services?service=sea" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
+                <Link to="/services/sea" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
                   <span className="relative">Морские перевозки
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
                   </span>
                 </Link>
               </li>
               <li>
-                <Link to="/services?service=aviation" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
+                <Link to="/services/aviation" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
                   <span className="relative">Авиаперевозки
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
                   </span>
                 </Link>
               </li>
               <li>
-                <Link to="/services?service=customs" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
+                <Link to="/services/railway" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
+                  <span className="relative">ЖД перевозки
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/auto" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
+                  <span className="relative">Автоперевозки
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/customs" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
                   <span className="relative">Таможенное оформление
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/consolidated" className="text-[15px] text-primary-foreground/70 hover:text-primary-foreground hover:text-accent transition-all duration-300 ease-out hover:translate-x-2 inline-block font-light relative group">
+                  <span className="relative">Сборные грузы
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
                   </span>
                 </Link>
@@ -114,6 +133,11 @@ const Footer = () => {
                 <span className="text-[15px] text-primary-foreground/70 group-hover:text-primary-foreground transition-colors duration-300 font-light">Санкт-Петербург, Горское шоссе, 4</span>
               </li>
             </ul>
+            <div className="mt-6 pt-6 border-t border-primary-foreground/10">
+              <p className="text-sm text-primary-foreground/50 font-light">
+                Работаем только с юр. лицами
+              </p>
+            </div>
             {/* Social Links */}
             <div className="flex gap-4 mt-6">
               <a 

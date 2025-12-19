@@ -1,10 +1,48 @@
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  type FocusEvent,
+  type MouseEvent,
+  type KeyboardEvent,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { X, ArrowRight, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+
+const PHONE_PREFIX = "+7 ";
+
+const formatPhone = (value: string) => {
+  const digits = value.replace(/\D/g, "");
+  const digitsWithoutCode = digits.startsWith("7")
+    ? digits.slice(1)
+    : digits.startsWith("8")
+    ? digits.slice(1)
+    : digits;
+
+  const limited = digitsWithoutCode.slice(0, 10);
+
+  let formatted = PHONE_PREFIX;
+  if (limited.length > 0) {
+    formatted += `(${limited.slice(0, 3)}`;
+  }
+  if (limited.length >= 3) {
+    formatted += ")";
+  }
+  if (limited.length > 3) {
+    formatted += ` ${limited.slice(3, 6)}`;
+  }
+  if (limited.length > 6) {
+    formatted += `-${limited.slice(6, 8)}`;
+  }
+  if (limited.length > 8) {
+    formatted += `-${limited.slice(8, 10)}`;
+  }
+
+  return formatted;
+};
 
 interface FormErrors {
   name?: string;
@@ -21,7 +59,7 @@ interface ApplicationModalProps {
 const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    phone: PHONE_PREFIX,
     email: "",
     message: "",
   });
@@ -33,7 +71,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
-      setFormData({ name: "", phone: "", email: "", message: "" });
+      setFormData({ name: "", phone: PHONE_PREFIX, email: "", message: "" });
       setErrors({});
       setIsSubmitted(false);
       setSubmitError(null);
@@ -42,7 +80,7 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
 
   // Handle escape key press
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleEscape = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
       }
@@ -76,7 +114,12 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
       newErrors.phone = "Пожалуйста, введите номер телефона";
     } else {
       const phoneDigits = formData.phone.replace(/\D/g, "");
-      if (phoneDigits.length < 10) {
+      const localDigits = phoneDigits.startsWith("7")
+        ? phoneDigits.slice(1)
+        : phoneDigits.startsWith("8")
+        ? phoneDigits.slice(1)
+        : phoneDigits;
+      if (localDigits.length !== 10) {
         newErrors.phone = "Введите корректный номер телефона";
       }
     }
@@ -101,34 +144,70 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     setIsSubmitting(true);
-
+  
     try {
       if (!supabase || !isSupabaseConfigured) {
-        throw new Error("База данных не настроена. Пожалуйста, свяжитесь с нами по телефону.");
+        throw new Error(
+          "База данных не настроена. Пожалуйста, свяжитесь с нами по телефону."
+        );
       }
+  
+      // 1. Сохраняем заявку в Supabase
+const payload = {
+  name: formData.name.trim(),
+  email: formData.email.trim() || null,
+  phone: formData.phone.trim(),
+  message: formData.message.trim(),
+};
 
-      const { error } = await supabase.from("applications").insert({
-        name: formData.name.trim(),
-        email: formData.email.trim() || null,
-        phone: formData.phone.trim(),
-        message: formData.message.trim(),
-      });
-
+const { error } = await supabase
+  .from("applications")
+  .insert(payload as any); // глушим дурку тайпскрипта
+  
       if (error) {
         throw error;
       }
-
+  
+      // 2. Шлём уведомление на почту через edge-функцию smooth-service
+      try {
+        const functionUrl =
+          "https://ztkvnqoxkdxpjlwcgarx.supabase.co/functions/v1/smooth-service";
+  
+        const response = await fetch(functionUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim() || null,
+            phone: formData.phone.trim(),
+            message: formData.message.trim(),
+          }),
+        });
+  
+        console.log("smooth-service (modal) status:", response.status);
+      } catch (emailError) {
+        console.error(
+          "Ошибка отправки email через Resend (modal):",
+          emailError
+        );
+      }
+  
+      // 3. Всё как было — успех, очистка формы и закрытие модалки
       toast.success("Спасибо! Мы свяжемся с вами в ближайшее время.");
-      setFormData({ name: "", phone: "", email: "", message: "" });
+      setFormData({ name: "", phone: PHONE_PREFIX, email: "", message: "" });
       setErrors({});
       setIsSubmitted(true);
-
+  
       setTimeout(() => {
         onClose();
         setIsSubmitted(false);
@@ -153,6 +232,48 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     }
     if (submitError) {
       setSubmitError(null);
+    }
+  };
+
+  const ensureCursorAfterPrefix = (input: HTMLInputElement) => {
+    const position = PHONE_PREFIX.length;
+    const selectionStart = input.selectionStart ?? position;
+    const selectionEnd = input.selectionEnd ?? position;
+
+    if (selectionStart < position || selectionEnd < position) {
+      input.setSelectionRange(position, position);
+    }
+  };
+
+  const handlePhoneChange = (value: string) => {
+    const formatted = formatPhone(value);
+    handleInputChange("phone", formatted);
+  };
+
+  const handlePhoneFocus = (e: FocusEvent<HTMLInputElement>) => {
+    if (!e.target.value.startsWith(PHONE_PREFIX)) {
+      handlePhoneChange(PHONE_PREFIX);
+    }
+    requestAnimationFrame(() => ensureCursorAfterPrefix(e.target));
+  };
+
+  const handlePhoneClick = (e: MouseEvent<HTMLInputElement>) => {
+    ensureCursorAfterPrefix(e.currentTarget);
+  };
+
+  const handlePhoneKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const position = PHONE_PREFIX.length;
+    const selectionStart = e.currentTarget.selectionStart ?? position;
+    const selectionEnd = e.currentTarget.selectionEnd ?? position;
+
+    const isTryingToErasePrefix =
+      selectionStart <= position &&
+      selectionEnd <= position &&
+      (e.key === "Backspace" || e.key === "Delete" || e.key === "ArrowLeft");
+
+    if (isTryingToErasePrefix) {
+      e.preventDefault();
+      requestAnimationFrame(() => ensureCursorAfterPrefix(e.currentTarget));
     }
   };
 
@@ -238,8 +359,12 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
                   </label>
                   <Input
                     type="tel"
+                    inputMode="tel"
                     value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    onFocus={handlePhoneFocus}
+                    onClick={handlePhoneClick}
+                    onKeyDown={handlePhoneKeyDown}
                     placeholder="+7 (___) ___-__-__"
                     className={`h-12 rounded-xl bg-secondary/50 border-border/50 focus:border-accent ${
                       errors.phone ? "border-destructive focus:border-destructive" : ""

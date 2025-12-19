@@ -104,10 +104,10 @@ const StatsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 lg:py-32 bg-primary overflow-hidden"
+      className="relative pt-24 lg:pt-32 pb-16 lg:pb-20 bg-[#0a0f1a] overflow-hidden"
     >
       {/* Atmospheric background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary/90 to-primary" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-transparent" />
       
       {/* Animated gradient orb */}
       <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-accent/15 rounded-full blur-[100px] animate-pulse" />

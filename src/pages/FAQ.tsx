@@ -104,25 +104,36 @@ const FAQ = () => {
         canonicalUrl="/faq"
         structuredData={organizationSchema}
       />
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[#0B0F18]">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary-dark" />
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[128px]" />
+        <section className="relative py-24 lg:py-32 overflow-hidden">
+          {/* Background effects */}
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
+          
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl">
-              <span className="inline-block px-4 py-1.5 mb-8 text-sm font-medium text-accent bg-accent/20 rounded-full border border-accent/30 backdrop-blur-sm animate-fade-in">
-                <HelpCircle className="inline h-4 w-4 mr-1" />
-                FAQ
-              </span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
+                <HelpCircle className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">FAQ</span>
+              </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
                 Частые вопросы
                 <br />
-                <span className="text-accent">и ответы</span>
+                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">и ответы</span>
               </h1>
-              <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
+              <p className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
                 Всё, что нужно знать о работе с нами
               </p>
             </div>

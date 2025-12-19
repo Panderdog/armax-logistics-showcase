@@ -103,25 +103,36 @@ const Reviews = () => {
         canonicalUrl="/reviews"
         structuredData={organizationSchema}
       />
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[#0B0F18]">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
+        <section className="relative py-24 lg:py-32 overflow-hidden">
+          {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
+          
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl">
-              <span className="inline-block px-4 py-1.5 mb-8 text-sm font-medium text-accent bg-accent/20 rounded-full border border-accent/30 backdrop-blur-sm animate-fade-in">
-                <Star className="inline h-4 w-4 mr-1 fill-accent" />
-                Отзывы
-              </span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
+                <Star className="w-4 h-4 text-[#F34D1B] fill-[#F34D1B]" />
+                <span className="text-zinc-300">Отзывы</span>
+              </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
                 Нам доверяют
                 <br />
-                <span className="text-accent">500+ компаний</span>
+                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">500+ компаний</span>
               </h1>
-              <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
+              <p className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
                 Реальные истории успешного сотрудничества<br />и решённых задач
               </p>
             </div>

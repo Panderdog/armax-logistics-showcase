@@ -1,3 +1,4 @@
+import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,36 +71,70 @@ const Contacts = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
-
-    // Validate form before submitting
+  
+    // Проверка формы
     if (!validateForm()) {
       return;
     }
-
+  
     setIsSubmitting(true);
-
+  
     try {
-      // Check if Supabase is configured
+      // Проверяем, что Supabase настроен
       if (!supabase || !isSupabaseConfigured) {
-        throw new Error("База данных не настроена. Пожалуйста, свяжитесь с нами по телефону.");
+        throw new Error(
+          "База данных не настроена. Пожалуйста, свяжитесь с нами по телефону."
+        );
       }
-
+  
+      // 1) Сохраняем заявку в таблицу applications
+      // @ts-ignore: типы Supabase для applications не сгенерированы, но объект корректный
       const { error } = await supabase.from("applications").insert({
         name: formData.name.trim(),
         email: formData.email.trim() || null,
         phone: formData.phone.trim(),
         message: formData.message.trim(),
       });
-
+  
       if (error) {
         throw error;
       }
+  
+      // 2) Шлём уведомление на почту через edge-функцию smooth-service
+// 2) Шлём уведомление на почту через edge-функцию smooth-service
+try {
+  const functionUrl =
+    "https://ztkvnqoxkdxpjlwcgarx.supabase.co/functions/v1/smooth-service";
 
+  const response = await fetch(functionUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({
+      name: formData.name.trim(),
+      email: formData.email.trim() || null,
+      phone: formData.phone.trim(),
+      message: formData.message.trim(),
+    }),
+  });
+
+  console.log("smooth-service status:", response.status);
+
+  const text = await response.text();
+  console.log("smooth-service response body:", text);
+} catch (emailError) {
+  console.error("Ошибка отправки email через Resend:", emailError);
+}
+  
+      // 3) Всё ок — показываем тост и чистим форму
       toast.success("Спасибо! Мы свяжемся с вами в ближайшее время.");
       setFormData({ name: "", phone: "", email: "", message: "" });
       setErrors({});
       setIsSubmitted(true);
-
+  
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
       console.error("Error submitting application:", error);
@@ -179,25 +214,36 @@ const Contacts = () => {
         canonicalUrl="/contacts"
         structuredData={localBusinessSchema}
       />
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[#0B0F18]">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 bg-primary overflow-hidden">
+        <section className="relative py-24 lg:py-32 overflow-hidden">
+          {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
-          <div className="absolute top-0 left-1/3 w-96 h-96 bg-accent/20 rounded-full blur-[128px]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
+          
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl">
-              <span className="inline-block px-4 py-1.5 mb-8 text-sm font-medium text-accent bg-accent/20 rounded-full border border-accent/30 backdrop-blur-sm animate-fade-in">
-                <MessageCircle className="inline h-4 w-4 mr-1" />
-                Контакты
-              </span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
+                <MessageCircle className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">Контакты</span>
+              </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
                 Давайте
                 <br />
-                <span className="text-accent">обсудим доставку</span>
+                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">обсудим доставку</span>
               </h1>
-              <p className="text-xl lg:text-2xl text-white/80 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
+              <p className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
                 Расскажите о вашей задаче — предложим оптимальное решение за 30 минут
               </p>
             </div>

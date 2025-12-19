@@ -58,12 +58,26 @@ export interface Database {
         Row: ApplicationRow;
         Insert: ApplicationInsert;
         Update: Partial<ApplicationInsert & { status: ApplicationStatus }>;
+        Relationships: [];
       };
       news: {
         Row: NewsRow;
         Insert: NewsInsert;
         Update: NewsUpdate;
+        Relationships: [];
       };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }

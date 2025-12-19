@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Light theme: Premium Minimalist Palette */
-    --background: 0 0% 98%; /* #FAFAFA - Pure, clean white */
+    --background: 34 28% 90%; /* #EDE7DF - Warm neutral base */
     --foreground: 220 13% 13%; /* #1F2937 - Deep charcoal */
 
     --card: 0 0% 100%;

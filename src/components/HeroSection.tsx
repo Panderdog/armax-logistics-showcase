@@ -23,7 +23,7 @@ const HeroSection = () => {
       {/* Mobile Background - Image with Overlay */}
       <div className="absolute inset-0 z-0 md:hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/95 via-primary/90 to-primary" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/95 via-primary/90 to-[#0a0f1a]" />
       </div>
 
       {/* Desktop/Tablet Background - Video with Overlay */}
@@ -59,16 +59,11 @@ const HeroSection = () => {
         
         {/* Gradient Overlay - чистый и читаемый */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-primary" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-[#0a0f1a]" />
       </div>
 
-      {/* Bottom fade transition */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-primary via-primary/90 to-transparent z-[5]" />
-      
-      {/* Subtle accent divider */}
-      <div className="absolute bottom-0 left-0 right-0 z-[6]">
-        <div className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-      </div>
+      {/* Bottom fade transition to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />
 
       {/* Mobile Content */}
       <div className="container relative z-10 mx-auto px-6 pb-24 md:hidden pt-12">
@@ -102,8 +97,8 @@ const HeroSection = () => {
         {/* Stats */}
         <div className="mt-16 grid grid-cols-2 gap-4 max-w-md mx-auto">
           {[
-            { value: "15+", label: "лет опыта" },
-            { value: "20+", label: "стран партнёров" },
+            { value: "16+", label: "лет опыта" },
+            { value: "1 000+", label: "деклараций в 2025" },
             { value: "99%", label: "доставок вовремя" },
             { value: "5000+", label: "тонн грузов/год" },
           ].map((stat, index) => (

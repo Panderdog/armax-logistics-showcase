@@ -10,6 +10,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import About from "./pages/About";
 import Geography from "./pages/Geography";
 import Reviews from "./pages/Reviews";
@@ -66,6 +67,7 @@ const App = () => (
               {/* Public routes */}
               <Route path="/" element={<Index />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/:id" element={<ServiceDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/geography" element={<Geography />} />
               <Route path="/reviews" element={<Reviews />} />
