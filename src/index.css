@@ -242,6 +242,33 @@ All colors MUST be HSL.
     }
   }
   
+  @keyframes shimmer-gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animate-shimmer-gradient {
+    background-size: 200% 100%;
+    animation: shimmer-gradient 3s ease-in-out infinite;
+  }
+  
+  /* Smooth scrollbar hide for filter sections */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
   .marquee-track {
     display: flex;
     width: max-content;

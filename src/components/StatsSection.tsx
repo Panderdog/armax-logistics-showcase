@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Globe, Package, Clock, Award } from "lucide-react";
+import { FileText, Package, Clock, Award } from "lucide-react";
 
 interface StatItem {
   value: number;
@@ -11,21 +11,21 @@ interface StatItem {
 
 const stats: StatItem[] = [
   {
-    value: 15,
+    value: 16,
     suffix: "+",
     label: "лет на рынке",
     icon: Award,
     description: "Стабильная работа с 2009 года",
   },
   {
-    value: 20,
+    value: 1000,
     suffix: "+",
-    label: "стран партнёров",
-    icon: Globe,
-    description: "Азия, Европа, СНГ",
+    label: "деклараций в 2025 году",
+    icon: FileText,
+    description: "Импорт и экспорт",
   },
   {
-    value: 5000,
+    value: 10000,
     suffix: "+",
     label: "тонн грузов в год",
     icon: Package,

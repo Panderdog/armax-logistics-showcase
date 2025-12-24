@@ -1,4 +1,25 @@
-import { Star, Quote, ArrowRight, TrendingUp, CheckCircle, Clock, Building2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { 
+  Star, 
+  Quote, 
+  ArrowRight, 
+  TrendingUp, 
+  CheckCircle2, 
+  Clock, 
+  Building2,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  Users,
+  Award,
+  Zap,
+  Ship,
+  Plane,
+  Train,
+  Truck as TruckIcon,
+  Package,
+  MessageSquare
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
@@ -6,13 +27,48 @@ import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const Reviews = () => {
   const { openApplicationModal } = useApplicationModal();
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const featuredTestimonials = [
+    {
+      name: "Игорь Савельев",
+      role: "Руководитель отдела логистики",
+      company: "СтройМатериалы Про",
+      text: "Работаем с Armax третий год. Когда были проблемы с поставкой из Гуанчжоу — ребята перестроили маршрут за сутки и уложились в срок. Для нас это критично, простой стройки стоит дорого.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      highlight: "Сэкономили 2 недели на поставке",
+      stats: { value: "40+", label: "поставок в год" },
+    },
+    {
+      name: "Елена Михайлова",
+      role: "Директор по закупкам",
+      company: "МедТехника Плюс",
+      text: "Медицинское оборудование требует особых условий перевозки и кучу документов. Armax взяли на себя всю головную боль с сертификатами и таможней. Честно — не ожидала такого уровня сервиса.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+      highlight: "Полное таможенное сопровождение",
+      stats: { value: "100%", label: "документов в порядке" },
+    },
+    {
+      name: "Андрей Волков",
+      role: "Основатель",
+      company: "TechParts",
+      text: "Начинали возить электронику из Шэньчжэня сами — это был кошмар. С Armax за полгода наладили стабильный поток в 4-5 контейнеров в месяц. Менеджер Артём реально погружается в специфику бизнеса.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      highlight: "4-5 контейнеров ежемесячно",
+      stats: { value: "60+", label: "контейнеров в год" },
+    },
+  ];
 
   const testimonials = [
     {
       name: "Александр Петров",
       role: "Директор по закупкам",
       company: "ТехноСнаб ООО",
-      text: "Сотрудничаем с Armax Logistics уже более 3 лет. Всегда чёткое выполнение сроков, профессиональная команда и прозрачная отчётность. Рекомендую!",
+      text: "Сотрудничаем с Armax Logistics уже более 3 лет. Всегда чёткое выполнение сроков, профессиональная команда и прозрачная отчётность.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     },
@@ -36,7 +92,7 @@ const Reviews = () => {
       name: "Елена Козлова",
       role: "Менеджер по логистике",
       company: "АзияТрейд",
-      text: "Работаем по Китаю уже 2 года. Ребята реально понимают специфику азиатского рынка, помогают с консолидацией и таможней. Очень довольны!",
+      text: "Работаем по Китаю уже 2 года. Ребята реально понимают специфику азиатского рынка, помогают с консолидацией и таможней.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
     },
@@ -60,39 +116,85 @@ const Reviews = () => {
 
   const caseStudies = [
     {
-      title: "Доставка промышленного оборудования из Китая",
+      title: "Промышленное оборудование из Китая",
       client: "Машиностроительный завод",
-      challenge: "Срочная доставка станка ЧПУ весом 12 тонн с завода в Шэньчжэне на производство в Екатеринбург",
-      solution: "Организовали мультимодальную перевозку: автотранспорт до порта, морской фрахт до Владивостока, ЖД до Екатеринбурга. Оформили все разрешения на негабарит.",
-      result: "Груз доставлен за 28 дней вместо стандартных 40. Экономия клиента — 2 недели простоя производства.",
+      challenge: "Срочная доставка станка ЧПУ весом 12 тонн с завода в Шэньчжэне на производство в Екатеринбург за минимальные сроки",
+      solution: "Мультимодальная перевозка: автотранспорт до порта, морской фрахт до Владивостока, ЖД до Екатеринбурга с оформлением разрешений на негабарит",
+      result: "Груз доставлен за 28 дней вместо стандартных 40. Экономия — 2 недели простоя производства",
       metrics: [
-        { value: "28", label: "дней доставка" },
-        { value: "12", label: "тонн груза" },
-        { value: "30%", label: "экономия времени" },
+        { value: "28", label: "дней" },
+        { value: "12", label: "тонн" },
+        { value: "–30%", label: "времени" },
       ],
-      color: "from-blue-500 to-cyan-500",
+      gradient: "from-[#F34D1B] to-orange-500",
+      transports: [TruckIcon, Ship, Train],
     },
     {
-      title: "Регулярные поставки электроники из Кореи",
+      title: "Электроника из Кореи",
       client: "Розничная сеть электроники",
-      challenge: "Организация еженедельных поставок смартфонов и комплектующих из Сеула с минимальными сроками",
-      solution: "Выстроили схему авиа+авто доставки через Инчхон. Договорились о приоритетном таможенном оформлении.",
-      result: "Сроки доставки сократились с 14 до 5 дней. Клиент получил конкурентное преимущество в скорости обновления ассортимента.",
+      challenge: "Организация еженедельных поставок смартфонов из Сеула с минимальными сроками доставки",
+      solution: "Схема авиа+авто доставки через Инчхон с приоритетным таможенным оформлением и фиксированными слотами",
+      result: "Сроки доставки сократились с 14 до 5 дней. Конкурентное преимущество в скорости обновления ассортимента",
       metrics: [
-        { value: "5", label: "дней доставка" },
-        { value: "52", label: "рейса в год" },
-        { value: "65%", label: "быстрее" },
+        { value: "5", label: "дней" },
+        { value: "52", label: "рейса/год" },
+        { value: "–65%", label: "времени" },
       ],
-      color: "from-accent to-orange-500",
+      gradient: "from-orange-500 to-amber-500",
+      transports: [Plane, TruckIcon],
+    },
+    {
+      title: "Комплектующие из Турции",
+      client: "E-commerce ритейлер",
+      challenge: "Снижение стоимости логистики в сезон высокой нагрузки при сохранении сроков доставки",
+      solution: "Гибкая мультимодальная схема с оптимизацией упаковки и ускоренным таможенным оформлением",
+      result: "Доставка за 8 дней даже в пик спроса. Снижение логистических затрат на 18%",
+      metrics: [
+        { value: "8", label: "дней" },
+        { value: "–18%", label: "затрат" },
+        { value: "100%", label: "в срок" },
+      ],
+      gradient: "from-amber-500 to-[#F34D1B]",
+      transports: [TruckIcon, Plane, Train],
     },
   ];
 
   const stats = [
-    { icon: Building2, value: "500+", label: "компаний-клиентов" },
-    { icon: Star, value: "4.9", label: "средняя оценка" },
-    { icon: Clock, value: "3+", label: "года в среднем работаем" },
-    { icon: TrendingUp, value: "95%", label: "возвращаются" },
+    { icon: Building2, value: "500+", label: "компаний-клиентов", description: "доверяют нам" },
+    { icon: Star, value: "4.9", label: "средняя оценка", description: "из 5 возможных" },
+    { icon: Clock, value: "3+", label: "года сотрудничества", description: "в среднем" },
+    { icon: TrendingUp, value: "95%", label: "возвращаются", description: "к нам снова" },
   ];
+
+  const handlePrevTestimonial = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setActiveTestimonial((prev) => 
+      prev === 0 ? featuredTestimonials.length - 1 : prev - 1
+    );
+    setTimeout(() => setIsAnimating(false), 500);
+  };
+
+  const handleNextTestimonial = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setActiveTestimonial((prev) => 
+      prev === featuredTestimonials.length - 1 ? 0 : prev + 1
+    );
+    setTimeout(() => setIsAnimating(false), 500);
+  };
+
+  // Auto-advance testimonials
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isAnimating) {
+        handleNextTestimonial();
+      }
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isAnimating]);
+
+  const currentTestimonial = featuredTestimonials[activeTestimonial];
 
   return (
     <>
@@ -107,14 +209,16 @@ const Reviews = () => {
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 overflow-hidden">
           {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0B0F18]/85 to-[#0B0F18]" />
+          
+          {/* Animated gradient orbs */}
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#F34D1B]/10 rounded-full blur-[180px] animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange-500/8 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
           
           {/* Grid pattern */}
           <div 
-            className="absolute inset-0 opacity-[0.02]"
+            className="absolute inset-0 opacity-[0.015]"
             style={{
               backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
               backgroundSize: '60px 60px'
@@ -122,35 +226,211 @@ const Reviews = () => {
           />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
-                <Star className="w-4 h-4 text-[#F34D1B] fill-[#F34D1B]" />
-                <span className="text-zinc-300">Отзывы</span>
+            <div className="max-w-4xl mx-auto text-center">
+              <div 
+                className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in"
+              >
+                <MessageSquare className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">Отзывы и кейсы</span>
               </div>
+              
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
                 Нам доверяют
                 <br />
-                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">500+ компаний</span>
+                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent animate-shimmer-gradient">
+                  500+ компаний
+                </span>
               </h1>
-              <p className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
-                Реальные истории успешного сотрудничества<br />и решённых задач
+              
+              <p 
+                className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl mx-auto" 
+                style={{ animationDelay: '0.15s' }}
+              >
+                Реальные истории успешного сотрудничества
+                <br />
+                и решённых логистических задач
               </p>
+
+              {/* Quick stats in hero */}
+              <div 
+                className="flex flex-wrap justify-center gap-8 mt-12 animate-fade-in"
+                style={{ animationDelay: '0.3s' }}
+              >
+                {[
+                  { value: "16+", label: "лет опыта" },
+                  { value: "20+", label: "стран" },
+                  { value: "99%", label: "в срок" },
+                ].map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-3xl lg:text-4xl font-bold text-white mb-1">{stat.value}</div>
+                    <div className="text-sm text-zinc-500">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Smooth section transition */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F18] to-transparent" />
+        </section>
+
+        {/* Featured Testimonial Carousel */}
+        <section className="relative py-20 lg:py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-[#0a0e15]" />
+          
+          {/* Ambient glow following active testimonial */}
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-r from-[#F34D1B]/[0.04] via-orange-500/[0.02] to-[#F34D1B]/[0.04] rounded-full blur-[150px] transition-all duration-700"
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <div className="max-w-5xl mx-auto">
+              {/* Section header */}
+              <div className="text-center mb-12 lg:mb-16">
+                <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium bg-white/[0.04] rounded-xl border border-white/[0.06]">
+                  <Award className="w-4 h-4 text-[#F34D1B]" />
+                  <span className="text-zinc-300">Лучшие отзывы</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                  Истории успеха
+                </h2>
+              </div>
+
+              {/* Carousel */}
+              <div className="relative">
+                <div className="relative rounded-3xl bg-white/[0.02] border border-white/[0.05] overflow-hidden p-8 lg:p-12">
+                  {/* Quote decoration */}
+                  <div className="absolute top-8 right-8 lg:top-12 lg:right-12">
+                    <Quote className="w-16 h-16 lg:w-24 lg:h-24 text-[#F34D1B]/10" />
+                  </div>
+
+                  <div className={`transition-all duration-500 ease-out ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-8 lg:gap-12 items-center">
+                      {/* Content */}
+                      <div>
+                        {/* Highlight badge */}
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 text-sm font-medium text-[#F34D1B] bg-[#F34D1B]/10 rounded-full border border-[#F34D1B]/20">
+                          <Zap className="w-3.5 h-3.5" />
+                          {currentTestimonial.highlight}
+                        </div>
+
+                        {/* Quote */}
+                        <blockquote className="text-xl lg:text-2xl text-white/90 font-light leading-relaxed mb-8">
+                          «{currentTestimonial.text}»
+                        </blockquote>
+
+                        {/* Rating */}
+                        <div className="flex gap-1 mb-6">
+                          {Array.from({ length: currentTestimonial.rating }).map((_, i) => (
+                            <Star key={i} className="h-5 w-5 fill-[#F34D1B] text-[#F34D1B]" />
+                          ))}
+                        </div>
+
+                        {/* Author */}
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={currentTestimonial.image}
+                            alt={currentTestimonial.name}
+                            className="w-14 h-14 rounded-full object-cover ring-2 ring-[#F34D1B]/20"
+                          />
+                          <div>
+                            <div className="font-semibold text-white text-lg">
+                              {currentTestimonial.name}
+                            </div>
+                            <div className="text-sm text-zinc-400">
+                              {currentTestimonial.role}
+                            </div>
+                            <div className="text-sm text-[#F34D1B]">
+                              {currentTestimonial.company}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Stats card */}
+                      <div className="hidden lg:block">
+                        <div className="w-40 p-6 rounded-2xl bg-gradient-to-br from-[#F34D1B] to-orange-500 text-center">
+                          <div className="text-4xl font-bold text-white mb-1">
+                            {currentTestimonial.stats.value}
+                          </div>
+                          <div className="text-sm text-white/80">
+                            {currentTestimonial.stats.label}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex items-center justify-between mt-6">
+                  <div className="flex gap-2">
+                    {featuredTestimonials.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          if (!isAnimating && index !== activeTestimonial) {
+                            setIsAnimating(true);
+                            setActiveTestimonial(index);
+                            setTimeout(() => setIsAnimating(false), 500);
+                          }
+                        }}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          activeTestimonial === index 
+                            ? "w-8 bg-gradient-to-r from-[#F34D1B] to-orange-500" 
+                            : "w-2 bg-zinc-700 hover:bg-zinc-600"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handlePrevTestimonial}
+                      className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={handleNextTestimonial}
+                      className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-all duration-300"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Stats */}
-        <section className="py-16 bg-background relative -mt-12 z-20">
-          <div className="container mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        {/* Stats Section */}
+        <section className="relative py-16 lg:py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-[#0B0F18]" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 max-w-5xl mx-auto">
               {stats.map((stat, index) => (
                 <div
                   key={index}
-                  className="group p-6 lg:p-8 rounded-2xl bg-card border border-border/50 shadow-large hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 text-center"
+                  className="group relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-[#F34D1B]/20 transition-all duration-500 hover:-translate-y-1 text-center overflow-hidden"
+                  style={{ 
+                    animationDelay: `${index * 0.1}s`,
+                  }}
                 >
-                  <stat.icon className="h-8 w-8 text-accent mx-auto mb-4 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                  <div className="text-3xl lg:text-4xl font-bold text-foreground mb-1">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-xl bg-[#F34D1B]/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+                      <stat.icon className="h-6 w-6 text-[#F34D1B]" strokeWidth={1.5} />
+                    </div>
+                    <div className="text-3xl lg:text-4xl font-bold text-white mb-1">{stat.value}</div>
+                    <div className="text-sm font-medium text-zinc-300">{stat.label}</div>
+                    <div className="text-xs text-zinc-500 mt-1">{stat.description}</div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -158,54 +438,66 @@ const Reviews = () => {
         </section>
 
         {/* Testimonials Grid */}
-        <section className="py-20 lg:py-20 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="relative py-20 lg:py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-[#0a0e15]" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-[#F34D1B]/[0.03] rounded-full blur-[150px]" />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                Отзывы клиентов
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium bg-white/[0.04] rounded-xl border border-white/[0.06]">
+                <Users className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">Отзывы клиентов</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
                 Что говорят о нас
               </h2>
+              <p className="text-lg text-zinc-400 font-light">
+                Мнения наших партнёров и постоянных клиентов
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 max-w-6xl mx-auto">
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="group relative p-8 rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large hover:-translate-y-2 animate-fade-in"
+                  className="group relative p-7 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-[#F34D1B]/20 transition-all duration-500 hover:-translate-y-2 animate-fade-in overflow-hidden"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
                   {/* Quote icon */}
-                  <div className="absolute -top-4 -left-4 w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all duration-500">
-                    <Quote className="h-5 w-5 text-accent group-hover:text-white transition-colors" />
+                  <div className="absolute -top-2 -right-2 w-16 h-16 rounded-full bg-[#F34D1B]/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110">
+                    <Quote className="h-6 w-6 text-[#F34D1B]/50" />
                   </div>
 
-                  {/* Rating */}
-                  <div className="flex gap-1 mb-6 pt-2">
-                    {Array.from({ length: testimonial.rating }).map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                    ))}
-                  </div>
+                  <div className="relative">
+                    {/* Rating */}
+                    <div className="flex gap-0.5 mb-5">
+                      {Array.from({ length: testimonial.rating }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-[#F34D1B] text-[#F34D1B]" />
+                      ))}
+                    </div>
 
-                  {/* Content */}
-                  <p className="text-foreground/80 leading-relaxed mb-8">
-                    "{testimonial.text}"
-                  </p>
+                    {/* Content */}
+                    <p className="text-zinc-300 leading-relaxed mb-6 text-[15px]">
+                      «{testimonial.text}»
+                    </p>
 
-                  {/* Author */}
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-12 h-12 rounded-full object-cover ring-2 ring-border group-hover:ring-accent/30 transition-all"
-                    />
-                    <div>
-                      <div className="font-semibold text-foreground group-hover:text-accent transition-colors">
-                        {testimonial.name}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {testimonial.role}, {testimonial.company}
+                    {/* Author */}
+                    <div className="flex items-center gap-3 pt-5 border-t border-white/[0.05]">
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                      />
+                      <div>
+                        <div className="font-medium text-white text-sm group-hover:text-[#F34D1B] transition-colors">
+                          {testimonial.name}
+                        </div>
+                        <div className="text-xs text-zinc-500">
+                          {testimonial.role}, {testimonial.company}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -216,39 +508,63 @@ const Reviews = () => {
         </section>
 
         {/* Case Studies */}
-        <section className="py-20 lg:py-20 bg-secondary/30">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="relative py-20 lg:py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-[#0B0F18]" />
+          <div className="absolute top-1/3 left-1/4 w-[500px] h-[300px] bg-[#F34D1B]/[0.03] rounded-full blur-[120px]" />
+          
+          {/* Subtle grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.015]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)`,
+              backgroundSize: '80px 80px'
+            }}
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                Кейсы
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
-                Реальные проекты
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium bg-white/[0.04] rounded-xl border border-white/[0.06]">
+                <Sparkles className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">Реальные результаты</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+                <span className="text-white">Кейсы </span>
+                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
+                  наших проектов
+                </span>
               </h2>
-              <p className="text-lg text-muted-foreground font-light">
+              <p className="text-lg text-zinc-400 font-light">
                 Как мы решаем сложные логистические задачи
               </p>
             </div>
 
-            <div className="space-y-8 max-w-5xl mx-auto">
+            <div className="space-y-6 max-w-5xl mx-auto">
               {caseStudies.map((caseStudy, index) => (
                 <div
                   key={index}
-                  className="group rounded-3xl bg-card border border-border/50 hover:border-accent/30 transition-all duration-500 hover:shadow-large overflow-hidden"
+                  className="group rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-[#F34D1B]/20 transition-all duration-500 overflow-hidden animate-fade-in"
+                  style={{ animationDelay: `${index * 0.15}s` }}
                 >
                   {/* Header */}
-                  <div className={`p-8 lg:p-10 bg-gradient-to-r ${caseStudy.color}`}>
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                  <div className={`p-6 lg:p-8 bg-gradient-to-r ${caseStudy.gradient} relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    
+                    <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                       <div>
-                        <div className="text-white/70 text-sm mb-2">{caseStudy.client}</div>
-                        <h3 className="text-2xl lg:text-3xl font-bold text-white">
+                        <div className="text-white/70 text-sm mb-2 font-medium">{caseStudy.client}</div>
+                        <h3 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
                           {caseStudy.title}
                         </h3>
                       </div>
-                      <div className="flex gap-4">
+                      
+                      {/* Metrics */}
+                      <div className="flex gap-3">
                         {caseStudy.metrics.map((metric, idx) => (
-                          <div key={idx} className="text-center px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm">
-                            <div className="text-2xl font-bold text-white">{metric.value}</div>
+                          <div 
+                            key={idx} 
+                            className="text-center px-4 py-3 rounded-xl bg-white/10 backdrop-blur-sm min-w-[70px]"
+                          >
+                            <div className="text-xl lg:text-2xl font-bold text-white">{metric.value}</div>
                             <div className="text-xs text-white/70">{metric.label}</div>
                           </div>
                         ))}
@@ -257,28 +573,48 @@ const Reviews = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-8 lg:p-10">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="p-6 lg:p-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                      {/* Challenge */}
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <div className="w-2 h-2 rounded-full bg-red-500" />
-                          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Задача</span>
+                          <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Задача</span>
                         </div>
-                        <p className="text-foreground leading-relaxed">{caseStudy.challenge}</p>
+                        <p className="text-zinc-300 text-sm leading-relaxed">{caseStudy.challenge}</p>
                       </div>
+                      
+                      {/* Solution */}
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <div className="w-2 h-2 rounded-full bg-amber-500" />
-                          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Решение</span>
+                          <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Решение</span>
                         </div>
-                        <p className="text-foreground leading-relaxed">{caseStudy.solution}</p>
+                        <p className="text-zinc-300 text-sm leading-relaxed">{caseStudy.solution}</p>
                       </div>
+                      
+                      {/* Result */}
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                          <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Результат</span>
+                          <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Результат</span>
                         </div>
-                        <p className="text-foreground leading-relaxed font-medium">{caseStudy.result}</p>
+                        <p className="text-white text-sm leading-relaxed font-medium">{caseStudy.result}</p>
+                      </div>
+                    </div>
+
+                    {/* Transport modes */}
+                    <div className="flex items-center gap-3 mt-6 pt-6 border-t border-white/[0.05]">
+                      <span className="text-xs text-zinc-500 uppercase tracking-wider">Транспорт:</span>
+                      <div className="flex gap-2">
+                        {caseStudy.transports.map((Transport, idx) => (
+                          <div 
+                            key={idx}
+                            className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:border-[#F34D1B]/20 transition-colors"
+                          >
+                            <Transport className="w-4 h-4 text-zinc-400 group-hover:text-[#F34D1B] transition-colors" strokeWidth={1.5} />
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -288,29 +624,45 @@ const Reviews = () => {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 lg:py-20 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+        {/* CTA Section */}
+        <section className="relative py-20 lg:py-28 overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center bg-fixed" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/95 to-[#0B0F18]/90" />
+          
+          {/* Animated gradient orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
+
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <div className="relative p-12 lg:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark overflow-hidden text-center">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[100px]" />
+              <div className="relative p-10 lg:p-16 rounded-3xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] overflow-hidden text-center">
+                {/* Decorative gradient */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#F34D1B]/15 rounded-full blur-[100px]" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#F34D1B]/10 rounded-full blur-[100px]" />
                 
                 <div className="relative">
-                  <CheckCircle className="h-16 w-16 text-accent mx-auto mb-6" strokeWidth={1.5} />
-                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                    Станьте нашим клиентом
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#F34D1B] to-orange-500 flex items-center justify-center mx-auto mb-8">
+                    <CheckCircle2 className="h-8 w-8 text-white" strokeWidth={1.5} />
+                  </div>
+                  
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+                    <span className="text-white">Станьте нашим </span>
+                    <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
+                      клиентом
+                    </span>
                   </h2>
-                  <p className="text-xl text-white/80 font-light mb-10 max-w-2xl mx-auto">
-                    Присоединяйтесь к 500+ компаниям, которые доверяют нам свою логистику
+                  
+                  <p className="text-xl text-zinc-400 font-light mb-10 max-w-2xl mx-auto">
+                    Присоединяйтесь к 500+ компаниям, которые уже доверяют нам свою логистику
                   </p>
+                  
                   <Button
                     size="lg"
-                    className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group"
+                    className="bg-gradient-to-r from-[#F34D1B] to-orange-500 hover:from-[#e04318] hover:to-orange-600 text-white text-lg px-10 py-7 h-auto group shadow-[0_10px_40px_-10px_rgba(243,77,27,0.5)] hover:shadow-[0_20px_60px_-10px_rgba(243,77,27,0.6)] transition-all duration-500 rounded-xl"
                     onClick={openApplicationModal}
                   >
                     Получить предложение
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
                   </Button>
                 </div>
               </div>

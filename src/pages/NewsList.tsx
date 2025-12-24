@@ -1,15 +1,50 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdmin } from '@/contexts/AdminContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ArrowRight, Newspaper } from 'lucide-react';
+import { Calendar, ArrowRight, Newspaper, Sparkles, TrendingUp, Clock, Filter } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useApplicationModal } from '@/contexts/ApplicationModalContext';
+
+// Hook for intersection observer animation
+const useInView = (threshold = 0.1) => {
+  const ref = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, isInView };
+};
 
 const NewsList = () => {
   const { getPublishedNews } = useAdmin();
   const { openApplicationModal } = useApplicationModal();
   const news = getPublishedNews();
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
+  // Animation refs
+  const heroRef = useInView(0.1);
+  const featuredRef = useInView(0.15);
+  const gridRef = useInView(0.1);
+  const ctaRef = useInView(0.2);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
@@ -19,9 +54,17 @@ const NewsList = () => {
     });
   };
 
+  // Get all unique tags
+  const allTags = [...new Set(news.flatMap(item => item.tags))];
+
+  // Filter news by tag
+  const filteredNews = selectedTag 
+    ? news.filter(item => item.tags.includes(selectedTag))
+    : news;
+
   // Featured news (first one)
-  const featuredNews = news[0];
-  const otherNews = news.slice(1);
+  const featuredNews = filteredNews[0];
+  const otherNews = filteredNews.slice(1);
 
   return (
     <>
@@ -30,241 +73,556 @@ const NewsList = () => {
         description="Актуальные новости компании Armax: новые маршруты, услуги, события в сфере международной логистики и грузоперевозок из Азии."
       />
       
-      <div className="min-h-screen bg-[#0B0F18]">
+      <div className="min-h-screen bg-[#0B0F18] overflow-hidden">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
-          {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/images/ship.jpg')] bg-cover bg-center opacity-30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
-          
-          {/* Grid pattern */}
-          <div 
-            className="absolute inset-0 opacity-[0.02]"
-            style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '60px 60px'
-            }}
-          />
+        <section 
+          ref={heroRef.ref as React.RefObject<HTMLElement>}
+          className="relative py-28 lg:py-40 overflow-hidden"
+        >
+          {/* Layered background effects */}
+          <div className="absolute inset-0">
+            {/* Base gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18] via-[#0F1520] to-[#0B0F18]" />
+            
+            {/* Animated floating orbs */}
+            <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-[#F34D1B]/20 rounded-full blur-[180px] animate-pulse" />
+            <div className="absolute bottom-1/4 -right-20 w-[400px] h-[400px] bg-[#F34D1B]/15 rounded-full blur-[150px]" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[200px]" />
+            
+            {/* Subtle image overlay */}
+            <div className="absolute inset-0 bg-[url('/images/ship.jpg')] bg-cover bg-center opacity-[0.07]" />
+            
+            {/* Noise texture */}
+            <div 
+              className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+              }}
+            />
+            
+            {/* Grid pattern */}
+            <div 
+              className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)`,
+                backgroundSize: '80px 80px'
+              }}
+            />
+
+            {/* Gradient overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18]/80 via-transparent to-[#0B0F18]/60" />
+          </div>
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
-                <Newspaper className="w-4 h-4 text-[#F34D1B]" />
-                <span className="text-zinc-300">Новости</span>
+            <div 
+              className="max-w-5xl"
+              style={{
+                opacity: heroRef.isInView ? 1 : 0,
+                transform: heroRef.isInView ? 'translateY(0)' : 'translateY(40px)',
+                transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            >
+              {/* Badge */}
+              <div 
+                className="inline-flex items-center gap-3 px-5 py-2.5 mb-10 text-sm font-medium bg-white/[0.04] backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-lg"
+                style={{
+                  opacity: heroRef.isInView ? 1 : 0,
+                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s'
+                }}
+              >
+                <div className="relative">
+                  <Sparkles className="w-4 h-4 text-[#F34D1B]" />
+                  <div className="absolute inset-0 blur-sm bg-[#F34D1B]/50 animate-pulse" />
+                </div>
+                <span className="text-zinc-300">Новости и события</span>
+                <div className="w-px h-4 bg-white/10" />
+                <span className="text-[#F34D1B] font-semibold">{news.length} публикаций</span>
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 animate-fade-in leading-[1.05] tracking-tight">
+
+              {/* Title */}
+              <h1 
+                className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-8 leading-[0.95] tracking-tight"
+                style={{
+                  opacity: heroRef.isInView ? 1 : 0,
+                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(30px)',
+                  transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.2s'
+                }}
+              >
                 Актуальное
                 <br />
-                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">от Armax</span>
+                <span className="relative inline-block">
+                  <span className="relative z-10 bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]">
+                    от Armax
+                  </span>
+                </span>
               </h1>
-              <p className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl" style={{ animationDelay: '0.15s' }}>
-                Следите за последними событиями, новыми маршрутами<br />и развитием компании
+
+              {/* Subtitle */}
+              <p 
+                className="text-xl lg:text-2xl xl:text-3xl text-zinc-400 font-light leading-relaxed max-w-2xl"
+                style={{
+                  opacity: heroRef.isInView ? 1 : 0,
+                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.35s'
+                }}
+              >
+                Следите за последними событиями,
+                <br className="hidden lg:block" />
+                новыми маршрутами и развитием компании
               </p>
+
+              {/* Quick stats */}
+              <div 
+                className="flex flex-wrap gap-6 mt-12"
+                style={{
+                  opacity: heroRef.isInView ? 1 : 0,
+                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s'
+                }}
+              >
+                {[
+                  { icon: TrendingUp, label: 'Рост перевозок', value: '+34%' },
+                  { icon: Clock, label: 'Публикации', value: 'Еженедельно' }
+                ].map((stat, i) => (
+                  <div 
+                    key={i}
+                    className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
+                  >
+                    <div className="p-2 rounded-xl bg-[#F34D1B]/10">
+                      <stat.icon className="w-5 h-5 text-[#F34D1B]" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-zinc-500">{stat.label}</div>
+                      <div className="text-lg font-semibold text-white">{stat.value}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+          </div>
+
+          {/* Bottom transition wave */}
+          <div className="absolute bottom-0 left-0 right-0 h-32">
+            <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1440 128" fill="none" preserveAspectRatio="none">
+              <path 
+                d="M0 128L48 122.7C96 117 192 107 288 101.3C384 96 480 96 576 106.7C672 117 768 139 864 144C960 149 1056 139 1152 122.7C1248 107 1344 85 1392 74.7L1440 64V192H1392C1344 192 1248 192 1152 192C1056 192 960 192 864 192C768 192 672 192 576 192C480 192 384 192 288 192C192 192 96 192 48 192H0V128Z" 
+                fill="#0a0f1a"
+              />
+            </svg>
           </div>
         </section>
 
         {news.length === 0 ? (
           /* Empty State */
-          <section className="py-20 lg:py-20 bg-background">
+          <section className="py-24 lg:py-32 bg-[#0a0f1a]">
             <div className="container mx-auto px-6 lg:px-8">
               <div className="text-center py-20">
-                <div className="w-24 h-24 mx-auto mb-8 rounded-3xl bg-secondary flex items-center justify-center">
-                  <Newspaper className="h-12 w-12 text-muted-foreground/50" />
+                <div className="w-32 h-32 mx-auto mb-10 rounded-[2rem] bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center border border-accent/10">
+                  <Newspaper className="h-16 w-16 text-zinc-500" />
                 </div>
-                <h2 className="text-2xl font-bold mb-4">Новостей пока нет</h2>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-white">Новостей пока нет</h2>
+                <p className="text-xl text-zinc-400 mb-10 max-w-lg mx-auto">
                   Скоро здесь появятся актуальные публикации о нашей работе и новых услугах
                 </p>
-                <Button onClick={openApplicationModal}>
+                <Button onClick={openApplicationModal} size="lg" className="group">
                   Связаться с нами
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </div>
             </div>
           </section>
         ) : (
           <>
-            {/* Featured News */}
-            {featuredNews && (
-              <section className="py-20 lg:py-20 bg-background">
+            {/* Tag Filter Section */}
+            {allTags.length > 0 && (
+              <section className="py-8 bg-[#0a0f1a] border-b border-white/[0.06] sticky top-[var(--header-height)] z-20 backdrop-blur-xl bg-[#0a0f1a]/80">
                 <div className="container mx-auto px-6 lg:px-8">
-                  <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-                    {/* Image */}
-                    <Link to={`/news/${featuredNews.slug}`} className="group relative">
-                      <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-large">
-                        {featuredNews.previewImage ? (
-                          <img
-                            src={featuredNews.previewImage}
-                            alt={featuredNews.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
-                            <Newspaper className="h-20 w-20 text-muted-foreground/30" />
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-
-                    {/* Content */}
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-4">
-                        <span className="inline-block px-4 py-1.5 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                          Последняя новость
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {formatDate(featuredNews.createdAt)}
-                        </span>
-                      </div>
-                      <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
-                        <Link 
-                          to={`/news/${featuredNews.slug}`}
-                          className="hover:text-accent transition-colors"
-                        >
-                          {featuredNews.title}
-                        </Link>
-                      </h2>
-                      <p className="text-lg text-muted-foreground leading-relaxed">
-                        {featuredNews.previewText}
-                      </p>
-                      {featuredNews.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {featuredNews.tags.map((tag, i) => (
-                            <Badge key={i} variant="secondary" className="text-sm">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                      <Button asChild size="lg" className="group mt-4">
-                        <Link to={`/news/${featuredNews.slug}`}>
-                          Читать полностью
-                          <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                        </Link>
-                      </Button>
+                  <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                    <div className="flex items-center gap-2 text-zinc-400 shrink-0">
+                      <Filter className="w-4 h-4" />
+                      <span className="text-sm font-medium">Фильтр:</span>
                     </div>
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Other News Grid */}
-            {otherNews.length > 0 && (
-              <section className="py-20 lg:py-20 bg-secondary/30">
-                <div className="container mx-auto px-6 lg:px-8">
-                  <div className="text-center max-w-3xl mx-auto mb-16">
-                    <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                      Архив
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight">
-                      Все публикации
-                    </h2>
-                    <p className="text-lg text-muted-foreground font-light">
-                      События, обновления и полезная информация
-                    </p>
-                  </div>
-
-                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {otherNews.map((item, index) => (
-                      <article 
-                        key={item.id}
-                        className="group relative rounded-3xl bg-card border border-border/50 overflow-hidden hover:border-accent/30 hover:shadow-large hover:-translate-y-2 transition-all duration-500 animate-fade-in"
-                        style={{ animationDelay: `${index * 0.1}s` }}
+                    <button
+                      onClick={() => setSelectedTag(null)}
+                      className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                        selectedTag === null 
+                          ? 'bg-accent text-white shadow-lg shadow-accent/25' 
+                          : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.06]'
+                      }`}
+                    >
+                      Все новости
+                    </button>
+                    {allTags.map((tag) => (
+                      <button
+                        key={tag}
+                        onClick={() => setSelectedTag(tag)}
+                        className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                          selectedTag === tag 
+                            ? 'bg-accent text-white shadow-lg shadow-accent/25' 
+                            : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.06]'
+                        }`}
                       >
-                        {/* Image */}
-                        <Link to={`/news/${item.slug}`} className="block">
-                          <div className="aspect-[16/10] overflow-hidden bg-secondary">
-                            {item.previewImage ? (
-                              <img
-                                src={item.previewImage}
-                                alt={item.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-accent/10 to-primary/10 flex items-center justify-center">
-                                <Newspaper className="h-12 w-12 text-muted-foreground/30" />
-                              </div>
-                            )}
-                          </div>
-                        </Link>
-
-                        {/* Content */}
-                        <div className="p-6 lg:p-8 space-y-4">
-                          {/* Date */}
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Calendar className="h-4 w-4" />
-                            <time dateTime={item.createdAt}>{formatDate(item.createdAt)}</time>
-                          </div>
-
-                          {/* Title */}
-                          <h3 className="text-xl font-bold leading-tight group-hover:text-accent transition-colors">
-                            <Link to={`/news/${item.slug}`}>
-                              {item.title}
-                            </Link>
-                          </h3>
-
-                          {/* Preview Text */}
-                          <p className="text-muted-foreground line-clamp-2">
-                            {item.previewText}
-                          </p>
-
-                          {/* Tags */}
-                          {item.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2 pt-2">
-                              {item.tags.slice(0, 2).map((tag, i) => (
-                                <Badge key={i} variant="secondary" className="text-xs">
-                                  {tag}
-                                </Badge>
-                              ))}
-                              {item.tags.length > 2 && (
-                                <Badge variant="secondary" className="text-xs">
-                                  +{item.tags.length - 2}
-                                </Badge>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Read More */}
-                          <Link 
-                            to={`/news/${item.slug}`}
-                            className="inline-flex items-center text-sm font-medium text-accent hover:text-accent/80 transition-colors pt-2"
-                          >
-                            Читать
-                            <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                          </Link>
-                        </div>
-                      </article>
+                        {tag}
+                      </button>
                     ))}
                   </div>
                 </div>
               </section>
             )}
 
+            {/* Featured News */}
+            {featuredNews && (
+              <section 
+                ref={featuredRef.ref as React.RefObject<HTMLElement>}
+                className="py-20 lg:py-28 bg-[#0a0f1a] relative overflow-hidden"
+              >
+                {/* Subtle background decoration */}
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/[0.02] rounded-full blur-[150px] pointer-events-none" />
+                
+                <div className="container mx-auto px-6 lg:px-8 relative z-10">
+                  <div 
+                    className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center"
+                    style={{
+                      opacity: featuredRef.isInView ? 1 : 0,
+                      transform: featuredRef.isInView ? 'translateY(0)' : 'translateY(50px)',
+                      transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  >
+                    {/* Image - Large Featured */}
+                    <Link 
+                      to={`/news/${featuredNews.slug}`} 
+                      className="lg:col-span-7 group relative"
+                      onMouseEnter={() => setHoveredCard(featuredNews.id)}
+                      onMouseLeave={() => setHoveredCard(null)}
+                    >
+                      <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl shadow-black/20">
+                        {/* Glow effect on hover */}
+                        <div 
+                          className="absolute -inset-4 bg-accent/20 rounded-[2.5rem] blur-3xl transition-opacity duration-700"
+                          style={{ opacity: hoveredCard === featuredNews.id ? 0.5 : 0 }}
+                        />
+                        
+                        <div className="relative w-full h-full rounded-[2rem] overflow-hidden">
+                          {featuredNews.previewImage ? (
+                            <img
+                              src={featuredNews.previewImage}
+                              alt={featuredNews.title}
+                              className="w-full h-full object-cover transition-all duration-1000 ease-out group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-accent/20 via-primary/30 to-primary/20 flex items-center justify-center">
+                              <Newspaper className="h-24 w-24 text-muted-foreground/20" />
+                            </div>
+                          )}
+                          
+                          {/* Overlay gradient */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+                          
+                          {/* Featured badge */}
+                          <div className="absolute top-6 left-6 px-4 py-2 bg-accent text-white text-sm font-semibold rounded-full shadow-lg">
+                            <span className="flex items-center gap-2">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              Главная новость
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Content */}
+                    <div 
+                      className="lg:col-span-5 space-y-6"
+                      style={{
+                        opacity: featuredRef.isInView ? 1 : 0,
+                        transform: featuredRef.isInView ? 'translateX(0)' : 'translateX(30px)',
+                        transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s'
+                      }}
+                    >
+                      {/* Date and read time */}
+                      <div className="flex items-center gap-4 text-zinc-400">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-accent" />
+                          <span className="text-sm">{formatDate(featuredNews.createdAt)}</span>
+                        </div>
+                        <div className="w-1 h-1 rounded-full bg-zinc-500" />
+                        <span className="text-sm">5 мин чтения</span>
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight leading-[1.1] text-white">
+                        <Link 
+                          to={`/news/${featuredNews.slug}`}
+                          className="hover:text-accent transition-colors duration-300"
+                        >
+                          {featuredNews.title}
+                        </Link>
+                      </h2>
+
+                      {/* Preview text */}
+                      <p className="text-lg lg:text-xl text-zinc-400 leading-relaxed">
+                        {featuredNews.previewText}
+                      </p>
+
+                      {/* Tags */}
+                      {featuredNews.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {featuredNews.tags.map((tag, i) => (
+                            <span
+                              key={i} 
+                              className="text-sm px-4 py-1.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] hover:bg-accent/20 hover:text-accent hover:border-accent/30 cursor-pointer transition-colors"
+                              onClick={() => setSelectedTag(tag)}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* CTA Button */}
+                      <Button asChild size="lg" className="group mt-4 h-14 px-8 text-base rounded-2xl">
+                        <Link to={`/news/${featuredNews.slug}`}>
+                          Читать полностью
+                          <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section transition - diagonal cut */}
+                <div className="absolute -bottom-1 left-0 right-0 h-20 bg-[#0d1219]" style={{ clipPath: 'polygon(0 100%, 100% 0, 100% 100%, 0 100%)' }} />
+              </section>
+            )}
+
+            {/* News Grid */}
+            {otherNews.length > 0 && (
+              <section 
+                ref={gridRef.ref as React.RefObject<HTMLElement>}
+                className="py-24 lg:py-32 bg-[#0d1219] relative"
+              >
+                {/* Background pattern */}
+                <div className="absolute inset-0 opacity-[0.02]">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+                    backgroundSize: '32px 32px'
+                  }} />
+                </div>
+
+                <div className="container mx-auto px-6 lg:px-8 relative z-10">
+                  {/* Section header */}
+                  <div 
+                    className="text-center max-w-3xl mx-auto mb-16 lg:mb-20"
+                    style={{
+                      opacity: gridRef.isInView ? 1 : 0,
+                      transform: gridRef.isInView ? 'translateY(0)' : 'translateY(30px)',
+                      transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  >
+                    <span className="inline-flex items-center gap-2 px-5 py-2 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+                      <Newspaper className="w-4 h-4" />
+                      Архив публикаций
+                    </span>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+                      Все новости
+                    </h2>
+                    <p className="text-lg lg:text-xl text-zinc-400 font-light">
+                      События, обновления и полезная информация о логистике
+                    </p>
+                  </div>
+
+                  {/* Masonry-style grid */}
+                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    {otherNews.map((item, index) => (
+                      <article 
+                        key={item.id}
+                        className="group relative"
+                        style={{
+                          opacity: gridRef.isInView ? 1 : 0,
+                          transform: gridRef.isInView ? 'translateY(0)' : 'translateY(40px)',
+                          transition: `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`
+                        }}
+                        onMouseEnter={() => setHoveredCard(item.id)}
+                        onMouseLeave={() => setHoveredCard(null)}
+                      >
+                        <div className={`relative h-full rounded-[1.5rem] bg-white/[0.03] border border-white/[0.08] overflow-hidden transition-all duration-500 ${
+                          hoveredCard === item.id 
+                            ? 'border-accent/40 shadow-2xl shadow-accent/10 -translate-y-3 bg-white/[0.06]' 
+                            : 'hover:shadow-xl hover:bg-white/[0.05]'
+                        }`}>
+                          {/* Card glow effect */}
+                          <div 
+                            className="absolute -inset-px rounded-[1.5rem] bg-gradient-to-br from-accent/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                          />
+                          
+                          {/* Image */}
+                          <Link to={`/news/${item.slug}`} className="block relative overflow-hidden">
+                            <div className="aspect-[16/10] overflow-hidden bg-secondary">
+                              {item.previewImage ? (
+                                <img
+                                  src={item.previewImage}
+                                  alt={item.title}
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-accent/10 to-primary/10 flex items-center justify-center">
+                                  <Newspaper className="h-12 w-12 text-muted-foreground/20" />
+                                </div>
+                              )}
+                              
+                              {/* Overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            </div>
+                          </Link>
+
+                          {/* Content */}
+                          <div className="relative p-6 lg:p-8 space-y-4">
+                            {/* Date */}
+                            <div className="flex items-center gap-2 text-sm text-zinc-500">
+                              <Calendar className="h-4 w-4 text-accent/70" />
+                              <time dateTime={item.createdAt}>{formatDate(item.createdAt)}</time>
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-xl lg:text-2xl font-bold leading-tight text-white transition-colors duration-300 group-hover:text-accent">
+                              <Link to={`/news/${item.slug}`}>
+                                {item.title}
+                              </Link>
+                            </h3>
+
+                            {/* Preview Text */}
+                            <p className="text-zinc-400 line-clamp-2 leading-relaxed">
+                              {item.previewText}
+                            </p>
+
+                            {/* Tags */}
+                            {item.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {item.tags.slice(0, 2).map((tag, i) => (
+                                  <Badge 
+                                    key={i} 
+                                    className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] transition-colors hover:bg-accent/10 hover:text-accent hover:border-accent/20 cursor-pointer"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setSelectedTag(tag);
+                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }}
+                                  >
+                                    {tag}
+                                  </Badge>
+                                ))}
+                                {item.tags.length > 2 && (
+                                  <Badge className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08]">
+                                    +{item.tags.length - 2}
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Read More */}
+                            <Link 
+                              to={`/news/${item.slug}`}
+                              className="inline-flex items-center text-sm font-semibold text-accent hover:text-accent/80 transition-colors pt-2 group/link"
+                            >
+                              <span>Читать статью</span>
+                              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-2" />
+                            </Link>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Section transition - curved */}
+                <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
+                  <path d="M0 60L1440 60L1440 0C1200 40 960 60 720 60C480 60 240 40 0 0L0 60Z" fill="#0a0f1a" />
+                </svg>
+              </section>
+            )}
+
             {/* CTA Section */}
-            <section className="py-20 lg:py-20 bg-background">
+            <section 
+              ref={ctaRef.ref as React.RefObject<HTMLElement>}
+              className="py-24 lg:py-32 bg-[#0a0f1a] relative overflow-hidden"
+            >
               <div className="container mx-auto px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto">
-                  <div className="relative p-12 lg:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark overflow-hidden">
+                <div 
+                  className="max-w-5xl mx-auto"
+                  style={{
+                    opacity: ctaRef.isInView ? 1 : 0,
+                    transform: ctaRef.isInView ? 'scale(1)' : 'scale(0.95)',
+                    transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                >
+                  <div className="relative p-12 lg:p-20 rounded-[2.5rem] overflow-hidden">
+                    {/* Background gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#1a1f2e] to-primary" />
+                    
                     {/* Decorative elements */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[100px]" />
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[100px]" />
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/30 rounded-full blur-[150px]" />
+                    <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-accent/20 rounded-full blur-[120px]" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px]" />
+                    
+                    {/* Grid pattern */}
+                    <div 
+                      className="absolute inset-0 opacity-[0.03]"
+                      style={{
+                        backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+                        backgroundSize: '40px 40px'
+                      }}
+                    />
                     
                     <div className="relative text-center">
-                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
-                        Нужна консультация?
+                      <div 
+                        className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/10 backdrop-blur-sm rounded-full border border-white/10"
+                        style={{
+                          opacity: ctaRef.isInView ? 1 : 0,
+                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s'
+                        }}
+                      >
+                        <Sparkles className="w-4 h-4 text-accent" />
+                        <span className="text-white/80">Бесплатная консультация</span>
+                      </div>
+                      
+                      <h2 
+                        className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 tracking-tight leading-[1.1]"
+                        style={{
+                          opacity: ctaRef.isInView ? 1 : 0,
+                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s'
+                        }}
+                      >
+                        Нужна консультация
+                        <br />
+                        <span className="text-accent">по логистике?</span>
                       </h2>
-                      <p className="text-xl text-white/80 font-light mb-10 max-w-2xl mx-auto">
+                      
+                      <p 
+                        className="text-xl lg:text-2xl text-white/70 font-light mb-12 max-w-2xl mx-auto leading-relaxed"
+                        style={{
+                          opacity: ctaRef.isInView ? 1 : 0,
+                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s'
+                        }}
+                      >
                         Расскажите о вашей задаче — мы предложим оптимальное решение по доставке груза
                       </p>
+                      
                       <Button
                         size="lg"
-                        className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 h-auto group"
+                        className="bg-white text-primary hover:bg-white/90 text-lg px-12 py-8 h-auto rounded-2xl group shadow-2xl shadow-black/20 hover:shadow-white/20 transition-all duration-500"
                         onClick={openApplicationModal}
+                        style={{
+                          opacity: ctaRef.isInView ? 1 : 0,
+                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s'
+                        }}
                       >
                         Связаться с нами
-                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                        <ArrowRight className="ml-3 h-6 w-6 transition-transform duration-300 group-hover:translate-x-2" />
                       </Button>
                     </div>
                   </div>
