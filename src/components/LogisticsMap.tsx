@@ -121,25 +121,10 @@ const LogisticsMap = () => {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [hoveredRoute, setHoveredRoute] = useState<string | null>(null);
   const [tooltipContent, setTooltipContent] = useState<{ content: string; x: number; y: number } | null>(null);
-  const [zoom, setZoom] = useState(0.55);
-  const [center, setCenter] = useState<[number, number]>([75, 40]);
-
-  const handleZoomIn = useCallback(() => {
-    setZoom(prev => Math.min(prev * 1.4, 5));
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    setZoom(prev => Math.max(prev / 1.4, 0.4));
-  }, []);
-
-  const handleReset = useCallback(() => {
-    setZoom(0.55);
-    setCenter([75, 40]);
-  }, []);
+  const [center, setCenter] = useState<[number, number]>([75, 30]);
 
   const handleMoveEnd = useCallback((position: { coordinates: [number, number]; zoom: number }) => {
     setCenter(position.coordinates);
-    setZoom(position.zoom);
   }, []);
 
   const getLocationById = useCallback((id: string) => {
@@ -231,7 +216,7 @@ const LogisticsMap = () => {
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{
-            center: [75, 40], // Центр на Евразии
+            center: [75, 30],
             scale: 350,
           }}
           style={{ width: "100%", height: "auto" }}
@@ -239,9 +224,9 @@ const LogisticsMap = () => {
         >
           <ZoomableGroup 
               center={center} 
-              zoom={zoom} 
-              minZoom={0.4} 
-              maxZoom={5}
+              zoom={0.55}
+              minZoom={0.55}
+              maxZoom={0.55}
               onMoveEnd={handleMoveEnd}
             >
             {/* Страны */}
@@ -356,38 +341,6 @@ const LogisticsMap = () => {
         </ComposableMap>
       </div>
 
-      {/* Zoom Controls */}
-      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-        <button
-          onClick={handleZoomIn}
-          className="w-10 h-10 bg-background/95 backdrop-blur-sm rounded-lg border border-border/50 shadow-lg flex items-center justify-center text-foreground hover:bg-secondary transition-colors"
-          title="Приблизить"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="w-10 h-10 bg-background/95 backdrop-blur-sm rounded-lg border border-border/50 shadow-lg flex items-center justify-center text-foreground hover:bg-secondary transition-colors"
-          title="Отдалить"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 12h14" />
-          </svg>
-        </button>
-        <button
-          onClick={handleReset}
-          className="w-10 h-10 bg-background/95 backdrop-blur-sm rounded-lg border border-border/50 shadow-lg flex items-center justify-center text-foreground hover:bg-secondary transition-colors"
-          title="Сбросить"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-          </svg>
-        </button>
-      </div>
-
       {/* Info Panel */}
       {selectedLocation && (
         <div className="absolute bottom-4 right-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-5 border border-border/50 shadow-lg max-w-xs animate-fade-in">
@@ -462,7 +415,7 @@ const LogisticsMap = () => {
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10">
         <p className="text-xs text-muted-foreground bg-background/80 backdrop-blur-sm px-3 py-2 rounded-lg">
-          🖱️ Перетаскивайте для навигации • Скролл для зума • Клик на точку для деталей
+          🖱️ Перетаскивайте для навигации • Клик на точку для деталей
         </p>
       </div>
     </div>
