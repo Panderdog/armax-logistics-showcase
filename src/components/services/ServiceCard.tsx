@@ -46,7 +46,7 @@ const ServiceCard = ({ id, icon: Icon, title, description, image, link = "/servi
           </h3>
           
           {/* Description — фиксированная высота 2 строки */}
-          <p className="text-white/70 text-sm leading-relaxed h-[40px] mt-2 line-clamp-2">
+          <p className="text-white/70 text-sm leading-relaxed min-h-[44px] mt-2 line-clamp-2">
             {description}
           </p>
           

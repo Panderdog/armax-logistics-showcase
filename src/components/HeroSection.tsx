@@ -64,6 +64,11 @@ const HeroSection = () => {
 
       {/* Bottom fade transition to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />
+      
+      {/* Subtle accent divider */}
+      <div className="absolute bottom-0 left-0 right-0 z-[6]">
+        <div className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      </div>
 
       {/* Mobile Content */}
       <div className="container relative z-10 mx-auto px-6 pb-24 md:hidden pt-12">

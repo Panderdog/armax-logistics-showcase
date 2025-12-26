@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { 
   Star, 
   Quote, 
-  ArrowRight, 
   TrendingUp, 
   CheckCircle2, 
   Clock, 
@@ -24,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+import CTABlock from "@/components/CTABlock";
 
 const Reviews = () => {
   const { openApplicationModal } = useApplicationModal();
@@ -35,7 +35,7 @@ const Reviews = () => {
       name: "Игорь Савельев",
       role: "Руководитель отдела логистики",
       company: "СтройМатериалы Про",
-      text: "Работаем с Armax третий год. Когда были проблемы с поставкой из Гуанчжоу — ребята перестроили маршрут за сутки и уложились в срок. Для нас это критично, простой стройки стоит дорого.",
+      text: "Работаем с Armax третий год. По поставке из Китая сроки «горели», и нам быстро предложили альтернативную схему с понятным планом по датам. В итоге забрали груз без простоев и уложились в дедлайн запуска проекта — минус примерно две недели к исходному сценарию. Для нас это критично, потому что каждый день простоя стоит денег.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
       highlight: "Сэкономили 2 недели на поставке",
@@ -45,7 +45,7 @@ const Reviews = () => {
       name: "Елена Михайлова",
       role: "Директор по закупкам",
       company: "МедТехника Плюс",
-      text: "Медицинское оборудование требует особых условий перевозки и кучу документов. Armax взяли на себя всю головную боль с сертификатами и таможней. Честно — не ожидала такого уровня сервиса.",
+      text: "Ввозили оборудование, где важно, чтобы по документам не было ни одного слабого места. Armax взяли на себя ТН ВЭД/пакет документов, заранее прогнали риски по оформлению и держали нас в курсе статусов. Выпуск прошёл спокойно, без «сюрпризов» и лишних затрат. По ощущениям — сервис выше среднего: не просто «оформляют», а реально ведут процесс.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
       highlight: "Полное таможенное сопровождение",
@@ -55,7 +55,7 @@ const Reviews = () => {
       name: "Андрей Волков",
       role: "Основатель",
       company: "TechParts",
-      text: "Начинали возить электронику из Шэньчжэня сами — это был кошмар. С Armax за полгода наладили стабильный поток в 4-5 контейнеров в месяц. Менеджер Артём реально погружается в специфику бизнеса.",
+      text: "Раньше поставки из Китая были хаосом: сроки прыгали, документы приходили в последний момент. С Armax за несколько месяцев выстроили стабильный поток — сейчас идём 4–5 контейнеров в месяц по понятному графику. Нравится, что менеджер погружается в специфику и предупреждает о рисках заранее, а не постфактум.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       highlight: "4-5 контейнеров ежемесячно",
@@ -68,7 +68,7 @@ const Reviews = () => {
       name: "Александр Петров",
       role: "Директор по закупкам",
       company: "ТехноСнаб ООО",
-      text: "Сотрудничаем с Armax Logistics уже более 3 лет. Всегда чёткое выполнение сроков, профессиональная команда и прозрачная отчётность.",
+      text: "Сотрудничаем с Armax Logistics больше трёх лет. Ценим стабильность: сроки и договорённости соблюдаются, статусы по перевозке понятные, документы оформляются аккуратно. Если возникают отклонения по графику — предупреждают заранее и предлагают варианты, а не ставят перед фактом. Для нас это ключевое, потому что закупки завязаны на производственный план.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     },
@@ -76,7 +76,7 @@ const Reviews = () => {
       name: "Мария Иванова",
       role: "Руководитель ВЭД",
       company: "СтройИмпорт",
-      text: "Отличный сервис! Быстро организовали доставку крупногабаритного груза из Германии. Груз прибыл в целости и в указанный срок.",
+      text: "Нужно было организовать доставку крупногабаритного груза из Германии: негабарит, согласования, контроль упаковки и сроков. Armax быстро собрали схему перевозки, обозначили риски и держали нас в курсе по каждому этапу. Груз пришёл без повреждений и в согласованное окно. По коммуникации — максимально комфортно: коротко, по делу, с ответственностью.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     },
@@ -84,7 +84,7 @@ const Reviews = () => {
       name: "Дмитрий Соколов",
       role: "Генеральный директор",
       company: "ЕвроТранс",
-      text: "Профессиональный подход к каждой перевозке. Особенно ценим оперативную обратную связь и готовность решать нестандартные задачи.",
+      text: "Работаем с Armax по разным направлениям. Нравится профессиональный подход: быстро отвечают, дают ясные сроки и реально помогают с нестандартными задачами — от срочных перезаказов документов до перестройки маршрута при изменении условий. По сути это не «перевозчик по заявке», а партнёр, который ведёт процесс и снимает с нас операционную нагрузку.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     },
@@ -92,7 +92,7 @@ const Reviews = () => {
       name: "Елена Козлова",
       role: "Менеджер по логистике",
       company: "АзияТрейд",
-      text: "Работаем по Китаю уже 2 года. Ребята реально понимают специфику азиатского рынка, помогают с консолидацией и таможней.",
+      text: "По Китаю работаем около двух лет. Ребята хорошо понимают специфику: консолидация, корректные документы, контроль отгрузки и коммуникация с поставщиками. Нам важно, чтобы груз не «зависал» на стыках и не было сюрпризов по таможне — здесь с этим порядок. По факту стали реже возникать простои и вопросы по оформлению.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
     },
@@ -100,7 +100,7 @@ const Reviews = () => {
       name: "Сергей Новиков",
       role: "Владелец бизнеса",
       company: "ИмпортПро",
-      text: "Перешли от конкурентов и не пожалели. Цены адекватные, сроки соблюдают, менеджер всегда на связи. То, что нужно для бизнеса.",
+      text: "Перешли к Armax от конкурентов и не пожалели. Условия прозрачные: по стоимости и срокам всё проговаривается заранее, без внезапных доплат. Менеджер всегда на связи и нормально объясняет, что происходит, если что-то меняется по маршруту. В итоге процесс стал предсказуемым — именно этого и не хватало для бизнеса.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
     },
@@ -108,7 +108,7 @@ const Reviews = () => {
       name: "Анна Белова",
       role: "Директор по развитию",
       company: "ФудЛогистик",
-      text: "Отдельное спасибо за работу с рефрижераторными грузами. Температурный режим соблюдается идеально, ни одной порчи за год работы.",
+      text: "Отдельно отмечу работу с рефрижераторными грузами. Соблюдается температурный режим, есть контроль на этапах и понятная отчётность по перевозке. За год сотрудничества не было потерь по качеству и спорных ситуаций. Когда работаешь с продуктами, это решает всё — поэтому продолжаем на постоянной основе.",
       rating: 5,
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
     },
@@ -211,10 +211,6 @@ const Reviews = () => {
           {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0B0F18]/85 to-[#0B0F18]" />
-          
-          {/* Animated gradient orbs */}
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#F34D1B]/10 rounded-full blur-[180px] animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange-500/8 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
           
           {/* Grid pattern */}
           <div 
@@ -440,7 +436,6 @@ const Reviews = () => {
         {/* Testimonials Grid */}
         <section className="relative py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-[#0a0e15]" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-[#F34D1B]/[0.03] rounded-full blur-[150px]" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -510,7 +505,6 @@ const Reviews = () => {
         {/* Case Studies */}
         <section className="relative py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-[#0B0F18]" />
-          <div className="absolute top-1/3 left-1/4 w-[500px] h-[300px] bg-[#F34D1B]/[0.03] rounded-full blur-[120px]" />
           
           {/* Subtle grid pattern */}
           <div 
@@ -628,44 +622,27 @@ const Reviews = () => {
         <section className="relative py-20 lg:py-28 overflow-hidden">
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center bg-fixed" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/95 to-[#0B0F18]/90" />
-          
-          {/* Animated gradient orbs */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
 
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <div className="relative p-10 lg:p-16 rounded-3xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] overflow-hidden text-center">
-                {/* Decorative gradient */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#F34D1B]/15 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#F34D1B]/10 rounded-full blur-[100px]" />
-                
-                <div className="relative">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#F34D1B] to-orange-500 flex items-center justify-center mx-auto mb-8">
-                    <CheckCircle2 className="h-8 w-8 text-white" strokeWidth={1.5} />
-                  </div>
-                  
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+              <CTABlock
+                icon={CheckCircle2}
+                title={
+                  <>
                     <span className="text-white">Станьте нашим </span>
                     <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
                       клиентом
                     </span>
-                  </h2>
-                  
-                  <p className="text-xl text-zinc-400 font-light mb-10 max-w-2xl mx-auto">
-                    Присоединяйтесь к 500+ компаниям, которые уже доверяют нам свою логистику
-                  </p>
-                  
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-[#F34D1B] to-orange-500 hover:from-[#e04318] hover:to-orange-600 text-white text-lg px-10 py-7 h-auto group shadow-[0_10px_40px_-10px_rgba(243,77,27,0.5)] hover:shadow-[0_20px_60px_-10px_rgba(243,77,27,0.6)] transition-all duration-500 rounded-xl"
-                    onClick={openApplicationModal}
-                  >
-                    Получить предложение
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                  </Button>
-                </div>
-              </div>
+                  </>
+                }
+                subtitle="Присоединяйтесь к 500+ компаниям, которые уже доверяют нам свою логистику"
+                buttons={[
+                  {
+                    text: "Получить предложение",
+                    variant: "primary",
+                  },
+                ]}
+              />
             </div>
           </div>
         </section>

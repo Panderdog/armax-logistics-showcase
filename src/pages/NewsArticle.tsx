@@ -143,10 +143,6 @@ const NewsArticle = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/95 to-[#0B0F18]/80" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18] via-transparent to-transparent" />
             
-            {/* Animated orbs */}
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[180px] animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[150px]" style={{ animationDelay: '1.5s' }} />
-            
             {/* Grid pattern */}
             <div 
               className="absolute inset-0 opacity-[0.03]"
@@ -320,9 +316,6 @@ const NewsArticle = () => {
             ref={relatedRef.ref as React.RefObject<HTMLElement>}
             className="py-24 lg:py-32 bg-[#0a0f1a] relative overflow-hidden"
           >
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/[0.02] rounded-full blur-[150px] pointer-events-none" />
-            
             <div className="container mx-auto px-6 lg:px-8 relative z-10">
               <div 
                 className="text-center max-w-3xl mx-auto mb-16 lg:mb-20"
@@ -444,10 +437,6 @@ const NewsArticle = () => {
               <div className="relative p-12 lg:p-20 rounded-[2.5rem] overflow-hidden">
                 {/* Background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#1a1f2e] to-primary" />
-                
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/30 rounded-full blur-[150px]" />
-                <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-accent/20 rounded-full blur-[120px]" />
                 
                 {/* Grid pattern */}
                 <div 

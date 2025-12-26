@@ -16,7 +16,6 @@ const PrivacyPolicy = () => {
         <section className="relative py-20 lg:py-28 bg-primary overflow-hidden">
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[128px]" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <Link 
@@ -42,6 +41,9 @@ const PrivacyPolicy = () => {
               </p>
             </div>
           </div>
+          
+          {/* Smooth transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F18] to-transparent" />
         </section>
 
         {/* Content */}

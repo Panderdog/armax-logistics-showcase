@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import SEO from "@/components/SEO";
 import { localBusinessSchema } from "@/lib/schema";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import CTABlock from "@/components/CTABlock";
 
 interface FormErrors {
   name?: string;
@@ -654,31 +655,25 @@ const Contacts = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0a0e15] to-[#0B0F18]" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
-                Остались вопросы?
-              </h2>
-              <p className="text-xl text-zinc-400 font-light mb-10 max-w-2xl mx-auto">
-                Позвоните нам или напишите в мессенджер — с радостью поможем
-              </p>
-              
-              {/* Contact links */}
-              <div className="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
-                <a 
-                  href="tel:+78126440291" 
-                  className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/[0.06] hover:border-[#F34D1B]/30 hover:text-white transition-all duration-300 group"
-                >
-                  <Phone className="h-5 w-5 text-[#F34D1B] group-hover:scale-110 transition-transform" />
-                  <span className="font-medium">+7 (812) 644-02-91</span>
-                </a>
-                <a 
-                  href="mailto:info@armaxstp.com" 
-                  className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/[0.06] hover:border-[#F34D1B]/30 hover:text-white transition-all duration-300 group"
-                >
-                  <Mail className="h-5 w-5 text-[#F34D1B] group-hover:scale-110 transition-transform" />
-                  <span className="font-medium">info@armaxstp.com</span>
-                </a>
-              </div>
+            <div className="max-w-4xl mx-auto">
+              <CTABlock
+                title="Остались вопросы?"
+                subtitle="Позвоните нам или напишите в мессенджер — с радостью поможем"
+                buttons={[
+                  {
+                    text: "+7 (812) 644-02-91",
+                    variant: "primary",
+                    href: "tel:+78126440291",
+                    icon: Phone,
+                  },
+                  {
+                    text: "info@armaxstp.com",
+                    variant: "secondary",
+                    href: "mailto:info@armaxstp.com",
+                    icon: Mail,
+                  },
+                ]}
+              />
             </div>
           </div>
         </section>

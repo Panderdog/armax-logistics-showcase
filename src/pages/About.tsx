@@ -1,11 +1,9 @@
-import { Target, Users, Award, TrendingUp, Globe, ArrowRight, Shield, Sparkles, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Target, Users, Award, TrendingUp, Globe, Shield, Sparkles, MapPin } from "lucide-react";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
-import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+import CTABlock from "@/components/CTABlock";
 
 const About = () => {
-  const { openApplicationModal } = useApplicationModal();
 
   const values = [
     {
@@ -49,8 +47,6 @@ const About = () => {
           {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/images/tlk.png')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/90 to-[#0B0F18]/40" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
           
           {/* Grid pattern */}
           <div 
@@ -79,6 +75,9 @@ const About = () => {
               </p>
             </div>
           </div>
+          
+          {/* Smooth transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0e15] to-transparent" />
         </section>
 
         {/* Focus Section - Bento Grid */}
@@ -191,7 +190,6 @@ const About = () => {
         {/* Values Section */}
         <section className="relative py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-[#0B0F18]" />
-          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#F34D1B]/[0.03] rounded-full blur-[180px]" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -243,38 +241,26 @@ const About = () => {
         <section className="relative py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center bg-fixed" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/95 to-[#0B0F18]/85" />
-          
-          {/* Animated gradient orbs */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#F34D1B]/20 rounded-full blur-[150px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
 
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <div className="relative p-10 lg:p-16 rounded-3xl bg-white/[0.03] backdrop-blur-md border border-white/[0.08] overflow-hidden">
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#F34D1B]/15 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#F34D1B]/10 rounded-full blur-[100px]" />
-                
-                <div className="relative text-center">
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+              <CTABlock
+                title={
+                  <>
                     <span className="text-white">Готовы к </span>
                     <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
                       сотрудничеству?
                     </span>
-                  </h2>
-                  <p className="text-xl text-zinc-400 font-light mb-10 max-w-2xl mx-auto">
-                    Расскажите о вашей задаче — мы предложим оптимальное решение
-                  </p>
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-[#F34D1B] to-orange-500 hover:from-[#e04318] hover:to-orange-600 text-white text-lg px-10 py-7 h-auto group shadow-[0_10px_40px_-10px_rgba(243,77,27,0.5)] hover:shadow-[0_20px_60px_-10px_rgba(243,77,27,0.6)] transition-all duration-500"
-                    onClick={openApplicationModal}
-                  >
-                    Связаться с нами
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                  </Button>
-                </div>
-              </div>
+                  </>
+                }
+                subtitle="Расскажите о вашей задаче — мы предложим оптимальное решение"
+                buttons={[
+                  {
+                    text: "Связаться с нами",
+                    variant: "primary",
+                  },
+                ]}
+              />
             </div>
           </div>
         </section>

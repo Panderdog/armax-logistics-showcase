@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+import CTABlock from "@/components/CTABlock";
 
 const Services = () => {
   const { openApplicationModal } = useApplicationModal();
@@ -39,7 +40,7 @@ const Services = () => {
       icon: Truck,
       title: "Автоперевозки",
       subtitle: "из Азии, Турции и Европы",
-      description: "Гибкость маршрутов и оптимальное сочетание стоимости и скорости. Доставка «до двери».",
+      description: "Гибкость маршрутов и оптимальное сочетание стоимости и скорости. Доставка до двери.",
       features: ["FTL и LTL", "GPS-мониторинг", "Доставка до двери"],
       stats: { value: "14-21", label: "дней" },
       image: "/images/truck.webp",
@@ -74,7 +75,7 @@ const Services = () => {
       id: "customs",
       icon: FileCheck,
       title: "Таможенное оформление",
-      subtitle: "«под ключ»",
+      subtitle: "под ключ",
       description: "Готовим декларации, подбираем коды ТН ВЭД, рассчитываем платежи, представляем ваши интересы.",
       features: ["Выпуск за 1-2 дня", "99% без замечаний", "15+ лет опыта"],
       stats: { value: "1-2", label: "дня" },
@@ -132,8 +133,6 @@ const Services = () => {
           {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/images/port-by-air.webp')] bg-cover bg-right opacity-30 rotate-180" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
           
           {/* Grid pattern */}
           <div 
@@ -160,20 +159,31 @@ const Services = () => {
               </p>
             </div>
           </div>
+          
+          {/* Smooth transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F18] to-transparent" />
         </section>
 
         {/* Services Grid */}
-        <section className="py-20 lg:py-28 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="py-20 lg:py-28 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             {/* Section header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
                 Наши услуги
               </span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 tracking-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
                 Выберите направление
               </h2>
-              <p className="text-lg text-muted-foreground font-light">
+              <p className="text-lg text-zinc-400 font-light">
                 Каждая услуга — это комплексное решение с полным сопровождением
               </p>
             </div>
@@ -184,16 +194,16 @@ const Services = () => {
                 <Link
                   key={service.id}
                   to={`/services/${service.id}`}
-                  className={`group relative overflow-hidden rounded-3xl bg-card border border-border/50 ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1`}
+                  className={`group relative overflow-hidden rounded-3xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1`}
                 >
                   {/* Background image */}
                   <div className="absolute inset-0">
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="w-full h-full object-cover opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-700"
+                      className="w-full h-full object-cover opacity-35 group-hover:opacity-45 group-hover:scale-105 transition-all duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/95 to-card/80" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18]/85 via-[#0B0F18]/65 to-[#0B0F18]/50" />
                   </div>
 
                   <div className="relative p-8 lg:p-10">
@@ -202,20 +212,20 @@ const Services = () => {
                         <service.icon className="h-7 w-7 text-white" strokeWidth={1.5} />
                       </div>
                       <div className="text-right">
-                        <div className={`text-2xl lg:text-3xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+                        <div className={`text-2xl lg:text-3xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent drop-shadow-lg`}>
                           {service.stats.value}
                         </div>
-                        <div className="text-sm text-muted-foreground">{service.stats.label}</div>
+                        <div className="text-sm text-zinc-300 drop-shadow-md">{service.stats.label}</div>
                       </div>
                     </div>
 
-                    <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+                    <h3 className="text-2xl lg:text-3xl font-bold text-white mb-2 group-hover:text-accent transition-colors drop-shadow-lg">
                       {service.title}
                     </h3>
-                    <p className={`text-lg font-medium bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-4`}>
+                    <p className={`text-lg font-medium bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-4 drop-shadow-lg`}>
                       {service.subtitle}
                     </p>
-                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                    <p className="text-zinc-300 mb-6 leading-relaxed drop-shadow-md">
                       {service.description}
                     </p>
 
@@ -224,14 +234,14 @@ const Services = () => {
                       {service.features.map((feature, idx) => (
                         <span 
                           key={idx}
-                          className="px-3 py-1.5 text-sm bg-secondary/80 text-foreground rounded-lg"
+                          className="px-3 py-1.5 text-sm bg-white/[0.08] backdrop-blur-sm text-zinc-200 rounded-lg border border-white/[0.12] drop-shadow-md"
                         >
                           {feature}
                         </span>
                       ))}
                     </div>
 
-                    <div className="flex items-center text-accent font-medium group-hover:translate-x-2 transition-transform">
+                    <div className="flex items-center text-accent font-medium group-hover:translate-x-2 transition-transform drop-shadow-lg">
                       Подробнее об услуге
                       <ArrowRight className="h-5 w-5 ml-2" />
                     </div>
@@ -246,35 +256,42 @@ const Services = () => {
                 <Link
                   key={service.id}
                   to={`/services/${service.id}`}
-                  className={`group relative p-6 lg:p-8 rounded-2xl bg-card border border-border/50 ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden`}
+                  className={`group relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden`}
                 >
-                  {/* Subtle gradient on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500`} />
+                  {/* Background image */}
+                  <div className="absolute inset-0">
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      className="w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18]/90 via-[#0B0F18]/75 to-[#0B0F18]/85" />
+                  </div>
                   
                   <div className="relative">
                     <div className="flex items-start justify-between mb-5">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${service.color}`}>
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${service.color} shadow-lg`}>
                         <service.icon className="h-6 w-6 text-white" strokeWidth={1.5} />
                       </div>
                       <div className="text-right">
-                        <div className={`text-xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+                        <div className={`text-xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent drop-shadow-lg`}>
                           {service.stats.value}
                         </div>
-                        <div className="text-xs text-muted-foreground">{service.stats.label}</div>
+                        <div className="text-xs text-zinc-300 drop-shadow-md">{service.stats.label}</div>
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-accent transition-colors">
+                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-accent transition-colors drop-shadow-lg">
                       {service.title}
                     </h3>
-                    <p className={`text-sm font-medium bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-3`}>
+                    <p className={`text-sm font-medium bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-3 drop-shadow-lg`}>
                       {service.subtitle}
                     </p>
-                    <p className="text-sm text-muted-foreground mb-5 line-clamp-2">
+                    <p className="text-sm text-zinc-300 mb-5 line-clamp-2 drop-shadow-md">
                       {service.description}
                     </p>
 
-                    <div className="flex items-center text-sm text-accent font-medium group-hover:translate-x-1 transition-transform">
+                    <div className="flex items-center text-sm text-accent font-medium group-hover:translate-x-1 transition-transform drop-shadow-lg">
                       Подробнее
                       <ChevronRight className="h-4 w-4 ml-1" />
                     </div>
@@ -287,9 +304,6 @@ const Services = () => {
 
         {/* Benefits Section */}
         <section className="py-20 lg:py-24 bg-[#0B0F18] relative overflow-hidden">
-          {/* Background effects */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-r from-accent/[0.04] via-orange-500/[0.02] to-accent/[0.04] rounded-full blur-[150px]" />
-          
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -345,43 +359,32 @@ const Services = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 lg:py-24 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="py-20 lg:py-24 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <div className="relative p-12 lg:p-16 rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-dark overflow-hidden">
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-80 h-80 bg-accent/20 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px]" />
-                
-                <div className="relative text-center">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
-                    Не нашли нужную услугу?
-                  </h2>
-                  <p className="text-xl text-white/70 font-light mb-10 max-w-2xl mx-auto">
-                    Расскажите о вашей задаче — мы подберём оптимальное решение
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button
-                      size="lg"
-                      className="bg-accent hover:bg-accent-hover text-white text-lg px-10 py-7 h-auto group shadow-glow"
-                      onClick={openApplicationModal}
-                    >
-                      Получить консультацию
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </Button>
-                    <Button
-                      asChild
-                      size="lg"
-                      variant="outline"
-                      className="bg-white/5 border-2 border-white/20 text-white hover:bg-white hover:text-primary text-lg px-10 py-7 h-auto"
-                    >
-                      <a href="tel:+78126440291">
-                        Позвонить нам
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <CTABlock
+                title="Не нашли нужную услугу?"
+                subtitle="Расскажите о вашей задаче — мы подберём оптимальное решение"
+                buttons={[
+                  {
+                    text: "Получить консультацию",
+                    variant: "primary",
+                  },
+                  {
+                    text: "Позвонить нам",
+                    variant: "secondary",
+                    href: "tel:+78126440291",
+                  },
+                ]}
+              />
             </div>
           </div>
         </section>

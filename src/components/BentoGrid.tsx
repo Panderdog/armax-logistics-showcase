@@ -121,7 +121,7 @@ const BentoGrid = () => {
                 <Shield className="h-6 w-6" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-bold text-accent mb-2">
-                Управление рисками
+                Страхование грузов
               </h3>
               <p className="text-foreground/70 text-sm flex-1">
                 Подбор под каждую перевозку

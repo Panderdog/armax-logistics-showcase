@@ -5,6 +5,7 @@ import { organizationSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import LogisticsMap from "@/components/LogisticsMap";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+import CTABlock from "@/components/CTABlock";
 
 const Geography = () => {
   const { openApplicationModal } = useApplicationModal();
@@ -151,8 +152,6 @@ const Geography = () => {
           {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/80 to-transparent" />
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#F34D1B]/15 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#F34D1B]/10 rounded-full blur-[150px]" />
           
           {/* Grid pattern */}
           <div 
@@ -179,14 +178,15 @@ const Geography = () => {
               </p>
             </div>
           </div>
+          
+          {/* Smooth transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F18] to-transparent" />
         </section>
 
         {/* Interactive Map Section */}
         <section className="relative py-20 lg:py-28 overflow-hidden">
           {/* Background effects */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0D1220] to-[#0B0F18]" />
-          <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-[#F34D1B]/8 rounded-full blur-[180px]" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px]" />
           
           {/* Decorative grid lines */}
           <div 
@@ -231,9 +231,6 @@ const Geography = () => {
           {/* Dark background with gradient */}
           <div className="absolute inset-0 bg-[#080B12]" />
           
-          {/* Accent glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#F34D1B]/5 rounded-full blur-[200px]" />
-          
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
               <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.03] backdrop-blur-sm rounded-full border border-white/[0.06]">
@@ -261,10 +258,6 @@ const Geography = () => {
                     animationDelay: `${index * 0.1}s`,
                   }}
                 >
-                  {/* Background glow on highlight */}
-                  {region.highlight && (
-                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#F34D1B]/30 rounded-full blur-[80px]" />
-                  )}
                   
                   {/* Hover glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B]/0 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-3xl" />
@@ -326,10 +319,6 @@ const Geography = () => {
         <section className="relative py-24 lg:py-32 overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#080B12] via-[#0B0F18] to-[#0D1220]" />
-          
-          {/* Animated gradient orbs */}
-          <div className="absolute top-20 right-1/4 w-[500px] h-[500px] bg-[#F34D1B]/8 rounded-full blur-[180px] animate-pulse" />
-          <div className="absolute bottom-20 left-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[150px]" />
           
           {/* Grid pattern */}
           <div 
@@ -443,10 +432,6 @@ const Geography = () => {
           
           {/* China flag inspired accent */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#DE2910] to-transparent opacity-50" />
-          
-          {/* Dramatic glow effects */}
-          <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-[#DE2910]/10 rounded-full blur-[200px]" />
-          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#F34D1B]/8 rounded-full blur-[180px]" />
           
           {/* Premium pattern overlay */}
           <div 
@@ -568,10 +553,6 @@ const Geography = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18] via-[#0B0F18]/80 to-[#0B0F18]/60" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-transparent to-[#0B0F18]" />
           
-          {/* Dramatic accent glows */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#F34D1B]/15 rounded-full blur-[200px]" />
-          <div className="absolute bottom-0 left-1/3 w-[600px] h-[300px] bg-blue-500/5 rounded-full blur-[150px]" />
-          
           {/* Decorative lines */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -579,58 +560,44 @@ const Geography = () => {
           </div>
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              {/* Premium badge */}
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 mb-10 text-sm font-medium bg-white/[0.03] backdrop-blur-sm rounded-full border border-white/[0.08]">
-                <Sparkles className="w-4 h-4 text-[#F34D1B]" />
-                <span className="text-zinc-400">Бесплатный расчёт за 30 минут</span>
-              </div>
-              
-              <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-[1.1]">
-                Нужна доставка
-                <br />
-                <span className="bg-gradient-to-r from-[#F34D1B] via-[#FF6B35] to-[#F34D1B] bg-clip-text text-transparent">из Азии?</span>
-              </h2>
-              <p className="text-xl lg:text-2xl text-zinc-400 font-light mb-12 max-w-2xl mx-auto">
-                Рассчитаем стоимость и предложим оптимальный маршрут под ваш бюджет и сроки
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  className="bg-[#F34D1B] hover:bg-[#FF6B35] text-white text-lg px-12 py-8 h-auto group shadow-lg shadow-[#F34D1B]/30 hover:shadow-[#F34D1B]/50 transition-all duration-500"
-                  onClick={openApplicationModal}
-                >
-                  Рассчитать доставку
-                  <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-white/20 bg-white/[0.02] text-white hover:bg-white hover:text-[#0B0F18] text-lg px-12 py-8 h-auto backdrop-blur-sm transition-all duration-500"
-                >
-                  <a href="tel:+78126440291">
-                    Позвонить нам
-                  </a>
-                </Button>
-              </div>
-              
-              {/* Trust indicators */}
-              <div className="mt-16 pt-10 border-t border-white/[0.06]">
-                <div className="flex flex-wrap justify-center gap-8 lg:gap-12">
-                  {[
-                    { value: "15+", label: "лет на рынке" },
-                    { value: "1500+", label: "доставок в год" },
-                    { value: "99%", label: "довольных клиентов" },
-                  ].map((item, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-2xl lg:text-3xl font-bold text-white mb-1">{item.value}</div>
-                      <div className="text-sm text-zinc-500">{item.label}</div>
-                    </div>
-                  ))}
+            <div className="max-w-4xl mx-auto">
+              <CTABlock
+                icon={Sparkles}
+                title={
+                  <>
+                    <span className="text-white">Нужна доставка </span>
+                    <span className="bg-gradient-to-r from-[#F34D1B] via-[#FF6B35] to-[#F34D1B] bg-clip-text text-transparent">из Азии?</span>
+                  </>
+                }
+                subtitle="Рассчитаем стоимость и предложим оптимальный маршрут под ваш бюджет и сроки"
+                buttons={[
+                  {
+                    text: "Рассчитать доставку",
+                    variant: "primary",
+                  },
+                  {
+                    text: "Позвонить нам",
+                    variant: "secondary",
+                    href: "tel:+78126440291",
+                  },
+                ]}
+              >
+                {/* Trust indicators */}
+                <div className="pt-10 border-t border-white/[0.06]">
+                  <div className="flex flex-wrap justify-center gap-8 lg:gap-12">
+                    {[
+                      { value: "15+", label: "лет на рынке" },
+                      { value: "1500+", label: "доставок в год" },
+                      { value: "99%", label: "довольных клиентов" },
+                    ].map((item, index) => (
+                      <div key={index} className="text-center">
+                        <div className="text-2xl lg:text-3xl font-bold text-white mb-1">{item.value}</div>
+                        <div className="text-sm text-zinc-500">{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </CTABlock>
             </div>
           </div>
         </section>

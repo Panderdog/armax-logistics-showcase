@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, HelpCircle, Phone, MessageCircle, ArrowRight, Search, Sparkles, X, Package, FileText, CreditCard, Truck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronDown, HelpCircle, Phone, MessageCircle, Search, Sparkles, X, Package, FileText, CreditCard, Truck } from "lucide-react";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
-import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+import CTABlock from "@/components/CTABlock";
 
 interface FAQItem {
   question: string;
@@ -16,7 +15,6 @@ const FAQ = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
-  const { openApplicationModal } = useApplicationModal();
   const faqRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [sectionVisible, setSectionVisible] = useState(false);
@@ -167,10 +165,6 @@ const FAQ = () => {
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/90 to-[#0B0F18]/70" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0B0F18]" />
-          
-          {/* Animated gradient orbs */}
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#F34D1B]/10 rounded-full blur-[180px] animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
           
           {/* Grid pattern */}
           <div 
@@ -438,55 +432,35 @@ const FAQ = () => {
 
               {/* Contact CTA */}
               <div 
-                className="mt-20 relative"
+                className="mt-20"
                 style={{
                   opacity: sectionVisible ? 1 : 0,
                   transform: sectionVisible ? 'translateY(0)' : 'translateY(30px)',
                   transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s'
                 }}
               >
-                <div className="relative p-10 lg:p-14 rounded-3xl bg-white/[0.02] border border-white/[0.06] overflow-hidden group">
-                  {/* Background effects */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B]/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="absolute top-0 right-0 w-72 h-72 bg-[#F34D1B]/10 rounded-full blur-[100px] opacity-50" />
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/10 rounded-full blur-[80px] opacity-50" />
-                  
-                  <div className="relative text-center">
-                    {/* Icon */}
-                    <div className="inline-flex p-5 rounded-2xl bg-gradient-to-br from-[#F34D1B] to-orange-500 mb-8 shadow-[0_10px_40px_-10px_rgba(243,77,27,0.5)]">
-                      <MessageCircle className="h-8 w-8 text-white" strokeWidth={1.5} />
-                    </div>
-                    
-                    <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 tracking-tight">
+                <CTABlock
+                  icon={MessageCircle}
+                  title={
+                    <>
                       <span className="text-white">Не нашли </span>
                       <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">ответ?</span>
-                    </h2>
-                    <p className="text-lg lg:text-xl text-zinc-400 mb-10 max-w-xl mx-auto font-light">
-                      Свяжитесь с нами — ответим на любые вопросы о логистике и доставке
-                    </p>
-                    
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <Button 
-                        size="lg" 
-                        className="group bg-gradient-to-r from-[#F34D1B] to-orange-500 hover:from-[#e04318] hover:to-orange-600 text-white text-lg px-8 py-6 h-auto shadow-[0_10px_40px_-10px_rgba(243,77,27,0.4)] hover:shadow-[0_20px_60px_-10px_rgba(243,77,27,0.5)] transition-all duration-500"
-                        onClick={openApplicationModal}
-                      >
-                        Написать нам
-                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
-                      </Button>
-                      <Button 
-                        asChild 
-                        size="lg" 
-                        className="group bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] hover:border-[#F34D1B]/30 text-white text-lg px-8 py-6 h-auto transition-all duration-500"
-                      >
-                        <a href="tel:+78126440291">
-                          <Phone className="mr-2 h-5 w-5" />
-                          +7 (812) 644-02-91
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                    </>
+                  }
+                  subtitle="Свяжитесь с нами — ответим на любые вопросы о логистике и доставке"
+                  buttons={[
+                    {
+                      text: "Написать нам",
+                      variant: "primary",
+                    },
+                    {
+                      text: "+7 (812) 644-02-91",
+                      variant: "secondary",
+                      href: "tel:+78126440291",
+                      icon: Phone,
+                    },
+                  ]}
+                />
               </div>
             </div>
           </div>
@@ -495,36 +469,6 @@ const FAQ = () => {
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F18] to-transparent" />
         </section>
 
-        {/* Quick Contact */}
-        <section className="relative py-16 overflow-hidden">
-          <div className="absolute inset-0 bg-[#0B0F18]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F34D1B]/[0.03] via-transparent to-[#F34D1B]/[0.03]" />
-          
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
-              {[
-                { icon: Phone, label: "+7 (812) 644-02-91", href: "tel:+78126440291" },
-                { icon: MessageCircle, label: "WhatsApp", href: "https://wa.me/78126440291" },
-                { icon: MessageCircle, label: "Telegram", href: "https://t.me/armaxlogistics" },
-              ].map((contact, index) => (
-                <a
-                  key={index}
-                  href={contact.href}
-                  target={contact.href.startsWith('http') ? "_blank" : undefined}
-                  rel={contact.href.startsWith('http') ? "noopener noreferrer" : undefined}
-                  className="group flex items-center gap-3 px-6 py-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-[#F34D1B]/30 hover:bg-white/[0.05] transition-all duration-500"
-                >
-                  <div className="p-2 rounded-lg bg-[#F34D1B]/10 group-hover:bg-[#F34D1B]/20 transition-colors duration-300">
-                    <contact.icon className="h-5 w-5 text-[#F34D1B]" strokeWidth={1.5} />
-                  </div>
-                  <span className="text-white font-medium group-hover:text-[#F34D1B] transition-colors duration-300">
-                    {contact.label}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
       </div>
     </>
   );

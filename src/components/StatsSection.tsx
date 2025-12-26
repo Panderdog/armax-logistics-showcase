@@ -108,9 +108,6 @@ const StatsSection = () => {
     >
       {/* Atmospheric background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-transparent" />
-      
-      {/* Animated gradient orb */}
-      <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-accent/15 rounded-full blur-[100px] animate-pulse" />
 
       {/* Grid pattern overlay */}
       <div 

@@ -35,7 +35,7 @@ const servicesData: ServiceData[] = [
     id: "auto",
     icon: Truck,
     title: "Автоперевозки",
-    description: "Доставка «до двери» из Азии и Европы.",
+    description: "Доставка до двери из Азии и Европы.",
     image: "/images/truck.webp",
   },
   {
@@ -62,7 +62,7 @@ const servicesData: ServiceData[] = [
   {
     id: "insurance",
     icon: Shield,
-    title: "Управление страховыми рисками",
+    title: "Страхование грузов",
     description: "Защита при перевозке и хранении.",
     image: "/images/service-images/safe1-service.webp",
   },

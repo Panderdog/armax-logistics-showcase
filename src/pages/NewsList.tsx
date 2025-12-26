@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { useAdmin } from '@/contexts/AdminContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ArrowRight, Newspaper, Sparkles, TrendingUp, Clock, Filter } from 'lucide-react';
+import { Calendar, ArrowRight, Newspaper, Sparkles } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useApplicationModal } from '@/contexts/ApplicationModalContext';
+import CTABlock from '@/components/CTABlock';
 
 // Hook for intersection observer animation
 const useInView = (threshold = 0.1) => {
@@ -46,6 +47,23 @@ const NewsList = () => {
   const gridRef = useInView(0.1);
   const ctaRef = useInView(0.2);
 
+  // Ref for scrolling to news section
+  const newsSectionRef = useRef<HTMLElement>(null);
+
+  // Handle filter selection with smooth scroll
+  const handleTagSelect = (tag: string | null) => {
+    // Toggle filter: if clicking the same tag, deselect it
+    setSelectedTag(selectedTag === tag ? null : tag);
+    if (newsSectionRef.current) {
+      const headerHeight = 80; // Approximate header height
+      const offsetTop = newsSectionRef.current.offsetTop - headerHeight;
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
       day: 'numeric',
@@ -84,13 +102,8 @@ const NewsList = () => {
             {/* Base gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18] via-[#0F1520] to-[#0B0F18]" />
             
-            {/* Animated floating orbs */}
-            <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-[#F34D1B]/20 rounded-full blur-[180px] animate-pulse" />
-            <div className="absolute bottom-1/4 -right-20 w-[400px] h-[400px] bg-[#F34D1B]/15 rounded-full blur-[150px]" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[200px]" />
-            
             {/* Subtle image overlay */}
-            <div className="absolute inset-0 bg-[url('/images/ship.jpg')] bg-cover bg-center opacity-[0.07]" />
+            <div className="absolute inset-0 bg-[url('/images/news.jpg')] bg-cover bg-center opacity-[0.2]" />
             
             {/* Noise texture */}
             <div 
@@ -132,11 +145,8 @@ const NewsList = () => {
                   transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s'
                 }}
               >
-                <div className="relative">
-                  <Sparkles className="w-4 h-4 text-[#F34D1B]" />
-                  <div className="absolute inset-0 blur-sm bg-[#F34D1B]/50 animate-pulse" />
-                </div>
-                <span className="text-zinc-300">Новости и события</span>
+                <Sparkles className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">Блог</span>
                 <div className="w-px h-4 bg-white/10" />
                 <span className="text-[#F34D1B] font-semibold">{news.length} публикаций</span>
               </div>
@@ -150,7 +160,7 @@ const NewsList = () => {
                   transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.2s'
                 }}
               >
-                Актуальное
+                Новости
                 <br />
                 <span className="relative inline-block">
                   <span className="relative z-10 bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]">
@@ -168,38 +178,35 @@ const NewsList = () => {
                   transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.35s'
                 }}
               >
-                Следите за последними событиями,
-                <br className="hidden lg:block" />
-                новыми маршрутами и развитием компании
+                Следите за последними событиями в мировой логистике и развитием компании
               </p>
 
-              {/* Quick stats */}
-              <div 
-                className="flex flex-wrap gap-6 mt-12"
-                style={{
-                  opacity: heroRef.isInView ? 1 : 0,
-                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                  transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s'
-                }}
-              >
-                {[
-                  { icon: TrendingUp, label: 'Рост перевозок', value: '+34%' },
-                  { icon: Clock, label: 'Публикации', value: 'Еженедельно' }
-                ].map((stat, i) => (
-                  <div 
-                    key={i}
-                    className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
-                  >
-                    <div className="p-2 rounded-xl bg-[#F34D1B]/10">
-                      <stat.icon className="w-5 h-5 text-[#F34D1B]" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-zinc-500">{stat.label}</div>
-                      <div className="text-lg font-semibold text-white">{stat.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {/* Tag Filters */}
+              {allTags.length > 0 && (
+                <div 
+                  className="flex flex-wrap items-center gap-3 mt-10"
+                  style={{
+                    opacity: heroRef.isInView ? 1 : 0,
+                    transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                    transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s'
+                  }}
+                >
+                  <span className="text-sm font-medium text-zinc-400">Фильтр:</span>
+                  {allTags.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => handleTagSelect(tag)}
+                      className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                        selectedTag === tag 
+                          ? 'bg-accent text-white shadow-lg shadow-accent/25 scale-105' 
+                          : 'bg-white/[0.06] hover:bg-white/[0.10] text-zinc-300 hover:text-white border border-white/[0.08] hover:border-white/[0.15]'
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -235,52 +242,15 @@ const NewsList = () => {
           </section>
         ) : (
           <>
-            {/* Tag Filter Section */}
-            {allTags.length > 0 && (
-              <section className="py-8 bg-[#0a0f1a] border-b border-white/[0.06] sticky top-[var(--header-height)] z-20 backdrop-blur-xl bg-[#0a0f1a]/80">
-                <div className="container mx-auto px-6 lg:px-8">
-                  <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                    <div className="flex items-center gap-2 text-zinc-400 shrink-0">
-                      <Filter className="w-4 h-4" />
-                      <span className="text-sm font-medium">Фильтр:</span>
-                    </div>
-                    <button
-                      onClick={() => setSelectedTag(null)}
-                      className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                        selectedTag === null 
-                          ? 'bg-accent text-white shadow-lg shadow-accent/25' 
-                          : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.06]'
-                      }`}
-                    >
-                      Все новости
-                    </button>
-                    {allTags.map((tag) => (
-                      <button
-                        key={tag}
-                        onClick={() => setSelectedTag(tag)}
-                        className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                          selectedTag === tag 
-                            ? 'bg-accent text-white shadow-lg shadow-accent/25' 
-                            : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.06]'
-                        }`}
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
-
             {/* Featured News */}
             {featuredNews && (
               <section 
-                ref={featuredRef.ref as React.RefObject<HTMLElement>}
+                ref={(el) => {
+                  (featuredRef.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+                  (newsSectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+                }}
                 className="py-20 lg:py-28 bg-[#0a0f1a] relative overflow-hidden"
               >
-                {/* Subtle background decoration */}
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/[0.02] rounded-full blur-[150px] pointer-events-none" />
-                
                 <div className="container mx-auto px-6 lg:px-8 relative z-10">
                   <div 
                     className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center"
@@ -372,7 +342,7 @@ const NewsList = () => {
                             <span
                               key={i} 
                               className="text-sm px-4 py-1.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] hover:bg-accent/20 hover:text-accent hover:border-accent/30 cursor-pointer transition-colors"
-                              onClick={() => setSelectedTag(tag)}
+                              onClick={() => handleTagSelect(tag)}
                             >
                               {tag}
                             </span>
@@ -505,8 +475,7 @@ const NewsList = () => {
                                     className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] transition-colors hover:bg-accent/10 hover:text-accent hover:border-accent/20 cursor-pointer"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      setSelectedTag(tag);
-                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                      handleTagSelect(tag);
                                     }}
                                   >
                                     {tag}
@@ -556,76 +525,22 @@ const NewsList = () => {
                     transition: 'all 1s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  <div className="relative p-12 lg:p-20 rounded-[2.5rem] overflow-hidden">
-                    {/* Background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#1a1f2e] to-primary" />
-                    
-                    {/* Decorative elements */}
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/30 rounded-full blur-[150px]" />
-                    <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-accent/20 rounded-full blur-[120px]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px]" />
-                    
-                    {/* Grid pattern */}
-                    <div 
-                      className="absolute inset-0 opacity-[0.03]"
-                      style={{
-                        backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-                        backgroundSize: '40px 40px'
-                      }}
-                    />
-                    
-                    <div className="relative text-center">
-                      <div 
-                        className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/10 backdrop-blur-sm rounded-full border border-white/10"
-                        style={{
-                          opacity: ctaRef.isInView ? 1 : 0,
-                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s'
-                        }}
-                      >
-                        <Sparkles className="w-4 h-4 text-accent" />
-                        <span className="text-white/80">Бесплатная консультация</span>
-                      </div>
-                      
-                      <h2 
-                        className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 tracking-tight leading-[1.1]"
-                        style={{
-                          opacity: ctaRef.isInView ? 1 : 0,
-                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s'
-                        }}
-                      >
-                        Нужна консультация
-                        <br />
+                  <CTABlock
+                    icon={Sparkles}
+                    title={
+                      <>
+                        <span className="text-white">Нужна консультация </span>
                         <span className="text-accent">по логистике?</span>
-                      </h2>
-                      
-                      <p 
-                        className="text-xl lg:text-2xl text-white/70 font-light mb-12 max-w-2xl mx-auto leading-relaxed"
-                        style={{
-                          opacity: ctaRef.isInView ? 1 : 0,
-                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s'
-                        }}
-                      >
-                        Расскажите о вашей задаче — мы предложим оптимальное решение по доставке груза
-                      </p>
-                      
-                      <Button
-                        size="lg"
-                        className="bg-white text-primary hover:bg-white/90 text-lg px-12 py-8 h-auto rounded-2xl group shadow-2xl shadow-black/20 hover:shadow-white/20 transition-all duration-500"
-                        onClick={openApplicationModal}
-                        style={{
-                          opacity: ctaRef.isInView ? 1 : 0,
-                          transform: ctaRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                          transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s'
-                        }}
-                      >
-                        Связаться с нами
-                        <ArrowRight className="ml-3 h-6 w-6 transition-transform duration-300 group-hover:translate-x-2" />
-                      </Button>
-                    </div>
-                  </div>
+                      </>
+                    }
+                    subtitle="Расскажите о вашей задаче — мы предложим оптимальное решение по доставке груза"
+                    buttons={[
+                      {
+                        text: "Связаться с нами",
+                        variant: "primary",
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             </section>
