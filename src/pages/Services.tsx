@@ -79,7 +79,7 @@ const Services = () => {
       description: "Готовим декларации, подбираем коды ТН ВЭД, рассчитываем платежи, представляем ваши интересы.",
       features: ["Выпуск за 1-2 дня", "99% без замечаний", "15+ лет опыта"],
       stats: { value: "1-2", label: "дня" },
-      image: "/images/customs.png",
+      image: "/images/customs.webp",
       color: "from-emerald-500 to-teal-500",
       hoverBorder: "hover:border-emerald-500/30",
     },

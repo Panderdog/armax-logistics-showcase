@@ -91,7 +91,7 @@ const BentoGrid = () => {
             to="/services"
             className="group relative lg:col-span-2 rounded-3xl overflow-hidden cursor-pointer"
           >
-            <div className="absolute inset-0 bg-[url('/images/customs.png')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-[url('/images/customs.webp')] bg-cover bg-center" />
             <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/60" />
             <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500" />
             

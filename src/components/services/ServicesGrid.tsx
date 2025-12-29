@@ -43,7 +43,7 @@ const servicesData: ServiceData[] = [
     icon: FileCheck,
     title: "Таможенное оформление",
     description: "Полное сопровождение документов.",
-    image: "/images/customs.png",
+    image: "/images/customs.webp",
   },
   {
     id: "consolidated",

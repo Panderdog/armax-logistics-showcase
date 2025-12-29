@@ -45,7 +45,7 @@ const About = () => {
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 overflow-hidden">
           {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/images/tlk.png')] bg-cover bg-center opacity-20" />
+          <div className="absolute inset-0 bg-[url('/images/tlk.webp')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/90 to-[#0B0F18]/40" />
           
           {/* Grid pattern */}
@@ -89,7 +89,7 @@ const About = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6">
               {/* Main story card */}
               <div className="lg:col-span-2 lg:row-span-2 relative rounded-3xl overflow-hidden group">
-                <div className="absolute inset-0 bg-[url('/images/tlk.png')] bg-cover bg-center" style={{ backgroundPosition: '85% center' }} />
+                <div className="absolute inset-0 bg-[url('/images/tlk.webp')] bg-cover bg-center" style={{ backgroundPosition: '85% center' }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18] via-[#0B0F18]/80 to-[#0B0F18]/40" />
                 <div className="relative h-full min-h-[480px] lg:min-h-[540px] p-8 lg:p-12 flex flex-col justify-end">
                   <div className="inline-flex items-center gap-2 w-fit px-3 py-1.5 mb-6 text-xs font-medium text-[#F34D1B] bg-[#F34D1B]/10 rounded-full border border-[#F34D1B]/20">

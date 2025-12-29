@@ -1,15 +1,15 @@
 import { Sparkles } from "lucide-react";
 
 const partners = [
-  { name: "MAERSK", image: "/images/containers-cropped/maersk.png" },
-  { name: "MSC", image: "/images/containers-cropped/msc.png" },
-  { name: "CMA CGM", image: "/images/containers-cropped/cma-cgm.png" },
-  { name: "OOCL", image: "/images/containers-cropped/oocl.png" },
-  { name: "ONE", image: "/images/containers-cropped/one-big.png" },
-  { name: "FESCO", image: "/images/containers-cropped/fesco.png" },
-  { name: "Hapag-Lloyd", image: "/images/containers-cropped/hapag-lloyd.png" },
-  { name: "Evergreen", image: "/images/containers-cropped/evergreen.png" },
-  { name: "Yang Ming", image: "/images/containers-cropped/yang ming.png" },
+  { name: "MAERSK", image: "/images/containers-cropped/maersk.webp" },
+  { name: "MSC", image: "/images/containers-cropped/msc.webp" },
+  { name: "CMA CGM", image: "/images/containers-cropped/cma-cgm.webp" },
+  { name: "OOCL", image: "/images/containers-cropped/oocl.webp" },
+  { name: "ONE", image: "/images/containers-cropped/one-big.webp" },
+  { name: "FESCO", image: "/images/containers-cropped/fesco.webp" },
+  { name: "Hapag-Lloyd", image: "/images/containers-cropped/hapag-lloyd.webp" },
+  { name: "Evergreen", image: "/images/containers-cropped/evergreen.webp" },
+  { name: "Yang Ming", image: "/images/containers-cropped/yang-ming.webp" },
 ];
 
 const PartnerCard = ({ name, image }: { name: string; image: string }) => (

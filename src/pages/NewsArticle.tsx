@@ -37,7 +37,7 @@ const useInView = (threshold = 0.1) => {
 function parseContent(content: string): string {
   if (!content) return '';
   
-  let html = content
+  const html = content
     // Escape HTML
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

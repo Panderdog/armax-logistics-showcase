@@ -112,7 +112,7 @@ const Contacts = () => {
         );
       }
 
-      // @ts-ignore
+            // @ts-expect-error - Yandex Maps typings issue
       const { error } = await supabase.from("applications").insert({
         name: formData.name.trim(),
         email: formData.email.trim() || null,
@@ -419,7 +419,7 @@ const Contacts = () => {
                 <div className="relative p-8 rounded-3xl overflow-hidden group">
                   {/* Background gradient */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B] to-orange-600" />
-                  <div className="absolute inset-0 bg-[url('/images/tlk.png')] bg-cover bg-center opacity-20" />
+                  <div className="absolute inset-0 bg-[url('/images/tlk.webp')] bg-cover bg-center opacity-20" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   
                   <div className="relative">

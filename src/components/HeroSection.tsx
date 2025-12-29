@@ -30,7 +30,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 z-0 hidden md:block">
         {/* Poster/Fallback Background - показывается пока видео грузится или при ошибке */}
         <div 
-          className={`absolute inset-0 bg-[url('/images/ship.jpg')] bg-cover bg-center transition-opacity duration-1000 ${
+          className={`absolute inset-0 bg-[url('/images/ship.webp')] bg-cover bg-center transition-opacity duration-1000 ${
             videoLoaded && !videoError ? 'opacity-0' : 'opacity-30'
           }`}
           aria-hidden="true"
@@ -45,14 +45,14 @@ const HeroSection = () => {
             muted
             playsInline
             preload="auto"
-            poster="/images/ship.jpg"
+            poster="/images/ship.webp"
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
               videoLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             aria-label="Фоновое видео морских грузовых перевозок и логистики"
           >
-            <source src="/video/Кубрик-3.0.webm" type="video/webm" />
-            <source src="/video/Кубрик-3.0.mp4" type="video/mp4" />
+            <source src="/video/compress-hero-video.webm" type="video/webm" />
+            <source src="/video/compress-hero-video.mp4" type="video/mp4" />
             Ваш браузер не поддерживает видео.
           </video>
         )}
