@@ -14,28 +14,48 @@ const useInView = (threshold = 0.1) => {
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
+    const currentRef = ref.current;
+    
+    // Fallback: make visible after a short delay if observer doesn't fire
+    const fallbackTimer = setTimeout(() => {
+      setIsInView(true);
+    }, 300);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsInView(true);
+          clearTimeout(fallbackTimer);
           observer.disconnect();
         }
       },
-      { threshold }
+      { threshold, rootMargin: '100px' }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (currentRef) {
+      observer.observe(currentRef);
+      
+      // Check if element is already in viewport
+      const rect = currentRef.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      if (isInViewport) {
+        setIsInView(true);
+        clearTimeout(fallbackTimer);
+        observer.disconnect();
+      }
     }
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(fallbackTimer);
+      observer.disconnect();
+    };
   }, [threshold]);
 
   return { ref, isInView };
 };
 
 const NewsList = () => {
-  const { getPublishedNews } = useAdmin();
+  const { getPublishedNews, newsLoading } = useAdmin();
   const { openApplicationModal } = useApplicationModal();
   const news = getPublishedNews();
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -91,6 +111,15 @@ const NewsList = () => {
         description="Актуальные новости компании Armax: новые маршруты, услуги, события в сфере международной логистики и грузоперевозок из Азии."
       />
       
+      {/* Loading State */}
+      {newsLoading ? (
+        <div className="min-h-screen bg-[#0B0F18] flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-accent/30 border-t-accent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-zinc-400 text-lg">Загрузка новостей...</p>
+          </div>
+        </div>
+      ) : (
       <div className="min-h-screen bg-[#0B0F18] overflow-hidden">
         {/* Hero Section */}
         <section 
@@ -103,7 +132,7 @@ const NewsList = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18] via-[#0F1520] to-[#0B0F18]" />
             
             {/* Subtle image overlay */}
-            <div className="absolute inset-0 bg-[url('/images/news.jpg')] bg-cover bg-center opacity-[0.2]" />
+            <div className="absolute inset-0 bg-[url('/images/news-hero.webp')] bg-cover bg-center opacity-[0.2]" />
             
             {/* Noise texture */}
             <div 
@@ -337,11 +366,11 @@ const NewsList = () => {
 
                       {/* Tags */}
                       {featuredNews.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 overflow-hidden">
                           {featuredNews.tags.map((tag, i) => (
                             <span
                               key={i} 
-                              className="text-sm px-4 py-1.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] hover:bg-accent/20 hover:text-accent hover:border-accent/30 cursor-pointer transition-colors"
+                              className="text-sm px-4 py-1.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] hover:bg-accent/20 hover:text-accent hover:border-accent/30 cursor-pointer transition-colors whitespace-nowrap"
                               onClick={() => handleTagSelect(tag)}
                             >
                               {tag}
@@ -468,11 +497,11 @@ const NewsList = () => {
 
                             {/* Tags */}
                             {item.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-2 pt-2">
+                              <div className="flex flex-wrap gap-2 pt-2 overflow-hidden">
                                 {item.tags.slice(0, 2).map((tag, i) => (
                                   <Badge 
                                     key={i} 
-                                    className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] transition-colors hover:bg-accent/10 hover:text-accent hover:border-accent/20 cursor-pointer"
+                                    className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] transition-colors hover:bg-accent/10 hover:text-accent hover:border-accent/20 cursor-pointer whitespace-nowrap"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       handleTagSelect(tag);
@@ -482,7 +511,7 @@ const NewsList = () => {
                                   </Badge>
                                 ))}
                                 {item.tags.length > 2 && (
-                                  <Badge className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08]">
+                                  <Badge className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08] whitespace-nowrap">
                                     +{item.tags.length - 2}
                                   </Badge>
                                 )}
@@ -547,6 +576,7 @@ const NewsList = () => {
           </>
         )}
       </div>
+      )}
     </>
   );
 };

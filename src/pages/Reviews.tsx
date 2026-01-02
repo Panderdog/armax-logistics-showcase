@@ -32,12 +32,12 @@ const Reviews = () => {
 
   const featuredTestimonials = [
     {
-      name: "Игорь Савельев",
+      name: "Андрей Хрусталёв",
       role: "Руководитель отдела логистики",
       company: "СтройМатериалы Про",
       text: "Работаем с Armax третий год. По поставке из Китая сроки «горели», и нам быстро предложили альтернативную схему с понятным планом по датам. В итоге забрали груз без простоев и уложились в дедлайн запуска проекта — минус примерно две недели к исходному сценарию. Для нас это критично, потому что каждый день простоя стоит денег.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      image: "/avatar/monogramm/AX.webp",
       highlight: "Сэкономили 2 недели на поставке",
       stats: { value: "40+", label: "поставок в год" },
     },
@@ -47,7 +47,7 @@ const Reviews = () => {
       company: "МедТехника Плюс",
       text: "Ввозили оборудование, где важно, чтобы по документам не было ни одного слабого места. Armax взяли на себя ТН ВЭД/пакет документов, заранее прогнали риски по оформлению и держали нас в курсе статусов. Выпуск прошёл спокойно, без «сюрпризов» и лишних затрат. По ощущениям — сервис выше среднего: не просто «оформляют», а реально ведут процесс.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+      image: "/avatar/maniken/2.webp",
       highlight: "Полное таможенное сопровождение",
       stats: { value: "100%", label: "документов в порядке" },
     },
@@ -57,7 +57,7 @@ const Reviews = () => {
       company: "TechParts",
       text: "Раньше поставки из Китая были хаосом: сроки прыгали, документы приходили в последний момент. С Armax за несколько месяцев выстроили стабильный поток — сейчас идём 4–5 контейнеров в месяц по понятному графику. Нравится, что менеджер погружается в специфику и предупреждает о рисках заранее, а не постфактум.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      image: "/avatar/maniken/4.webp",
       highlight: "4-5 контейнеров ежемесячно",
       stats: { value: "60+", label: "контейнеров в год" },
     },
@@ -70,7 +70,7 @@ const Reviews = () => {
       company: "ТехноСнаб ООО",
       text: "Сотрудничаем с Armax Logistics больше трёх лет. Ценим стабильность: сроки и договорённости соблюдаются, статусы по перевозке понятные, документы оформляются аккуратно. Если возникают отклонения по графику — предупреждают заранее и предлагают варианты, а не ставят перед фактом. Для нас это ключевое, потому что закупки завязаны на производственный план.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+      image: "/avatar/monogramm/AP.webp",
     },
     {
       name: "Мария Иванова",
@@ -78,7 +78,7 @@ const Reviews = () => {
       company: "СтройИмпорт",
       text: "Нужно было организовать доставку крупногабаритного груза из Германии: негабарит, согласования, контроль упаковки и сроков. Armax быстро собрали схему перевозки, обозначили риски и держали нас в курсе по каждому этапу. Груз пришёл без повреждений и в согласованное окно. По коммуникации — максимально комфортно: коротко, по делу, с ответственностью.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+      image: "/avatar/maniken/1.webp",
     },
     {
       name: "Дмитрий Соколов",
@@ -86,7 +86,7 @@ const Reviews = () => {
       company: "ЕвроТранс",
       text: "Работаем с Armax по разным направлениям. Нравится профессиональный подход: быстро отвечают, дают ясные сроки и реально помогают с нестандартными задачами — от срочных перезаказов документов до перестройки маршрута при изменении условий. По сути это не «перевозчик по заявке», а партнёр, который ведёт процесс и снимает с нас операционную нагрузку.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+      image: "/avatar/monogramm/DS.webp",
     },
     {
       name: "Елена Козлова",
@@ -94,7 +94,7 @@ const Reviews = () => {
       company: "АзияТрейд",
       text: "По Китаю работаем около двух лет. Ребята хорошо понимают специфику: консолидация, корректные документы, контроль отгрузки и коммуникация с поставщиками. Нам важно, чтобы груз не «зависал» на стыках и не было сюрпризов по таможне — здесь с этим порядок. По факту стали реже возникать простои и вопросы по оформлению.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+      image: "/avatar/monogramm/EK.webp",
     },
     {
       name: "Сергей Новиков",
@@ -102,7 +102,7 @@ const Reviews = () => {
       company: "ИмпортПро",
       text: "Перешли к Armax от конкурентов и не пожалели. Условия прозрачные: по стоимости и срокам всё проговаривается заранее, без внезапных доплат. Менеджер всегда на связи и нормально объясняет, что происходит, если что-то меняется по маршруту. В итоге процесс стал предсказуемым — именно этого и не хватало для бизнеса.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+      image: "/avatar/maniken/image7.webp",
     },
     {
       name: "Анна Белова",
@@ -110,7 +110,7 @@ const Reviews = () => {
       company: "ФудЛогистик",
       text: "Отдельно отмечу работу с рефрижераторными грузами. Соблюдается температурный режим, есть контроль на этапах и понятная отчётность по перевозке. За год сотрудничества не было потерь по качеству и спорных ситуаций. Когда работаешь с продуктами, это решает всё — поэтому продолжаем на постоянной основе.",
       rating: 5,
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
+      image: "/avatar/monogramm/AB.webp",
     },
   ];
 
@@ -222,7 +222,7 @@ const Reviews = () => {
           />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div className="max-w-4xl">
               <div 
                 className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in"
               >
@@ -239,7 +239,7 @@ const Reviews = () => {
               </h1>
               
               <p 
-                className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-2xl mx-auto" 
+                className="text-xl lg:text-2xl text-zinc-400 font-light animate-fade-in leading-relaxed max-w-3xl" 
                 style={{ animationDelay: '0.15s' }}
               >
                 Реальные истории успешного сотрудничества
@@ -249,7 +249,7 @@ const Reviews = () => {
 
               {/* Quick stats in hero */}
               <div 
-                className="flex flex-wrap justify-center gap-8 mt-12 animate-fade-in"
+                className="flex flex-wrap gap-8 mt-12 animate-fade-in"
                 style={{ animationDelay: '0.3s' }}
               >
                 {[
@@ -257,7 +257,7 @@ const Reviews = () => {
                   { value: "20+", label: "стран" },
                   { value: "99%", label: "в срок" },
                 ].map((stat, index) => (
-                  <div key={index} className="text-center">
+                  <div key={index}>
                     <div className="text-3xl lg:text-4xl font-bold text-white mb-1">{stat.value}</div>
                     <div className="text-sm text-zinc-500">{stat.label}</div>
                   </div>
@@ -324,11 +324,16 @@ const Reviews = () => {
 
                         {/* Author */}
                         <div className="flex items-center gap-4">
-                          <img
-                            src={currentTestimonial.image}
-                            alt={currentTestimonial.name}
-                            className="w-14 h-14 rounded-full object-cover ring-2 ring-[#F34D1B]/20"
-                          />
+                          <div className="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center ring-2 ring-[#F34D1B]/20">
+                            <img
+                              src={currentTestimonial.image}
+                              alt={currentTestimonial.name}
+                              className="w-full h-full object-cover"
+                              style={currentTestimonial.image.includes('monogramm') ? {
+                                transform: 'scaleX(1.75) scaleY(1.81) translateY(1px)'
+                              } as React.CSSProperties : undefined}
+                            />
+                          </div>
                           <div>
                             <div className="font-semibold text-white text-lg">
                               {currentTestimonial.name}
@@ -481,11 +486,16 @@ const Reviews = () => {
 
                     {/* Author */}
                     <div className="flex items-center gap-3 pt-5 border-t border-white/[0.05]">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                      />
+                      <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-full h-full object-cover transition-all duration-500"
+                          style={testimonial.image.includes('monogramm') ? {
+                            transform: 'scaleX(1.75) scaleY(1.81) translateY(1px)'
+                          } as React.CSSProperties : undefined}
+                        />
+                      </div>
                       <div>
                         <div className="font-medium text-white text-sm group-hover:text-[#F34D1B] transition-colors">
                           {testimonial.name}

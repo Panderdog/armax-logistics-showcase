@@ -27,7 +27,7 @@ const Services = () => {
       id: "aviation",
       icon: Plane,
       title: "Авиаперевозки",
-      subtitle: "грузов по всему миру",
+      subtitle: "экспресс доставка",
       description: "Полная организация воздушной логистики: приём груза, подготовка документов, контроль расписаний.",
       features: ["Проверенные авиалинии", "Точные сроки", "Экспресс-доставка"],
       stats: { value: "3-7", label: "дней" },
@@ -52,7 +52,7 @@ const Services = () => {
       icon: Train,
       title: "ЖД перевозки",
       subtitle: "из Китая",
-      description: "Сбалансированное решение по срокам и стоимости. Регулярные отправки через 3 погранперехода.",
+      description: "Сбалансированное решение по срокам и стоимости. Регулярные рейсы и прозрачная логистика.",
       features: ["Сроки 28–35 дней", "Высокая надёжность", "Еженедельные рейсы"],
       stats: { value: "28-35", label: "дней" },
       image: "/images/service-images/train-service.webp",
@@ -63,10 +63,10 @@ const Services = () => {
       id: "consolidated",
       icon: Package,
       title: "Сборные грузы",
-      subtitle: "из любой точки мира",
-      description: "Консолидация грузов от 1 коробки до нескольких паллет. До 40% экономии на логистике.",
+      subtitle: "небольшие партии",
+      description: "Консолидация грузов от 1 коробки до нескольких паллет.",
       features: ["От 1 коробки", "Склады в Китае и Турции", "Регулярные отправки"],
-      stats: { value: "40%", label: "экономия" },
+      stats: { value: "от 1", label: "коробки" },
       image: "/images/service-images/sbor-service.webp",
       color: "from-rose-500 to-pink-500",
       hoverBorder: "hover:border-rose-500/30",
@@ -194,19 +194,19 @@ const Services = () => {
                 <Link
                   key={service.id}
                   to={`/services/${service.id}`}
-                  className={`group relative overflow-hidden rounded-3xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1`}
+                  className={`group relative rounded-3xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden`}
                 >
                   {/* Background image */}
                   <div className="absolute inset-0">
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="w-full h-full object-cover opacity-35 group-hover:opacity-45 group-hover:scale-105 transition-all duration-700"
+                      className="w-full h-full object-cover opacity-35 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18]/85 via-[#0B0F18]/65 to-[#0B0F18]/50" />
                   </div>
 
-                  <div className="relative p-8 lg:p-10">
+                  <div className="relative p-8 lg:p-10 overflow-hidden">
                     <div className="flex items-start justify-between mb-6">
                       <div className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg`}>
                         <service.icon className="h-7 w-7 text-white" strokeWidth={1.5} />
@@ -230,11 +230,11 @@ const Services = () => {
                     </p>
 
                     {/* Features */}
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <div className="flex flex-wrap gap-2 mb-6 overflow-hidden">
                       {service.features.map((feature, idx) => (
                         <span 
                           key={idx}
-                          className="px-3 py-1.5 text-sm bg-white/[0.08] backdrop-blur-sm text-zinc-200 rounded-lg border border-white/[0.12] drop-shadow-md"
+                          className="px-3 py-1.5 text-sm bg-white/[0.08] backdrop-blur-sm text-zinc-200 rounded-lg border border-white/[0.12] drop-shadow-md whitespace-nowrap"
                         >
                           {feature}
                         </span>
@@ -263,21 +263,21 @@ const Services = () => {
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700"
+                      className="w-full h-full object-cover opacity-30 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18]/90 via-[#0B0F18]/75 to-[#0B0F18]/85" />
                   </div>
                   
-                  <div className="relative">
+                  <div className="relative overflow-hidden">
                     <div className="flex items-start justify-between mb-5">
                       <div className={`p-3 rounded-xl bg-gradient-to-br ${service.color} shadow-lg`}>
                         <service.icon className="h-6 w-6 text-white" strokeWidth={1.5} />
                       </div>
-                      <div className="text-right">
+                      <div className="text-right flex-shrink-0">
                         <div className={`text-xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent drop-shadow-lg`}>
                           {service.stats.value}
                         </div>
-                        <div className="text-xs text-zinc-300 drop-shadow-md">{service.stats.label}</div>
+                        <div className="text-xs text-zinc-300 drop-shadow-md whitespace-nowrap">{service.stats.label}</div>
                       </div>
                     </div>
 
@@ -314,13 +314,13 @@ const Services = () => {
                     <span className="text-zinc-300">Почему мы</span>
                   </span>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
-                    <span className="text-white">Комплексный подход </span>
+                    <span className="text-white">Комплексный подход<br /></span>
                     <span className="bg-gradient-to-r from-accent via-orange-400 to-accent bg-clip-text text-transparent">
                       к каждой перевозке
                     </span>
                   </h2>
                   <p className="text-lg text-zinc-400 font-light leading-relaxed mb-8">
-                    Мы не просто доставляем грузы — мы выстраиваем надёжные цепочки поставок, которые работают как часы.
+                    Берём на себя логистику «под ключ»: перевозка, таможенное оформление, страхование и склад в Санкт-Петербурге.
                   </p>
                   <Button
                     size="lg"
@@ -335,10 +335,10 @@ const Services = () => {
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { value: "15+", label: "лет на рынке", color: "from-accent to-orange-500" },
-                    { value: "99%", label: "доставок вовремя", color: "from-emerald-500 to-teal-500" },
-                    { value: "20+", label: "стран партнёров", color: "from-blue-500 to-cyan-500" },
-                    { value: "24/7", label: "поддержка", color: "from-violet-500 to-purple-500" },
+                    { value: "16+", label: "лет на рынке", color: "from-accent to-orange-500" },
+                    { value: "1×1", label: "персональный менеджер", color: "from-emerald-500 to-teal-500" },
+                    { value: "ASIA", label: "вся Азия → РФ", color: "from-blue-500 to-cyan-500" },
+                    { value: "EXW–DDP", label: "любые условия поставок", color: "from-violet-500 to-purple-500" },
                   ].map((stat, index) => (
                     <div
                       key={index}

@@ -1,33 +1,34 @@
-import { Target, Users, Award, TrendingUp, Globe, Shield, Sparkles, MapPin } from "lucide-react";
+import { Target, Users, Award, TrendingUp, Globe, Shield, Sparkles, MapPin, ClipboardCheck, ShieldCheck, Boxes } from "lucide-react";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
 import CTABlock from "@/components/CTABlock";
 
 const About = () => {
 
+  // NBSP (\u00A0) используется для предотвращения переноса коротких союзов/предлогов на новую строку
   const values = [
     {
       icon: Shield,
       title: "Надёжность",
-      description: "Гарантируем сохранность груза и выполнение обязательств в срок",
+      description: "Сохранность груза, контроль рисков и соблюдение сроков",
       gradient: "from-blue-500 to-cyan-500",
     },
     {
       icon: TrendingUp,
       title: "Скорость",
-      description: "Оптимизированные маршруты и быстрая обработка заявок",
+      description: "Оптимизированные маршруты и\u00A0быстрая обработка заявок",
       gradient: "from-[#F34D1B] to-orange-500",
     },
     {
       icon: Users,
       title: "Прозрачность",
-      description: "Полная отчётность и контроль на каждом этапе доставки",
+      description: "Полная отчётность и\u00A0контроль на\u00A0каждом этапе доставки",
       gradient: "from-emerald-500 to-teal-500",
     },
     {
       icon: Award,
       title: "Ответственность",
-      description: "Профессиональный подход и индивидуальные решения",
+      description: "Профессиональный подход и\u00A0индивидуальные решения",
       gradient: "from-violet-500 to-purple-500",
     },
   ];
@@ -80,6 +81,57 @@ const About = () => {
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0e15] to-transparent" />
         </section>
 
+        {/* About Intro Section - Alternative Version */}
+        <section className="py-16 lg:py-20 bg-[#0a0e15] relative overflow-hidden">
+          {/* Ambient glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#F34D1B]/[0.04] rounded-full blur-[120px] pointer-events-none" />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <div className="max-w-4xl mx-auto">
+              {/* Glass card */}
+              <div className="relative rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-sm overflow-hidden">
+                {/* Accent bar left */}
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#F34D1B] via-orange-500 to-[#F34D1B]/50" />
+                
+                <div className="p-8 lg:p-10 pl-10 lg:pl-12">
+                  {/* Header */}
+                  <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 tracking-tight">
+                    Международная логистика{' '}
+                    <span className="bg-gradient-to-r from-[#F34D1B] to-orange-400 bg-clip-text text-transparent">
+                      для поставок в РФ
+                    </span>
+                  </h2>
+                  
+                  {/* Description */}
+                  <p className="text-zinc-400 text-base lg:text-[17px] leading-relaxed mb-8 max-w-2xl">
+                    Организуем поставки «под ключ»: маршрут, перевозка, таможня. 
+                    Работаем с импортом из Азии и транзитом через третьи страны. 
+                    Единая точка управления — понятный процесс на каждом этапе.
+                  </p>
+                  
+                  {/* Capabilities grid */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    {[
+                      { icon: Globe, label: "Море / авто / ж/д / авиа" },
+                      { icon: ClipboardCheck, label: "Таможня и документы" },
+                      { icon: ShieldCheck, label: "Страхование грузов" },
+                      { icon: Boxes, label: "Склад в СПб" },
+                    ].map((item, index) => (
+                      <div 
+                        key={index}
+                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] hover:border-[#F34D1B]/20 hover:bg-white/[0.05] transition-all duration-300"
+                      >
+                        <item.icon className="w-4 h-4 text-[#F34D1B] flex-shrink-0" strokeWidth={1.5} />
+                        <span className="text-sm text-zinc-300 leading-tight">{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Focus Section - Bento Grid */}
         <section className="relative py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-[#0a0e15]" />
@@ -126,7 +178,7 @@ const About = () => {
                   <Award className="h-6 w-6 text-[#F34D1B]" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-2">15 лет опыта</h3>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-2">16 лет опыта</h3>
                   <p className="text-zinc-500 group-hover:text-zinc-400 text-sm lg:text-base leading-relaxed transition-colors">
                     Репутация партнёра, который берёт на себя ответственность и гарантирует результат
                   </p>
@@ -170,15 +222,20 @@ const About = () => {
                     <span className="text-zinc-300">Наши клиенты</span>
                   </div>
                   <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white tracking-tight leading-[1.1]">
-                    Для компаний с 
-                    <span className="bg-gradient-to-r from-[#F34D1B] to-orange-400 bg-clip-text text-transparent"> регулярным импортом</span>
+                    Для компаний
+                    <br />
+                    с <span className="bg-gradient-to-r from-[#F34D1B] to-orange-400 bg-clip-text text-transparent">регулярным</span>
+                    <br />
+                    <span className="bg-gradient-to-r from-[#F34D1B] to-orange-400 bg-clip-text text-transparent">импортом</span>
                   </h2>
                   <div className="space-y-6">
                     <p className="text-lg text-zinc-400 leading-relaxed">
                       Наши клиенты — производственные и торговые компании, для которых сбой поставки означает простой, потери и репутационные риски.
                     </p>
                     <p className="text-lg text-zinc-400 leading-relaxed">
-                      Мы выстраиваем логистику как управляемый процесс — с понятными сроками, ответственностью и прогнозируемым результатом на каждом этапе.
+                      Мы выстраиваем логистику как управляемый процесс — с понятными сроками, ответственностью
+                      <br />
+                      и прогнозируемым результатом на каждом этапе.
                     </p>
                   </div>
                 </div>

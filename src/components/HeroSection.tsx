@@ -7,6 +7,7 @@ import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const { openApplicationModal } = useApplicationModal();
 
   useEffect(() => {
@@ -16,6 +17,18 @@ const HeroSection = () => {
       video.addEventListener('loadeddata', () => setVideoLoaded(true));
       video.addEventListener('error', () => setVideoError(true));
     }
+  }, []);
+
+  useEffect(() => {
+    // Hide scroll indicator after scrolling down
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const heroHeight = window.innerHeight - 72; // minus header height
+      setShowScrollIndicator(scrollPosition < heroHeight * 0.3); // Hide after 30% of hero section
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -65,9 +78,18 @@ const HeroSection = () => {
       {/* Bottom fade transition to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />
       
-      {/* Subtle accent divider */}
-      <div className="absolute bottom-0 left-0 right-0 z-[6]">
-        <div className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      {/* Scroll indicator - slightly peeking from bottom */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 z-[6] hidden md:flex justify-center pointer-events-none transition-opacity duration-500 ${
+          showScrollIndicator ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <div className="flex flex-col items-center gap-2 animate-bounce -mb-6">
+          <span className="text-white/40 text-xs font-medium tracking-wider uppercase">Прокрутите</span>
+          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
+            <div className="w-1.5 h-3 bg-accent rounded-full animate-scroll-down" />
+          </div>
+        </div>
       </div>
 
       {/* Mobile Content */}

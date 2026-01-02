@@ -287,4 +287,23 @@ All colors MUST be HSL.
   .marquee-track:hover {
     animation-play-state: paused;
   }
+  
+  /* Scroll indicator animation */
+  @keyframes scroll-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  
+  .animate-scroll-down {
+    animation: scroll-down 1.5s ease-in-out infinite;
+  }
 }

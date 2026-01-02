@@ -1,4 +1,4 @@
-import { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo, useMemo } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -7,98 +7,33 @@ import {
   Line,
   ZoomableGroup,
 } from "react-simple-maps";
-import { Ship, Plane, Train, Truck } from "lucide-react";
+import { Ship, Plane, Train, Truck, Layers } from "lucide-react";
+import { 
+  points, 
+  routes, 
+  modeLabels, 
+  modeColors, 
+  type Mode, 
+  type LocationPoint, 
+  type Route 
+} from "@/data/geography";
 
 // TopoJSON с картой мира (высокое качество от Natural Earth)
 const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-interface LocationPoint {
-  id: string;
-  name: string;
-  nameRu: string;
-  coordinates: [number, number]; // [longitude, latitude]
-  type: "origin" | "destination" | "hub";
-  country: string;
-}
-
-interface Route {
-  id: string;
-  from: string;
-  to: string;
-  modes: ("sea" | "air" | "rail" | "road")[];
-  description: string;
-}
-
-// Точные координаты городов [longitude, latitude]
-const locations: LocationPoint[] = [
-  // Азия - источники
-  { id: "shanghai", name: "Shanghai", nameRu: "Шанхай", coordinates: [121.47, 31.23], type: "origin", country: "Китай" },
-  { id: "shenzhen", name: "Shenzhen", nameRu: "Шэньчжэнь", coordinates: [114.06, 22.54], type: "origin", country: "Китай" },
-  { id: "beijing", name: "Beijing", nameRu: "Пекин", coordinates: [116.41, 39.90], type: "origin", country: "Китай" },
-  { id: "guangzhou", name: "Guangzhou", nameRu: "Гуанчжоу", coordinates: [113.26, 23.13], type: "origin", country: "Китай" },
-  { id: "seoul", name: "Seoul", nameRu: "Сеул", coordinates: [126.98, 37.57], type: "origin", country: "Ю. Корея" },
-  { id: "tokyo", name: "Tokyo", nameRu: "Токио", coordinates: [139.69, 35.69], type: "origin", country: "Япония" },
-  { id: "hochiminh", name: "Ho Chi Minh", nameRu: "Хошимин", coordinates: [106.63, 10.82], type: "origin", country: "Вьетнам" },
-  { id: "hanoi", name: "Hanoi", nameRu: "Ханой", coordinates: [105.85, 21.03], type: "origin", country: "Вьетнам" },
-  { id: "bangkok", name: "Bangkok", nameRu: "Бангкок", coordinates: [100.50, 13.76], type: "origin", country: "Таиланд" },
-  { id: "mumbai", name: "Mumbai", nameRu: "Мумбаи", coordinates: [72.88, 19.08], type: "origin", country: "Индия" },
-  { id: "delhi", name: "Delhi", nameRu: "Дели", coordinates: [77.21, 28.64], type: "origin", country: "Индия" },
-  { id: "singapore", name: "Singapore", nameRu: "Сингапур", coordinates: [103.82, 1.35], type: "hub", country: "Сингапур" },
-  { id: "jakarta", name: "Jakarta", nameRu: "Джакарта", coordinates: [106.85, -6.21], type: "origin", country: "Индонезия" },
-  
-  // Хабы
-  { id: "istanbul", name: "Istanbul", nameRu: "Стамбул", coordinates: [28.98, 41.01], type: "hub", country: "Турция" },
-  { id: "dubai", name: "Dubai", nameRu: "Дубай", coordinates: [55.27, 25.20], type: "hub", country: "ОАЭ" },
-  { id: "almaty", name: "Almaty", nameRu: "Алматы", coordinates: [76.95, 43.24], type: "hub", country: "Казахстан" },
-  
-  // Россия - пункты назначения
-  { id: "moscow", name: "Moscow", nameRu: "Москва", coordinates: [37.62, 55.75], type: "destination", country: "Россия" },
-  { id: "spb", name: "St. Petersburg", nameRu: "Санкт-Петербург", coordinates: [30.31, 59.94], type: "destination", country: "Россия" },
-  { id: "vladivostok", name: "Vladivostok", nameRu: "Владивосток", coordinates: [131.89, 43.12], type: "destination", country: "Россия" },
-  { id: "novosibirsk", name: "Novosibirsk", nameRu: "Новосибирск", coordinates: [82.93, 55.03], type: "destination", country: "Россия" },
-  { id: "ekb", name: "Yekaterinburg", nameRu: "Екатеринбург", coordinates: [60.60, 56.84], type: "destination", country: "Россия" },
-  
-  // Европа
-  { id: "rotterdam", name: "Rotterdam", nameRu: "Роттердам", coordinates: [4.48, 51.92], type: "origin", country: "Нидерланды" },
-  { id: "hamburg", name: "Hamburg", nameRu: "Гамбург", coordinates: [9.99, 53.55], type: "origin", country: "Германия" },
-  { id: "milan", name: "Milan", nameRu: "Милан", coordinates: [9.19, 45.46], type: "origin", country: "Италия" },
-];
-
-const routes: Route[] = [
-  { id: "r1", from: "shanghai", to: "moscow", modes: ["rail", "sea"], description: "Основной маршрут из Китая" },
-  { id: "r2", from: "shenzhen", to: "moscow", modes: ["sea", "rail"], description: "Южный Китай - Россия" },
-  { id: "r3", from: "beijing", to: "moscow", modes: ["rail"], description: "Прямое ж/д сообщение" },
-  { id: "r4", from: "seoul", to: "vladivostok", modes: ["sea"], description: "Корея - Дальний Восток" },
-  { id: "r5", from: "hochiminh", to: "moscow", modes: ["sea", "air"], description: "Вьетнам - Россия" },
-  { id: "r6", from: "mumbai", to: "moscow", modes: ["sea", "rail"], description: "Индия - Россия" },
-  { id: "r7", from: "istanbul", to: "moscow", modes: ["road", "sea"], description: "Турция - Россия" },
-  { id: "r8", from: "rotterdam", to: "istanbul", modes: ["sea"], description: "Европа через Турцию" },
-  { id: "r9", from: "hamburg", to: "istanbul", modes: ["road"], description: "Германия через Турцию" },
-  { id: "r10", from: "guangzhou", to: "almaty", modes: ["rail"], description: "Казахстанский транзит" },
-  { id: "r11", from: "almaty", to: "moscow", modes: ["rail", "road"], description: "Центральная Азия" },
-  { id: "r12", from: "singapore", to: "vladivostok", modes: ["sea"], description: "ЮВА - Дальний Восток" },
-  { id: "r13", from: "dubai", to: "moscow", modes: ["air", "sea"], description: "Ближний Восток" },
-  { id: "r14", from: "tokyo", to: "vladivostok", modes: ["sea"], description: "Япония - ДВ" },
-];
-
-const modeIcons = {
+// Иконки для модальностей
+const modeIcons: Record<Mode, typeof Ship> = {
   sea: Ship,
   air: Plane,
   rail: Train,
   road: Truck,
+  multi: Layers,
 };
 
-const modeLabels = {
-  sea: "Море",
-  air: "Авиа",
-  rail: "ЖД",
-  road: "Авто",
-};
-
+// Цвета для типов точек
 const locationColors = {
   origin: { fill: "#E85D3E", stroke: "#FF7A5C" },      // Coral
   destination: { fill: "#22C55E", stroke: "#4ADE80" }, // Green
-  hub: { fill: "#F59E0B", stroke: "#FBBF24" },         // Amber
 };
 
 // Memoized Geography component для производительности
@@ -121,24 +56,48 @@ const LogisticsMap = () => {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [hoveredRoute, setHoveredRoute] = useState<string | null>(null);
   const [tooltipContent, setTooltipContent] = useState<{ content: string; x: number; y: number } | null>(null);
-  const [center, setCenter] = useState<[number, number]>([75, 30]);
+  const [center, setCenter] = useState<[number, number]>([50, 35]);
+  
+  // Фильтр модальностей: null = все, иначе только выбранный mode
+  const [activeMode, setActiveMode] = useState<Mode | null>(null);
 
   const handleMoveEnd = useCallback((position: { coordinates: [number, number]; zoom: number }) => {
     setCenter(position.coordinates);
   }, []);
 
-  const getLocationById = useCallback((id: string) => {
-    return locations.find(loc => loc.id === id);
+  const getLocationById = useCallback((id: string): LocationPoint | undefined => {
+    return points.find(loc => loc.id === id);
   }, []);
 
+  // Фильтрованные маршруты по режиму
+  const filteredRoutes = useMemo(() => {
+    if (activeMode === null) return routes;
+    return routes.filter(r => r.mode === activeMode);
+  }, [activeMode]);
+
+  // Активные точки (участвующие в отфильтрованных маршрутах)
+  const activePointIds = useMemo(() => {
+    const ids = new Set<string>();
+    filteredRoutes.forEach(r => {
+      ids.add(r.fromId);
+      ids.add(r.toId);
+    });
+    return ids;
+  }, [filteredRoutes]);
+
+  // Точки для отображения
+  const visiblePoints = useMemo(() => {
+    return points.filter(p => activePointIds.has(p.id));
+  }, [activePointIds]);
+
   const getConnectedRoutes = useCallback((locationId: string) => {
-    return routes.filter(r => r.from === locationId || r.to === locationId);
-  }, []);
+    return filteredRoutes.filter(r => r.fromId === locationId || r.toId === locationId);
+  }, [filteredRoutes]);
 
   const isRouteHighlighted = useCallback((route: Route) => {
     if (hoveredRoute === route.id) return true;
-    if (selectedLocation && (route.from === selectedLocation || route.to === selectedLocation)) return true;
-    if (hoveredLocation && (route.from === hoveredLocation || route.to === hoveredLocation)) return true;
+    if (selectedLocation && (route.fromId === selectedLocation || route.toId === selectedLocation)) return true;
+    if (hoveredLocation && (route.fromId === hoveredLocation || route.toId === hoveredLocation)) return true;
     return false;
   }, [hoveredRoute, selectedLocation, hoveredLocation]);
 
@@ -156,6 +115,24 @@ const LogisticsMap = () => {
     setHoveredLocation(null);
     setTooltipContent(null);
   }, []);
+
+  const handleRouteMouseEnter = useCallback((route: Route, event: React.MouseEvent) => {
+    setHoveredRoute(route.id);
+    const rect = (event.target as Element).getBoundingClientRect();
+    setTooltipContent({
+      content: route.label,
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+    });
+  }, []);
+
+  const handleRouteMouseLeave = useCallback(() => {
+    setHoveredRoute(null);
+    setTooltipContent(null);
+  }, []);
+
+  // Все доступные модальности
+  const allModes: Mode[] = ["sea", "air", "rail", "road", "multi"];
 
   return (
     <div className="logistics-map-container relative w-full">
@@ -177,23 +154,59 @@ const LogisticsMap = () => {
             />
             <span className="text-xs text-muted-foreground">Пункты назначения</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div 
-              className="w-3 h-3 rounded-full" 
-              style={{ backgroundColor: locationColors.hub.fill, boxShadow: `0 0 8px ${locationColors.hub.fill}` }} 
-            />
-            <span className="text-xs text-muted-foreground">Транзитные хабы</span>
-          </div>
         </div>
         <div className="mt-3 pt-3 border-t border-border/50">
+          <p className="text-xs text-muted-foreground mb-2">Виды транспорта:</p>
           <div className="grid grid-cols-2 gap-2">
-            {Object.entries(modeIcons).map(([mode, Icon]) => (
-              <div key={mode} className="flex items-center gap-1.5">
-                <Icon className="w-3 h-3 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">{modeLabels[mode as keyof typeof modeLabels]}</span>
-              </div>
-            ))}
+            {allModes.map((mode) => {
+              const Icon = modeIcons[mode];
+              return (
+                <div key={mode} className="flex items-center gap-1.5">
+                  <Icon 
+                    className="w-3 h-3" 
+                    style={{ color: modeColors[mode] }} 
+                  />
+                  <span className="text-xs text-muted-foreground">{modeLabels[mode]}</span>
+                </div>
+              );
+            })}
           </div>
+        </div>
+      </div>
+
+      {/* Mode Filter Buttons */}
+      <div className="absolute top-4 right-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-3 border border-border/50 shadow-lg">
+        <h4 className="text-xs font-semibold text-foreground mb-2">Фильтр по типу</h4>
+        <div className="flex flex-col gap-1.5">
+          <button
+            onClick={() => setActiveMode(null)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              activeMode === null
+                ? "bg-[#F34D1B] text-white"
+                : "bg-white/5 text-muted-foreground hover:bg-white/10"
+            }`}
+          >
+            Все маршруты
+          </button>
+          {allModes.map((mode) => {
+            const Icon = modeIcons[mode];
+            const isActive = activeMode === mode;
+            return (
+              <button
+                key={mode}
+                onClick={() => setActiveMode(isActive ? null : mode)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "bg-white/5 text-muted-foreground hover:bg-white/10"
+                }`}
+                style={isActive ? { backgroundColor: modeColors[mode] } : undefined}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {modeLabels[mode]}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -216,17 +229,17 @@ const LogisticsMap = () => {
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{
-            center: [75, 30],
-            scale: 350,
+            center: [50, 35],
+            scale: 280,
           }}
           style={{ width: "100%", height: "auto" }}
           viewBox="0 0 800 450"
         >
           <ZoomableGroup 
               center={center} 
-              zoom={0.55}
-              minZoom={0.55}
-              maxZoom={0.55}
+              zoom={0.6}
+              minZoom={0.6}
+              maxZoom={0.6}
               onMoveEnd={handleMoveEnd}
             >
             {/* Страны */}
@@ -239,40 +252,42 @@ const LogisticsMap = () => {
             </Geographies>
 
             {/* Маршруты */}
-            {routes.map((route) => {
-              const fromLoc = getLocationById(route.from);
-              const toLoc = getLocationById(route.to);
+            {filteredRoutes.map((route) => {
+              const fromLoc = getLocationById(route.fromId);
+              const toLoc = getLocationById(route.toId);
               if (!fromLoc || !toLoc) return null;
 
               const highlighted = isRouteHighlighted(route);
+              const routeColor = modeColors[route.mode];
 
               return (
                 <Line
                   key={route.id}
                   from={fromLoc.coordinates}
                   to={toLoc.coordinates}
-                  stroke={highlighted ? "#F59E0B" : "#E85D3E"}
-                  strokeWidth={highlighted ? 2.5 : 1}
-                  strokeOpacity={highlighted ? 1 : 0.4}
+                  stroke={highlighted ? "#FBBF24" : routeColor}
+                  strokeWidth={highlighted ? 2.5 : 1.5}
+                  strokeOpacity={highlighted ? 1 : 0.6}
                   strokeLinecap="round"
+                  strokeDasharray={route.mode === "multi" ? "4 2" : undefined}
                   style={{ 
                     cursor: "pointer",
-                    filter: highlighted ? "drop-shadow(0 0 4px #F59E0B)" : "none",
+                    filter: highlighted ? "drop-shadow(0 0 4px #FBBF24)" : "none",
                     transition: "all 0.3s ease",
                   }}
-                  onMouseEnter={() => setHoveredRoute(route.id)}
-                  onMouseLeave={() => setHoveredRoute(null)}
+                  onMouseEnter={(e) => handleRouteMouseEnter(route, e as unknown as React.MouseEvent)}
+                  onMouseLeave={handleRouteMouseLeave}
                 />
               );
             })}
 
             {/* Маркеры городов */}
-            {locations.map((location) => {
+            {visiblePoints.map((location) => {
               const isHovered = hoveredLocation === location.id;
               const isSelected = selectedLocation === location.id;
               const isHighlighted = isHovered || isSelected;
               const colors = locationColors[location.type];
-              const baseRadius = location.type === "hub" ? 5 : 4;
+              const baseRadius = location.type === "destination" ? 6 : 4;
               const radius = isHighlighted ? baseRadius * 1.4 : baseRadius;
 
               return (
@@ -322,7 +337,7 @@ const LogisticsMap = () => {
                       filter: isHighlighted ? `drop-shadow(0 0 6px ${colors.fill})` : `drop-shadow(0 0 3px ${colors.fill})`,
                       transition: "all 0.3s ease",
                     }}
-                    onMouseEnter={(e) => handleMarkerMouseEnter(location, e)}
+                    onMouseEnter={(e) => handleMarkerMouseEnter(location, e as unknown as React.MouseEvent)}
                     onMouseLeave={handleMarkerMouseLeave}
                     onClick={() => setSelectedLocation(selectedLocation === location.id ? null : location.id)}
                   />
@@ -369,10 +384,11 @@ const LogisticsMap = () => {
                 <div className="space-y-2">
                   <p className="text-xs text-muted-foreground uppercase tracking-wider">Маршруты:</p>
                   {connectedRoutes.length > 0 ? connectedRoutes.map(route => {
-                    const otherPoint = route.from === selectedLocation 
-                      ? getLocationById(route.to) 
-                      : getLocationById(route.from);
-                    const direction = route.from === selectedLocation ? "→" : "←";
+                    const otherPoint = route.fromId === selectedLocation 
+                      ? getLocationById(route.toId) 
+                      : getLocationById(route.fromId);
+                    const direction = route.fromId === selectedLocation ? "→" : "←";
+                    const Icon = modeIcons[route.mode];
                     
                     return (
                       <div 
@@ -386,19 +402,17 @@ const LogisticsMap = () => {
                             {direction} {otherPoint?.nameRu}
                           </span>
                         </div>
-                        <div className="flex gap-1">
-                          {route.modes.map(mode => {
-                            const Icon = modeIcons[mode];
-                            return (
-                              <div 
-                                key={mode} 
-                                className="p-1 rounded bg-accent/10"
-                                title={modeLabels[mode]}
-                              >
-                                <Icon className="w-3 h-3 text-accent" />
-                              </div>
-                            );
-                          })}
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="p-1 rounded"
+                            style={{ backgroundColor: `${modeColors[route.mode]}20` }}
+                          >
+                            <Icon 
+                              className="w-3 h-3" 
+                              style={{ color: modeColors[route.mode] }}
+                            />
+                          </div>
+                          <span className="text-xs text-muted-foreground">{modeLabels[route.mode]}</span>
                         </div>
                       </div>
                     );

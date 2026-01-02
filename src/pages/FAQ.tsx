@@ -176,7 +176,7 @@ const FAQ = () => {
           />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div className="max-w-4xl">
               <div 
                 className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06]"
                 style={{
@@ -201,7 +201,7 @@ const FAQ = () => {
               </h1>
               
               <p 
-                className="text-xl lg:text-2xl text-zinc-400 font-light leading-relaxed max-w-2xl mx-auto mb-12"
+                className="text-xl lg:text-2xl text-zinc-400 font-light leading-relaxed max-w-3xl mb-12"
                 style={{
                   opacity: 0,
                   animation: 'fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards',
@@ -212,7 +212,7 @@ const FAQ = () => {
 
               {/* Stats row */}
               <div 
-                className="flex flex-wrap justify-center gap-6 lg:gap-12"
+                className="flex flex-wrap gap-6 lg:gap-12"
                 style={{
                   opacity: 0,
                   animation: 'fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards',

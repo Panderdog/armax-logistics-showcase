@@ -176,6 +176,11 @@ const StatsSection = () => {
           ))}
         </div>
       </div>
+      
+      {/* Accent divider after stats */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <div className="h-0.5 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+      </div>
     </section>
   );
 };

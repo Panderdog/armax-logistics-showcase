@@ -125,7 +125,7 @@ const NewsCarousel = () => {
                   </Link>
 
                   {/* Content */}
-                  <div className="p-6 lg:p-8 space-y-4">
+                  <div className="p-6 lg:p-8 space-y-4 overflow-hidden">
                     {/* Date */}
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
@@ -146,9 +146,9 @@ const NewsCarousel = () => {
 
                     {/* Tags */}
                     {item.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-2">
+                      <div className="flex flex-wrap gap-2 pt-2 overflow-hidden">
                         {item.tags.slice(0, 2).map((tag, i) => (
-                          <Badge key={i} variant="secondary" className="text-xs">
+                          <Badge key={i} variant="secondary" className="text-xs whitespace-nowrap">
                             {tag}
                           </Badge>
                         ))}

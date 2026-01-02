@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 const testimonials = [
   {
     id: 1,
-    author: "Игорь Савельев",
+    author: "Андрей Хрусталёв",
     role: "Руководитель отдела логистики",
     company: "СтройМатериалы Про",
     content: "Работаем с Armax третий год. По поставке из Китая сроки «горели», и нам быстро предложили альтернативную схему с понятным планом по датам. В итоге забрали груз без простоев и уложились в дедлайн запуска проекта — минус примерно две недели к исходному сценарию. Для нас это критично, потому что каждый день простоя стоит денег.",
     rating: 5,
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+    image: "/avatar/monogramm/AX.webp",
     highlight: "Сэкономили 2 недели на поставке",
     icon: TrendingUp,
   },
@@ -21,7 +21,7 @@ const testimonials = [
     company: "МедТехника Плюс",
     content: "Ввозили оборудование, где важно, чтобы по документам не было ни одного слабого места. Armax взяли на себя ТН ВЭД/пакет документов, заранее прогнали риски по оформлению и держали нас в курсе статусов. Выпуск прошёл спокойно, без «сюрпризов» и лишних затрат. По ощущениям — сервис выше среднего: не просто «оформляют», а реально ведут процесс.",
     rating: 5,
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+    image: "/avatar/maniken/2.webp",
     highlight: "Полное таможенное сопровождение",
     icon: Package,
   },
@@ -32,7 +32,7 @@ const testimonials = [
     company: "TechParts",
     content: "Раньше поставки из Китая были хаосом: сроки прыгали, документы приходили в последний момент. С Armax за несколько месяцев выстроили стабильный поток — сейчас идём 4–5 контейнеров в месяц по понятному графику. Нравится, что менеджер погружается в специфику и предупреждает о рисках заранее, а не постфактум.",
     rating: 5,
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    image: "/avatar/maniken/4.webp",
     highlight: "4-5 контейнеров ежемесячно",
     icon: Building2,
   },
@@ -56,9 +56,8 @@ const TestimonialsPreview = () => {
             </div>
             <span>Реальные отзывы клиентов</span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-foreground mb-6 tracking-tight leading-[1.1]">
-            Истории успешных<br />
-            <span className="text-muted-foreground/50">поставок</span>
+          <h2 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-foreground mb-6 tracking-tight leading-[1.1] whitespace-nowrap">
+            Истории успешных поставок
           </h2>
           <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-xl mx-auto">
             Каждый проект — это решение конкретной задачи бизнеса. Вот что говорят наши клиенты.
@@ -99,11 +98,16 @@ const TestimonialsPreview = () => {
 
                 {/* Author */}
                 <div className="flex items-center gap-4 pt-6 border-t border-border">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.author}
-                    className="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                  />
+                  <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.author}
+                      className="w-full h-full object-cover transition-all duration-500"
+                      style={testimonial.image.includes('monogramm') ? {
+                        transform: 'scaleX(1.75) scaleY(1.81) translateY(1px)'
+                      } as React.CSSProperties : undefined}
+                    />
+                  </div>
                   <div>
                     <div className="font-semibold text-foreground text-sm">
                       {testimonial.author}

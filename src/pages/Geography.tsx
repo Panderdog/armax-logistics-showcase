@@ -184,9 +184,9 @@ const Geography = () => {
         </section>
 
         {/* Interactive Map Section */}
-        <section className="relative py-20 lg:py-28 overflow-hidden">
-          {/* Background effects */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0D1220] to-[#0B0F18]" />
+        <section className="relative py-20 lg:py-28 pb-32 lg:pb-40 overflow-hidden">
+          {/* Background effects with smooth gradient transition */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0D1220] to-[#080B12]" />
           
           {/* Decorative grid lines */}
           <div 
@@ -224,12 +224,18 @@ const Geography = () => {
               </div>
             </div>
           </div>
+          
+          {/* Smooth gradient transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-[#080B12]/50 to-[#080B12]" />
         </section>
 
         {/* Regions Grid - Premium Design */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-24 lg:py-32 pt-32 lg:pt-40 pb-32 lg:pb-40 overflow-hidden">
           {/* Dark background with gradient */}
-          <div className="absolute inset-0 bg-[#080B12]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#080B12] via-[#080B12] to-[#0B0F18]" />
+          
+          {/* China flag inspired accent */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#DE2910] to-transparent opacity-50 z-10" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
@@ -285,11 +291,11 @@ const Geography = () => {
                     </div>
                     
                     {/* Countries */}
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <div className="flex flex-wrap gap-2 mb-6 overflow-hidden">
                       {region.countries.map((country, idx) => (
                         <span
                           key={idx}
-                          className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-300 ${
+                          className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-300 whitespace-nowrap ${
                             region.highlight 
                               ? "bg-white/10 text-white/90 hover:bg-white/20" 
                               : "bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:text-white"
@@ -313,10 +319,13 @@ const Geography = () => {
               ))}
             </div>
           </div>
+          
+          {/* Smooth gradient transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-[#0B0F18]/50 to-[#0B0F18]" />
         </section>
 
         {/* Routes Section - Premium Interactive Cards */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-24 lg:py-32 pt-32 lg:pt-40 overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#080B12] via-[#0B0F18] to-[#0D1220]" />
           

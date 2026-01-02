@@ -23,7 +23,7 @@ const ServiceCard = ({ id, icon: Icon, title, description, image, link = "/servi
       />
       
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/60 group-hover:bg-black/55 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
       
       {/* Gradient for text readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
