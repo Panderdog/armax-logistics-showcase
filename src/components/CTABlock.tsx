@@ -17,7 +17,7 @@ interface CTABlockProps {
   /** Заголовок CTA-блока */
   title: string | ReactNode;
   /** Подзаголовок/описание */
-  subtitle: string;
+  subtitle: string | ReactNode;
   /** Кнопки для отображения */
   buttons?: CTABlockButton[];
   /** Дополнительный контент под кнопками */
@@ -141,6 +141,7 @@ const CTABlock = ({
 };
 
 export default CTABlock;
+
 
 
 

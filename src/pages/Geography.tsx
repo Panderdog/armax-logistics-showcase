@@ -184,9 +184,9 @@ const Geography = () => {
         </section>
 
         {/* Interactive Map Section */}
-        <section className="relative py-20 lg:py-28 pb-32 lg:pb-40 overflow-hidden">
+        <section className="relative py-16 lg:py-20 pb-16 lg:pb-20 overflow-hidden">
           {/* Background effects with smooth gradient transition */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0D1220] to-[#080B12]" />
+          <div className="absolute inset-0 bg-[#0B0F18]" />
           
           {/* Decorative grid lines */}
           <div 
@@ -224,18 +224,12 @@ const Geography = () => {
               </div>
             </div>
           </div>
-          
-          {/* Smooth gradient transition to next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-[#080B12]/50 to-[#080B12]" />
         </section>
 
         {/* Regions Grid - Premium Design */}
-        <section className="relative py-24 lg:py-32 pt-32 lg:pt-40 pb-32 lg:pb-40 overflow-hidden">
+        <section className="relative py-16 lg:py-20 overflow-hidden">
           {/* Dark background with gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#080B12] via-[#080B12] to-[#0B0F18]" />
-          
-          {/* China flag inspired accent */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#DE2910] to-transparent opacity-50 z-10" />
+          <div className="absolute inset-0 bg-[#0B0F18]" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
@@ -274,7 +268,7 @@ const Geography = () => {
                       <div className="flex items-center gap-4">
                         <span className="text-4xl">{region.icon}</span>
                         <div>
-                          <h3 className={`text-2xl lg:text-3xl font-bold ${region.highlight ? "text-white" : "text-white group-hover:text-[#F34D1B] transition-colors"}`}>
+                          <h3 className="text-2xl lg:text-3xl font-bold text-white">
                             {region.name}
                           </h3>
                           {region.highlight && (
@@ -312,22 +306,18 @@ const Geography = () => {
                         <Clock className={`w-4 h-4 ${region.highlight ? "text-[#F34D1B]" : "text-zinc-500"}`} />
                         <span className="text-sm text-zinc-400">Доставка {region.stats.time}</span>
                       </div>
-                      <ArrowRight className={`w-5 h-5 ml-auto transition-transform group-hover:translate-x-1 ${region.highlight ? "text-[#F34D1B]" : "text-zinc-600 group-hover:text-[#F34D1B]"}`} />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          
-          {/* Smooth gradient transition to next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-[#0B0F18]/50 to-[#0B0F18]" />
         </section>
 
         {/* Routes Section - Premium Interactive Cards */}
-        <section className="relative py-24 lg:py-32 pt-32 lg:pt-40 overflow-hidden">
+        <section className="relative py-16 lg:py-20 overflow-hidden">
           {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#080B12] via-[#0B0F18] to-[#0D1220]" />
+          <div className="absolute inset-0 bg-[#0B0F18]" />
           
           {/* Grid pattern */}
           <div 
@@ -435,12 +425,12 @@ const Geography = () => {
         </section>
 
         {/* China Focus - Premium Section */}
-        <section className="relative py-28 lg:py-36 overflow-hidden" ref={statsRef}>
+        <section className="relative py-20 lg:py-24 overflow-hidden" ref={statsRef}>
           {/* Rich dark background */}
-          <div className="absolute inset-0 bg-[#070A10]" />
+          <div className="absolute inset-0 bg-[#0B0F18]" />
           
           {/* China flag inspired accent */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#DE2910] to-transparent opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#DE2910] to-transparent opacity-30" />
           
           {/* Premium pattern overlay */}
           <div 
@@ -484,17 +474,14 @@ const Geography = () => {
                       transition: `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.15}s`
                     }}
                   >
-                    <div className="relative p-6 lg:p-8 rounded-3xl bg-white/[0.02] backdrop-blur-sm border border-white/[0.06] hover:border-[#F34D1B]/30 hover:bg-white/[0.04] transition-all duration-500 h-full text-center overflow-hidden">
-                      {/* Hover glow */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B]/0 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-3xl" />
-                      
+                    <div className="relative p-6 lg:p-8 rounded-3xl bg-white/[0.02] backdrop-blur-sm border border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300 h-full text-center overflow-hidden">
                       {/* Icon */}
-                      <div className="relative mb-5 inline-flex p-4 rounded-2xl bg-[#F34D1B]/10 text-[#F34D1B] group-hover:bg-[#F34D1B] group-hover:text-white transition-all duration-500">
+                      <div className="relative mb-5 inline-flex p-4 rounded-2xl bg-[#F34D1B]/10 text-[#F34D1B]">
                         <stat.icon className="h-6 w-6 lg:h-7 lg:w-7" strokeWidth={1.5} />
                       </div>
 
                       {/* Number */}
-                      <div className="relative text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 tracking-tight group-hover:scale-105 transition-transform duration-500">
+                      <div className="relative text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 tracking-tight">
                         {stat.value}
                       </div>
 
@@ -504,7 +491,7 @@ const Geography = () => {
                       </div>
 
                       {/* Description */}
-                      <div className="relative text-sm text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                      <div className="relative text-sm text-zinc-500">
                         {stat.desc}
                       </div>
                     </div>
@@ -517,7 +504,7 @@ const Geography = () => {
                   {advantages.map((item, index) => (
                   <div 
                     key={index} 
-                    className="group relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-[#F34D1B]/30 transition-all duration-500"
+                    className="relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] transition-colors duration-300"
                     style={{ 
                       opacity: isVisible ? 1 : 0,
                       transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
@@ -525,11 +512,11 @@ const Geography = () => {
                     }}
                   >
                     <div className="flex items-start gap-5">
-                      <div className="p-3 rounded-xl bg-[#F34D1B]/10 text-[#F34D1B] group-hover:bg-[#F34D1B] group-hover:text-white transition-all duration-300 shrink-0">
+                      <div className="p-3 rounded-xl bg-[#F34D1B]/10 text-[#F34D1B] shrink-0">
                         <item.icon className="h-6 w-6" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <div className="font-semibold text-lg text-white group-hover:text-[#F34D1B] transition-colors mb-1">
+                        <div className="font-semibold text-lg text-white mb-1">
                           {item.title}
                         </div>
                         <div className="text-sm text-zinc-500 leading-relaxed">{item.description}</div>
@@ -554,19 +541,15 @@ const Geography = () => {
           </div>
         </section>
 
-        {/* CTA - Premium Closing Section */}
-        <section className="relative py-28 lg:py-36 overflow-hidden">
-          {/* Rich layered background */}
-          <div className="absolute inset-0 bg-[#0B0F18]" />
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18] via-[#0B0F18]/80 to-[#0B0F18]/60" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-transparent to-[#0B0F18]" />
-          
-          {/* Decorative lines */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            <div className="absolute bottom-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-          </div>
+        {/* CTA Section */}
+        <section className="py-20 lg:py-24 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
+          />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto">
@@ -590,23 +573,7 @@ const Geography = () => {
                     href: "tel:+78126440291",
                   },
                 ]}
-              >
-                {/* Trust indicators */}
-                <div className="pt-10 border-t border-white/[0.06]">
-                  <div className="flex flex-wrap justify-center gap-8 lg:gap-12">
-                    {[
-                      { value: "15+", label: "лет на рынке" },
-                      { value: "1500+", label: "доставок в год" },
-                      { value: "99%", label: "довольных клиентов" },
-                    ].map((item, index) => (
-                      <div key={index} className="text-center">
-                        <div className="text-2xl lg:text-3xl font-bold text-white mb-1">{item.value}</div>
-                        <div className="text-sm text-zinc-500">{item.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CTABlock>
+              />
             </div>
           </div>
         </section>

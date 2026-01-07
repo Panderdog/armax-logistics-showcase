@@ -43,9 +43,9 @@ const Index = () => {
                 title={
                   <>
                     <span className="text-white">Готовы оптимизировать </span>
-                    <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
-                      вашу логистику?
-                    </span>
+                <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent whitespace-nowrap">
+                  вашу логистику?
+                </span>
                   </>
                 }
                 subtitle="Получите персональное предложение в течение 30 минут. Расскажите нам о вашем грузе."

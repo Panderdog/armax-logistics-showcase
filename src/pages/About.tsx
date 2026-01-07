@@ -44,7 +44,7 @@ const About = () => {
       />
       <div className="min-h-screen bg-[#0B0F18]">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative min-h-[calc(100vh-var(--header-height))] flex items-center overflow-hidden">
           {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/images/tlk.webp')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/90 to-[#0B0F18]/40" />
@@ -58,7 +58,7 @@ const About = () => {
             }}
           />
           
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="container mx-auto px-6 lg:px-8 relative z-10 py-24 lg:py-32">
             <div className="max-w-4xl">
               <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
                 <Sparkles className="w-4 h-4 text-[#F34D1B]" />
@@ -310,7 +310,7 @@ const About = () => {
                     </span>
                   </>
                 }
-                subtitle="Расскажите о вашей задаче — мы предложим оптимальное решение"
+                subtitle={<>Расскажите о вашей задаче — мы предложим оптимальное{'\u00A0'}решение</>}
                 buttons={[
                   {
                     text: "Связаться с нами",

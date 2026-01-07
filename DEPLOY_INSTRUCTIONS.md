@@ -92,3 +92,4 @@ zip -r dist.zip dist/
 4. Убедитесь, что веб-сервер правильно настроен для SPA (Single Page Application)
 
 
+

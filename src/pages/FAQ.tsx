@@ -160,11 +160,10 @@ const FAQ = () => {
       />
       <div className="min-h-screen bg-[#0B0F18]">
         {/* Hero Section */}
-        <section className="relative py-24 lg:py-32 overflow-hidden">
+        <section className="relative py-28 lg:py-40 overflow-hidden">
           {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/90 to-[#0B0F18]/70" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0B0F18]" />
+          <div className="absolute inset-0 bg-[url('/images/faq-hero.webp')] bg-cover bg-top opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18]/60 via-[#0B0F18]/40 to-[#0B0F18]" />
           
           {/* Grid pattern */}
           <div 
@@ -184,8 +183,8 @@ const FAQ = () => {
                   animation: 'fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards',
                 }}
               >
-                <Sparkles className="w-4 h-4 text-[#F34D1B]" />
-                <span className="text-zinc-300">Поддержка</span>
+                <HelpCircle className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">FAQ</span>
               </div>
               
               <h1 
@@ -201,7 +200,7 @@ const FAQ = () => {
               </h1>
               
               <p 
-                className="text-xl lg:text-2xl text-zinc-400 font-light leading-relaxed max-w-3xl mb-12"
+                className="text-xl lg:text-2xl text-zinc-400 font-light leading-relaxed max-w-3xl"
                 style={{
                   opacity: 0,
                   animation: 'fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards',
@@ -209,29 +208,6 @@ const FAQ = () => {
               >
                 Всё, что нужно знать о работе с нами — в одном месте
               </p>
-
-              {/* Stats row */}
-              <div 
-                className="flex flex-wrap gap-6 lg:gap-12"
-                style={{
-                  opacity: 0,
-                  animation: 'fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards',
-                }}
-              >
-                {[
-                  { value: "12", label: "вопросов" },
-                  { value: "4", label: "категории" },
-                  { value: "24/7", label: "поддержка" },
-                ].map((stat, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
-                  >
-                    <span className="text-2xl lg:text-3xl font-bold text-[#F34D1B]">{stat.value}</span>
-                    <span className="text-sm text-zinc-400">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
           

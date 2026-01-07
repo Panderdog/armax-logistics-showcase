@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { 
   Star, 
   Quote, 
-  TrendingUp, 
   CheckCircle2, 
-  Clock, 
-  Building2,
   Sparkles,
   ChevronLeft,
   ChevronRight,
@@ -16,7 +13,6 @@ import {
   Plane,
   Train,
   Truck as TruckIcon,
-  Package,
   MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,16 +28,6 @@ const Reviews = () => {
 
   const featuredTestimonials = [
     {
-      name: "Андрей Хрусталёв",
-      role: "Руководитель отдела логистики",
-      company: "СтройМатериалы Про",
-      text: "Работаем с Armax третий год. По поставке из Китая сроки «горели», и нам быстро предложили альтернативную схему с понятным планом по датам. В итоге забрали груз без простоев и уложились в дедлайн запуска проекта — минус примерно две недели к исходному сценарию. Для нас это критично, потому что каждый день простоя стоит денег.",
-      rating: 5,
-      image: "/avatar/monogramm/AX.webp",
-      highlight: "Сэкономили 2 недели на поставке",
-      stats: { value: "40+", label: "поставок в год" },
-    },
-    {
       name: "Елена Михайлова",
       role: "Директор по закупкам",
       company: "МедТехника Плюс",
@@ -50,6 +36,16 @@ const Reviews = () => {
       image: "/avatar/maniken/2.webp",
       highlight: "Полное таможенное сопровождение",
       stats: { value: "100%", label: "документов в порядке" },
+    },
+    {
+      name: "Андрей Хрусталёв",
+      role: "Руководитель отдела логистики",
+      company: "СтройМатериалы Про",
+      text: "Работаем с Armax третий год. По поставке из Китая сроки «горели», и нам быстро предложили альтернативную схему с понятным планом по датам. В итоге забрали груз без простоев и уложились в дедлайн запуска проекта — минус примерно две недели к исходному сценарию. Для нас это критично, потому что каждый день простоя стоит денег.",
+      rating: 5,
+      image: "/avatar/monogramm/AX.webp",
+      highlight: "Сэкономили 2 недели на поставке",
+      stats: { value: "40+", label: "поставок в год" },
     },
     {
       name: "Андрей Волков",
@@ -159,13 +155,6 @@ const Reviews = () => {
     },
   ];
 
-  const stats = [
-    { icon: Building2, value: "500+", label: "компаний-клиентов", description: "доверяют нам" },
-    { icon: Star, value: "4.9", label: "средняя оценка", description: "из 5 возможных" },
-    { icon: Clock, value: "3+", label: "года сотрудничества", description: "в среднем" },
-    { icon: TrendingUp, value: "95%", label: "возвращаются", description: "к нам снова" },
-  ];
-
   const handlePrevTestimonial = () => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -190,7 +179,7 @@ const Reviews = () => {
       if (!isAnimating) {
         handleNextTestimonial();
       }
-    }, 6000);
+    }, 13200);
     return () => clearInterval(interval);
   }, [isAnimating]);
 
@@ -209,8 +198,8 @@ const Reviews = () => {
         {/* Hero Section */}
         <section className="relative py-24 lg:py-32 overflow-hidden">
           {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18] via-[#0B0F18]/85 to-[#0B0F18]" />
+          <div className="absolute inset-0 bg-[url('/images/feedback-plane-hero.webp')] bg-cover bg-top opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18]/60 via-[#0B0F18]/40 to-[#0B0F18]" />
           
           {/* Grid pattern */}
           <div 
@@ -246,23 +235,6 @@ const Reviews = () => {
                 <br />
                 и решённых логистических задач
               </p>
-
-              {/* Quick stats in hero */}
-              <div 
-                className="flex flex-wrap gap-8 mt-12 animate-fade-in"
-                style={{ animationDelay: '0.3s' }}
-              >
-                {[
-                  { value: "16+", label: "лет опыта" },
-                  { value: "20+", label: "стран" },
-                  { value: "99%", label: "в срок" },
-                ].map((stat, index) => (
-                  <div key={index}>
-                    <div className="text-3xl lg:text-4xl font-bold text-white mb-1">{stat.value}</div>
-                    <div className="text-sm text-zinc-500">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -405,42 +377,12 @@ const Reviews = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="relative py-16 lg:py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-[#0B0F18]" />
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-          
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 max-w-5xl mx-auto">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="group relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-[#F34D1B]/20 transition-all duration-500 hover:-translate-y-1 text-center overflow-hidden"
-                  style={{ 
-                    animationDelay: `${index * 0.1}s`,
-                  }}
-                >
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-xl bg-[#F34D1B]/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
-                      <stat.icon className="h-6 w-6 text-[#F34D1B]" strokeWidth={1.5} />
-                    </div>
-                    <div className="text-3xl lg:text-4xl font-bold text-white mb-1">{stat.value}</div>
-                    <div className="text-sm font-medium text-zinc-300">{stat.label}</div>
-                    <div className="text-xs text-zinc-500 mt-1">{stat.description}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Testimonials Grid */}
         <section className="relative py-20 lg:py-24 overflow-hidden">
           <div className="absolute inset-0 bg-[#0a0e15]" />
+          
+          {/* Smooth transition gradient to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#0B0F18]" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-16">

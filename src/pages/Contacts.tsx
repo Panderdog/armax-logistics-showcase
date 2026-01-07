@@ -244,7 +244,7 @@ const Contacts = () => {
         {/* Hero Section */}
         <section 
           ref={heroRef.ref}
-          className="relative py-24 lg:py-32 overflow-hidden"
+          className="relative min-h-[calc(100vh-var(--header-height))] flex items-center overflow-hidden"
         >
           {/* Background effects */}
           <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-40" />
@@ -260,7 +260,7 @@ const Contacts = () => {
             }}
           />
           
-          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="container mx-auto px-6 lg:px-8 relative z-10 py-24 lg:py-32">
             <div className="max-w-4xl">
               <div 
                 className={`inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] transition-all duration-700 ${

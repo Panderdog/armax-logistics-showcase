@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAdmin } from '@/contexts/AdminContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ArrowRight, Newspaper, Sparkles } from 'lucide-react';
+import { Calendar, ArrowRight, Newspaper, Sparkles, X } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useApplicationModal } from '@/contexts/ApplicationModalContext';
 import CTABlock from '@/components/CTABlock';
@@ -92,13 +92,14 @@ const NewsList = () => {
     });
   };
 
-  // Get all unique tags
-  const allTags = [...new Set(news.flatMap(item => item.tags))];
-
+  // Main category tags to show
+  const mainTags = ['Новости', 'ВЭД', 'Китай', 'Логистика', 'Таможня'];
+  
   // Filter news by tag
-  const filteredNews = selectedTag 
-    ? news.filter(item => item.tags.includes(selectedTag))
-    : news;
+  const filteredNews = news.filter(item => {
+    const matchesTag = selectedTag ? item.tags.includes(selectedTag) : true;
+    return matchesTag;
+  });
 
   // Featured news (first one)
   const featuredNews = filteredNews[0];
@@ -167,22 +168,15 @@ const NewsList = () => {
             >
               {/* Badge */}
               <div 
-                className="inline-flex items-center gap-3 px-5 py-2.5 mb-10 text-sm font-medium bg-white/[0.04] backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-lg"
-                style={{
-                  opacity: heroRef.isInView ? 1 : 0,
-                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s'
-                }}
+                className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in"
               >
-                <Sparkles className="w-4 h-4 text-[#F34D1B]" />
-                <span className="text-zinc-300">Блог</span>
-                <div className="w-px h-4 bg-white/10" />
-                <span className="text-[#F34D1B] font-semibold">{news.length} публикаций</span>
+                <Newspaper className="w-4 h-4 text-[#F34D1B]" />
+                <span className="text-zinc-300">Новости</span>
               </div>
 
               {/* Title */}
               <h1 
-                className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-8 leading-[0.95] tracking-tight"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-[1.05] tracking-tight"
                 style={{
                   opacity: heroRef.isInView ? 1 : 0,
                   transform: heroRef.isInView ? 'translateY(0)' : 'translateY(30px)',
@@ -200,42 +194,54 @@ const NewsList = () => {
 
               {/* Subtitle */}
               <p 
-                className="text-xl lg:text-2xl xl:text-3xl text-zinc-400 font-light leading-relaxed max-w-2xl"
+                className="text-xl lg:text-2xl text-zinc-400 font-light leading-relaxed max-w-2xl"
                 style={{
                   opacity: heroRef.isInView ? 1 : 0,
                   transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
                   transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.35s'
                 }}
               >
-                Следите за последними событиями в мировой логистике и развитием компании
+                Следите за последними событиями в мировой логистике и&nbsp;развитием компании
               </p>
 
-              {/* Tag Filters */}
-              {allTags.length > 0 && (
-                <div 
-                  className="flex flex-wrap items-center gap-3 mt-10"
-                  style={{
-                    opacity: heroRef.isInView ? 1 : 0,
-                    transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
-                    transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s'
-                  }}
-                >
-                  <span className="text-sm font-medium text-zinc-400">Фильтр:</span>
-                  {allTags.map((tag) => (
+              {/* Category Tags */}
+              <div 
+                className="mt-10"
+                style={{
+                  opacity: heroRef.isInView ? 1 : 0,
+                  transform: heroRef.isInView ? 'translateY(0)' : 'translateY(20px)',
+                  transition: 'all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s'
+                }}
+              >
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="text-sm font-medium text-zinc-400">Категории:</span>
+                  
+                  {mainTags.map((tag) => (
                     <button
                       key={tag}
                       onClick={() => handleTagSelect(tag)}
-                      className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                         selectedTag === tag 
-                          ? 'bg-accent text-white shadow-lg shadow-accent/25 scale-105' 
+                          ? 'bg-accent text-white shadow-lg shadow-accent/25' 
                           : 'bg-white/[0.06] hover:bg-white/[0.10] text-zinc-300 hover:text-white border border-white/[0.08] hover:border-white/[0.15]'
                       }`}
                     >
                       {tag}
                     </button>
                   ))}
+
+                  {/* Clear Filter */}
+                  {selectedTag && (
+                    <button
+                      onClick={() => setSelectedTag(null)}
+                      className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-zinc-400 hover:text-white flex items-center gap-2"
+                    >
+                      <X className="h-4 w-4" />
+                      Сбросить
+                    </button>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
 
