@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
@@ -32,11 +31,24 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative h-[calc(100vh-var(--header-height))] flex items-center justify-center overflow-hidden bg-primary">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary pt-[var(--header-height)]">
       {/* Mobile Background - Image with Overlay */}
       <div className="absolute inset-0 z-0 md:hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070')] bg-cover bg-center opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/95 via-primary/90 to-[#0a0f1a]" />
+        <div className="absolute inset-0 bg-[url('/images/armax_hero_9x16_right.webp')] bg-cover bg-right scale-x-[-1]" />
+        {/* Vertical gradient - top to bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/75 via-primary/60 to-[#0a0f1a]" />
+        {/* Horizontal gradient - darker on left (text area), lighter on right (port/containers) */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(90deg,
+              rgba(15,22,36,0.70) 0%,
+              rgba(15,22,36,0.05) 45%,
+              transparent 55%,
+              transparent 100%
+            )`
+          }}
+        />
       </div>
 
       {/* Desktop/Tablet Background - Video with Overlay */}
@@ -92,52 +104,69 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Mobile Content */}
-      <div className="container relative z-10 mx-auto px-6 pb-24 md:hidden pt-12">
-        <div className="max-w-xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6 animate-fade-in leading-[1.1] tracking-tight">
-            ARMAX LOGISTICS — надёжные международные перевозки без задержек
-          </h1>
-          <p className="text-base sm:text-lg text-white/80 mb-10 animate-fade-in font-light leading-relaxed" style={{ animationDelay: '0.15s' }}>
-            Организуем доставку по 20+ странам Европы и Азии
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <Button
-              size="lg"
-              className="text-base px-8 py-6 h-auto group shadow-glow hover:shadow-[0_20px_60px_-10px_hsl(14_90%_53%/0.5)] hover:scale-105 transition-all duration-500"
-              onClick={openApplicationModal}
+      {/* Mobile Content - Premium minimal design */}
+      <div className="container relative z-10 mx-auto px-5 md:hidden flex flex-col justify-center min-h-[calc(100vh-var(--header-height))]">
+        <div className="max-w-lg mx-auto relative">
+          {/* Local gradient overlay for text readability - premium effect */}
+          <div className="absolute -inset-x-8 -inset-y-6 bg-gradient-to-b from-primary/60 via-primary/40 to-transparent blur-2xl" />
+          
+          <div className="relative">
+            {/* Accent badge */}
+            <div 
+              className="inline-flex items-center gap-2 mb-6 animate-fade-in"
+              style={{ animationDelay: '0.1s' }}
             >
-              Получить предложение
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="text-base px-8 py-6 h-auto bg-white/5 border-2 border-white/20 text-white hover:bg-white hover:text-primary hover:border-white transition-all duration-500 backdrop-blur-sm"
-            >
-              <Link to="/services">Наши услуги</Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 gap-4 max-w-md mx-auto">
-          {[
-            { value: "16+", label: "лет опыта" },
-            { value: "1 000+", label: "деклараций в 2025" },
-            { value: "99%", label: "доставок вовремя" },
-            { value: "5000+", label: "тонн грузов/год" },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="group text-center p-5 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 animate-fade-in hover:bg-white/10 hover:border-accent/30 transition-all duration-500 cursor-default"
-              style={{ animationDelay: `${0.45 + index * 0.1}s` }}
-            >
-              <div className="text-2xl sm:text-3xl font-bold text-white group-hover:text-accent mb-1 tracking-tight transition-colors duration-300">{stat.value}</div>
-              <div className="text-xs sm:text-sm text-white/60 group-hover:text-white/80 font-medium transition-colors duration-300">{stat.label}</div>
+              <span className="w-8 h-[1px] bg-accent" />
+              <span className="text-xs font-medium tracking-[0.2em] uppercase text-accent">
+                Логистика и таможня
+              </span>
             </div>
-          ))}
+
+            {/* Main heading - clean hierarchy */}
+            <h1 className="text-[2rem] sm:text-[2.5rem] font-bold text-white mb-5 animate-fade-in leading-[1.15] tracking-tight">
+              Международная логистика
+              <br />
+              <span className="text-accent">для бизнеса</span>
+            </h1>
+
+            {/* Subtitle - refined typography */}
+            <p 
+              className="text-base sm:text-lg text-white/80 mb-8 animate-fade-in font-normal leading-[1.6] max-w-sm"
+              style={{ animationDelay: '0.15s' }}
+            >
+              Импорт и экспорт по направлениям Азии и Европы. Таможенное оформление под ключ.
+            </p>
+          </div>
+
+            {/* Single CTA - organic and premium */}
+            <div 
+              className="animate-fade-in"
+              style={{ animationDelay: '0.25s' }}
+            >
+              <Button
+                size="lg"
+                className="text-[15px] px-7 py-5 h-auto group bg-accent hover:bg-accent/90 shadow-[0_8px_30px_-8px_hsl(14_90%_53%/0.4)] hover:shadow-[0_12px_40px_-8px_hsl(14_90%_53%/0.5)] transition-all duration-400 rounded-xl"
+                onClick={openApplicationModal}
+              >
+                Рассчитать доставку
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Button>
+            </div>
+
+            {/* Trust indicator - subtle */}
+            <div 
+              className="mt-10 flex items-center gap-3 animate-fade-in"
+              style={{ animationDelay: '0.4s' }}
+            >
+              <div className="flex -space-x-1">
+                <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                <div className="w-2 h-2 rounded-full bg-emerald-400/60" />
+                <div className="w-2 h-2 rounded-full bg-emerald-400/30" />
+              </div>
+              <span className="text-xs text-white/50 font-medium">
+                Более 16 лет на рынке логистики
+              </span>
+            </div>
         </div>
       </div>
 
@@ -147,7 +176,7 @@ const HeroSection = () => {
           <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 animate-fade-in leading-[1.1] tracking-tight">
             ARMAX LOGISTICS — <span className="text-accent">интеллект в движении</span>
           </h1>
-          <p className="text-lg lg:text-xl xl:text-2xl text-white/80 mb-10 animate-fade-in font-light leading-relaxed" style={{ animationDelay: '0.15s' }}>
+          <p className="text-lg lg:text-xl xl:text-2xl text-white/90 mb-10 animate-fade-in font-light leading-relaxed" style={{ animationDelay: '0.15s' }}>
             Умные решения для импортной логистики<br />и таможенного оформления
           </p>
           <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
