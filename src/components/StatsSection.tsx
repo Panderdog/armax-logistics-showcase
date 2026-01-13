@@ -104,7 +104,7 @@ const StatsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative pt-24 lg:pt-32 pb-16 lg:pb-20 bg-[#0a0f1a] overflow-hidden"
+      className="relative pt-0 sm:pt-12 lg:pt-24 xl:pt-32 pb-12 sm:pb-14 lg:pb-16 xl:pb-20 bg-[#0a0f1a] overflow-hidden"
     >
       {/* Atmospheric background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-transparent" />
@@ -121,11 +121,11 @@ const StatsSection = () => {
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         {/* Section header */}
-        <div className="text-center mb-16 lg:mb-20">
-          <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16 xl:mb-20">
+          <span className="inline-block px-3 py-1 sm:px-4 sm:py-1.5 mb-4 sm:mb-6 text-xs sm:text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
             Наши достижения
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 tracking-tight leading-tight">
             Цифры, которые говорят
             <br />
             <span className="text-accent">сами за себя</span>
@@ -133,7 +133,7 @@ const StatsSection = () => {
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
           {stats.map((stat, index) => (
             <div
               key={index}
@@ -144,14 +144,14 @@ const StatsSection = () => {
                 transition: `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`
               }}
             >
-              <div className="relative p-6 lg:p-8 rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-accent/30 hover:bg-white/10 transition-all duration-500 h-full">
+              <div className="relative p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-accent/30 hover:bg-white/10 transition-all duration-500 h-full flex flex-col">
                 {/* Icon */}
-                <div className="mb-6 inline-flex p-4 rounded-2xl bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
-                  <stat.icon className="h-6 w-6 lg:h-8 lg:w-8" strokeWidth={1.5} />
+                <div className="mb-3 sm:mb-4 lg:mb-6 inline-flex p-2.5 sm:p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500 self-start">
+                  <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8" strokeWidth={1.5} />
                 </div>
 
                 {/* Number */}
-                <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 tracking-tight">
+                <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-1 sm:mb-2 tracking-tight leading-none">
                   <AnimatedCounter 
                     value={stat.value} 
                     suffix={stat.suffix} 
@@ -160,12 +160,12 @@ const StatsSection = () => {
                 </div>
 
                 {/* Label */}
-                <div className="text-lg lg:text-xl font-semibold text-white/90 mb-2">
+                <div className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold text-white/90 mb-1 sm:mb-2 leading-snug">
                   {stat.label}
                 </div>
 
                 {/* Description */}
-                <div className="text-sm text-white/50 group-hover:text-white/70 transition-colors">
+                <div className="text-xs sm:text-sm text-white/50 group-hover:text-white/70 transition-colors leading-relaxed">
                   {stat.description}
                 </div>
 

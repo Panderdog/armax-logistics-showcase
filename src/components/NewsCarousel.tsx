@@ -14,6 +14,7 @@ const NewsCarousel = () => {
     loop: true,
     align: 'start',
     slidesToScroll: 1,
+    containScroll: 'trimSnaps',
   });
   
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -55,7 +56,7 @@ const NewsCarousel = () => {
     <section className="py-20 lg:py-20 bg-background overflow-hidden">
       <div className="container mx-auto px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 lg:mb-16">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8 lg:mb-16">
           <div>
             <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
               Новости
@@ -66,8 +67,8 @@ const NewsCarousel = () => {
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Navigation buttons */}
-            <div className="flex gap-2">
+            {/* Navigation buttons - hidden on mobile */}
+            <div className="hidden md:flex gap-2">
               <button
                 onClick={scrollPrev}
                 disabled={!canScrollPrev}
@@ -97,8 +98,8 @@ const NewsCarousel = () => {
         </div>
 
         {/* Carousel */}
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-6 lg:gap-8">
+        <div className="overflow-hidden -mx-6 px-6 md:mx-0 md:px-0" ref={emblaRef}>
+          <div className="flex gap-4 md:gap-6 lg:gap-8">
             {news.map((item) => (
               <article 
                 key={item.id}

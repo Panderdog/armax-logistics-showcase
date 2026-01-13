@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
@@ -22,8 +22,8 @@ const HeroSection = () => {
     // Hide scroll indicator after scrolling down
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const heroHeight = window.innerHeight - 72; // minus header height
-      setShowScrollIndicator(scrollPosition < heroHeight * 0.3); // Hide after 30% of hero section
+      // Hide after 80-120px scroll (using 100px as middle value)
+      setShowScrollIndicator(scrollPosition < 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -31,10 +31,23 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary pt-[var(--header-height)]">
+    <section className="relative min-h-screen-dynamic flex items-center justify-center overflow-hidden bg-primary pt-[var(--header-height)]">
       {/* Mobile Background - Image with Overlay */}
-      <div className="absolute inset-0 z-0 md:hidden">
-        <div className="absolute inset-0 bg-[url('/images/armax_hero_9x16_right.webp')] bg-cover bg-right scale-x-[-1]" />
+      <div className="absolute inset-0 z-0 md:hidden overflow-hidden">
+        <div 
+          className="absolute w-full h-full"
+          style={{
+            backgroundImage: "url('/images/armax_hero_9x16_right.webp')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'left',
+            backgroundRepeat: 'no-repeat',
+            transform: 'scaleX(-1)',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }}
+        />
         {/* Vertical gradient - top to bottom */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/75 via-primary/60 to-[#0a0f1a]" />
         {/* Horizontal gradient - darker on left (text area), lighter on right (port/containers) */}
@@ -88,9 +101,30 @@ const HeroSection = () => {
       </div>
 
       {/* Bottom fade transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 md:h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />
       
-      {/* Scroll indicator - slightly peeking from bottom */}
+      {/* Scroll indicator - mobile version (premium chevrons) - aligned with trust badge */}
+      <div 
+        className={`absolute bottom-28 right-6 z-[6] md:hidden flex flex-col items-center gap-1 pointer-events-none transition-opacity duration-500 ${
+          showScrollIndicator ? 'opacity-100' : 'opacity-0'
+        }`}
+        aria-label="Прокрутите вниз"
+      >
+        <ChevronDown 
+          className="w-5 h-5 text-accent animate-chevron-1" 
+          strokeWidth={2.5}
+        />
+        <ChevronDown 
+          className="w-5 h-5 text-accent animate-chevron-2 -mt-2" 
+          strokeWidth={2.5}
+        />
+        <ChevronDown 
+          className="w-5 h-5 text-accent animate-chevron-3 -mt-2" 
+          strokeWidth={2.5}
+        />
+      </div>
+
+      {/* Scroll indicator - desktop version */}
       <div 
         className={`fixed bottom-0 left-0 right-0 z-[6] hidden md:flex justify-center pointer-events-none transition-opacity duration-500 ${
           showScrollIndicator ? 'opacity-100' : 'opacity-0'
@@ -105,10 +139,10 @@ const HeroSection = () => {
       </div>
 
       {/* Mobile Content - Premium minimal design */}
-      <div className="container relative z-10 mx-auto px-5 md:hidden flex flex-col justify-center min-h-[calc(100vh-var(--header-height))]">
-        <div className="max-w-lg mx-auto relative">
+      <div className="container relative z-20 mx-auto px-5 md:hidden flex flex-col justify-end pb-24 hero-mobile-height">
+        <div className="max-w-lg relative">
           {/* Local gradient overlay for text readability - premium effect */}
-          <div className="absolute -inset-x-8 -inset-y-6 bg-gradient-to-b from-primary/60 via-primary/40 to-transparent blur-2xl" />
+          <div className="absolute -inset-x-8 -inset-y-6 bg-gradient-to-b from-primary/60 via-primary/40 to-transparent blur-2xl -z-10" />
           
           <div className="relative">
             {/* Accent badge */}

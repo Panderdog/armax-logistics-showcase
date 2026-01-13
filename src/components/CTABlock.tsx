@@ -97,10 +97,10 @@ const CTABlock = ({
                     key={index}
                     asChild
                     size="lg"
-                    className="group bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] hover:border-[#F34D1B]/30 text-white text-lg px-8 py-6 h-auto transition-all duration-500"
+                    className="group bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] hover:border-[#F34D1B]/30 text-white text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6 h-auto transition-all duration-500 whitespace-normal text-center leading-tight"
                   >
-                    <a href={button.href}>
-                      {button.icon && <ButtonIcon className="mr-2 h-5 w-5" />}
+                    <a href={button.href} className="flex items-center justify-center flex-wrap gap-x-2">
+                      {button.icon && <ButtonIcon className="h-5 w-5 shrink-0" />}
                       {button.text}
                     </a>
                   </Button>
@@ -108,11 +108,13 @@ const CTABlock = ({
                   <Button
                     key={index}
                     size="lg"
-                    className="group bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] hover:border-[#F34D1B]/30 text-white text-lg px-8 py-6 h-auto transition-all duration-500"
+                    className="group bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] hover:border-[#F34D1B]/30 text-white text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6 h-auto transition-all duration-500 whitespace-normal text-center leading-tight"
                     onClick={button.onClick}
                   >
-                    {button.icon && <ButtonIcon className="mr-2 h-5 w-5" />}
-                    {button.text}
+                    <span className="flex items-center justify-center flex-wrap gap-x-2">
+                      {button.icon && <ButtonIcon className="h-5 w-5 shrink-0" />}
+                      {button.text}
+                    </span>
                   </Button>
                 );
               }
@@ -122,11 +124,13 @@ const CTABlock = ({
                 <Button
                   key={index}
                   size="lg"
-                  className="group bg-gradient-to-r from-[#F34D1B] to-orange-500 hover:from-[#e04318] hover:to-orange-600 text-white text-lg px-8 py-6 h-auto shadow-[0_10px_40px_-10px_rgba(243,77,27,0.4)] hover:shadow-[0_20px_60px_-10px_rgba(243,77,27,0.5)] transition-all duration-500"
+                  className="group bg-gradient-to-r from-[#F34D1B] to-orange-500 hover:from-[#e04318] hover:to-orange-600 text-white text-base sm:text-lg px-4 sm:px-8 py-4 sm:py-6 h-auto shadow-[0_10px_40px_-10px_rgba(243,77,27,0.4)] hover:shadow-[0_20px_60px_-10px_rgba(243,77,27,0.5)] transition-all duration-500 whitespace-normal text-center leading-tight"
                   onClick={button.onClick || (() => openApplicationModal())}
                 >
-                  {button.text}
-                  <ButtonIcon className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1.5" />
+                  <span className="flex items-center justify-center flex-wrap gap-x-2">
+                    {button.text}
+                    <ButtonIcon className="hidden sm:inline-flex h-5 w-5 transition-transform group-hover:translate-x-1.5 shrink-0" />
+                  </span>
                 </Button>
               );
             })}

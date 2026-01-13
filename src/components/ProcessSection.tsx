@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MessageSquare, Calculator, Truck, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { MessageSquare, Calculator, Truck, CheckCircle, ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
@@ -50,13 +50,188 @@ const steps = [
   },
 ];
 
+// Mobile accordion step card component
+const MobileStepCard = ({ 
+  step, 
+  isExpanded, 
+  onToggle, 
+  openApplicationModal 
+}: { 
+  step: typeof steps[0]; 
+  isExpanded: boolean; 
+  onToggle: () => void;
+  openApplicationModal: () => void;
+}) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(contentRef.current.scrollHeight);
+    }
+  }, [isExpanded]);
+
+  return (
+    <div
+      className={`w-full ${RADIUS} border transition-all duration-300 overflow-hidden ${
+        isExpanded
+          ? "bg-white/[0.04] border-[#F34D1B]/20"
+          : "bg-white/[0.025] border-white/[0.05]"
+      }`}
+      style={{
+        boxShadow: isExpanded 
+          ? '0 0 20px rgba(243,77,27,0.08), 0 0 40px rgba(243,77,27,0.04)' 
+          : 'none'
+      }}
+    >
+      {/* Header - always visible, clickable */}
+      <button
+        onClick={onToggle}
+        className="w-full text-left p-5 group"
+      >
+        <div className="flex items-center gap-4">
+          {/* Step icon */}
+          <div className="relative flex-shrink-0">
+            <div
+              className={`w-12 h-12 ${RADIUS} flex items-center justify-center transition-all duration-300 ${
+                isExpanded
+                  ? `bg-gradient-to-br ${step.gradient}`
+                  : "bg-zinc-800/70"
+              }`}
+              style={{
+                boxShadow: isExpanded 
+                  ? '0 0 8px rgba(243,77,27,0.2), 0 0 16px rgba(243,77,27,0.1)' 
+                  : 'none'
+              }}
+            >
+              <step.icon
+                className={`h-5 w-5 transition-all duration-300 ${
+                  isExpanded 
+                    ? "text-white" 
+                    : "text-zinc-400"
+                }`}
+                strokeWidth={1.5}
+              />
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-1">
+              <span
+                className={`text-[11px] font-medium uppercase tracking-wider transition-colors duration-300 ${
+                  isExpanded 
+                    ? "text-[#F34D1B]" 
+                    : "text-zinc-500"
+                }`}
+              >
+                Шаг {step.id}
+              </span>
+              <span
+                className={`text-[11px] px-2.5 py-1 ${RADIUS_SM} font-medium transition-all duration-300 ${
+                  isExpanded
+                    ? "bg-white/[0.06] text-white/60"
+                    : "bg-zinc-800/50 text-zinc-500"
+                }`}
+              >
+                {step.time}
+              </span>
+            </div>
+            <h3
+              className={`text-base font-semibold tracking-tight transition-colors duration-300 ${
+                isExpanded ? "text-white" : "text-zinc-300"
+              }`}
+            >
+              {step.title}
+            </h3>
+            <p
+              className={`text-sm mt-0.5 transition-colors duration-300 ${
+                isExpanded ? "text-zinc-400" : "text-zinc-500"
+              }`}
+            >
+              {step.shortDesc}
+            </p>
+          </div>
+
+          {/* Chevron indicator */}
+          <div className={`flex-shrink-0 w-8 h-8 ${RADIUS_SM} flex items-center justify-center transition-all duration-300 ${
+            isExpanded
+              ? "bg-[#F34D1B]/10"
+              : "bg-white/[0.03]"
+          }`}>
+            <ChevronDown
+              className={`h-4 w-4 transition-all duration-300 ${
+                isExpanded
+                  ? "text-[#F34D1B] rotate-180"
+                  : "text-zinc-500"
+              }`}
+            />
+          </div>
+        </div>
+      </button>
+
+      {/* Expandable content */}
+      <div 
+        className="overflow-hidden transition-all duration-400 ease-out"
+        style={{ 
+          maxHeight: isExpanded ? `${contentHeight}px` : '0px',
+        }}
+      >
+        <div 
+          ref={contentRef}
+          className={`px-5 pb-5 transition-all duration-300 ${
+            isExpanded ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {/* Separator line */}
+          <div className="h-px bg-white/[0.06] mb-4" />
+          
+          {/* Description */}
+          <p className="text-sm text-zinc-400 leading-relaxed mb-4">
+            {step.description}
+          </p>
+
+          {/* Time indicator */}
+          <div className={`flex items-center gap-3 mb-4 p-3 ${RADIUS} bg-white/[0.025] border border-white/[0.03]`}>
+            <div className="relative">
+              <div className={`w-2 h-2 rounded-full bg-gradient-to-br ${step.gradient}`} />
+              <div className={`absolute inset-0 w-2 h-2 rounded-full bg-gradient-to-br ${step.gradient} animate-ping opacity-30`} />
+            </div>
+            <span className="text-sm text-zinc-400">
+              Среднее время: <span className="text-white font-medium">{step.time}</span>
+            </span>
+          </div>
+
+          {/* CTA button */}
+          <Button 
+            size="default" 
+            className={`w-full group relative overflow-hidden bg-gradient-to-r ${step.gradient} hover:opacity-90 border-0 text-white font-semibold px-6 py-3 text-sm ${RADIUS} transition-all duration-300`}
+            onClick={(e) => {
+              e.stopPropagation();
+              openApplicationModal();
+            }}
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {step.ctaText}
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-600" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ProcessSection = () => {
   const [activeStep, setActiveStep] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [displayStep, setDisplayStep] = useState(1);
+  const [mobileExpandedStep, setMobileExpandedStep] = useState<number | null>(1);
   const { openApplicationModal } = useApplicationModal();
   const currentStep = steps.find((s) => s.id === displayStep) || steps[0];
 
+  // Desktop step change handler
   const handleStepChange = (newStep: number) => {
     if (newStep === activeStep || isAnimating) return;
     
@@ -67,6 +242,11 @@ const ProcessSection = () => {
       setDisplayStep(newStep);
       setTimeout(() => setIsAnimating(false), 250);
     }, 120);
+  };
+
+  // Mobile accordion toggle handler
+  const handleMobileToggle = (stepId: number) => {
+    setMobileExpandedStep(prev => prev === stepId ? null : stepId);
   };
 
   return (
@@ -106,9 +286,37 @@ const ProcessSection = () => {
           </p>
         </div>
 
-        {/* Process visualization - equal height columns */}
-        <div className="max-w-[1080px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr,minmax(0,360px)] gap-8 lg:gap-20 items-stretch">
+        {/* Mobile version - Accordion cards */}
+        <div className="lg:hidden max-w-[600px] mx-auto">
+          <div className="flex flex-col gap-3">
+            {steps.map((step) => (
+              <MobileStepCard
+                key={step.id}
+                step={step}
+                isExpanded={mobileExpandedStep === step.id}
+                onToggle={() => handleMobileToggle(step.id)}
+                openApplicationModal={openApplicationModal}
+              />
+            ))}
+          </div>
+          
+          {/* Mobile progress indicator */}
+          <div className="flex items-center gap-1.5 pt-6 px-1">
+            <div className="flex-1 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-[#F34D1B] to-orange-500 rounded-full transition-all duration-400"
+                style={{ width: `${((mobileExpandedStep || 1) / steps.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-xs text-zinc-500 tabular-nums ml-2">
+              {mobileExpandedStep || 1}/{steps.length}
+            </span>
+          </div>
+        </div>
+
+        {/* Desktop version - Two columns layout */}
+        <div className="hidden lg:block max-w-[1080px] mx-auto">
+          <div className="grid grid-cols-[1fr,minmax(0,360px)] gap-20 items-stretch">
             {/* Left side - Steps navigation */}
             <div className="flex flex-col gap-3">
               {steps.map((step) => {
@@ -221,7 +429,7 @@ const ProcessSection = () => {
               <div className={`relative ${RADIUS} border border-white/[0.03] overflow-hidden flex-1 flex flex-col`}>
                 
                 {/* Card content - distributed vertically, reduced top padding */}
-                <div className="relative bg-white/[0.02] pt-5 lg:pt-6 pb-7 lg:pb-8 px-7 lg:px-8 flex-1 flex flex-col justify-center">
+                <div className="relative bg-white/[0.02] pt-6 pb-8 px-8 flex-1 flex flex-col justify-center">
                   {/* Header with icon and step number */}
                   <div className={`flex items-center gap-4 mb-6 transition-all duration-400 ease-out ${
                     isAnimating ? 'opacity-0 translate-y-2 scale-95' : 'opacity-100 translate-y-0 scale-100'
@@ -246,10 +454,10 @@ const ProcessSection = () => {
                   <div className={`transition-all duration-400 ease-out ${
                     isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
                   }`}>
-                    <h3 className="text-xl lg:text-2xl font-bold text-white mb-4 tracking-tight leading-tight">
+                    <h3 className="text-2xl font-bold text-white mb-4 tracking-tight leading-tight">
                       {currentStep.title}
                     </h3>
-                    <p className="text-sm lg:text-base text-zinc-400 leading-relaxed mb-6">
+                    <p className="text-base text-zinc-400 leading-relaxed mb-6">
                       {currentStep.description}
                     </p>
 
@@ -282,8 +490,8 @@ const ProcessSection = () => {
             </div>
           </div>
           
-          {/* Progress indicator - macOS style - moved outside the grid */}
-          <div className="hidden lg:flex items-center gap-1.5 pt-8 pl-1 max-w-[calc(100%-360px-5rem)]">
+          {/* Progress indicator - macOS style - desktop only */}
+          <div className="flex items-center gap-1.5 pt-8 pl-1 max-w-[calc(100%-360px-5rem)]">
             <div className="flex-1 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-[#F34D1B] to-orange-500 rounded-full transition-all duration-400"

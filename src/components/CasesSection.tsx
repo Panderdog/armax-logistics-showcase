@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   Factory, 
   Smartphone, 
@@ -13,10 +13,12 @@ import {
   Train,
   Truck as TruckIcon,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Unified design tokens
 const RADIUS = "rounded-2xl"; // 16px
@@ -121,12 +123,267 @@ const cases: CaseStudy[] = [
   },
 ];
 
+// Reusable case content component
+const CaseContent = ({ 
+  caseData, 
+  isAnimating = false,
+  isMobile = false,
+  openApplicationModal 
+}: { 
+  caseData: CaseStudy; 
+  isAnimating?: boolean;
+  isMobile?: boolean;
+  openApplicationModal: () => void;
+}) => (
+  <div className={`transition-all duration-400 ease-out ${
+    isAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+  }`}>
+    {/* Stats grid - responsive: 2 cols on mobile, 4 on desktop */}
+    <div className={`grid gap-3 mb-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4 gap-4 mb-8'}`}>
+      {/* Main stat - same size as others on mobile */}
+      <div className={`${isMobile ? '' : 'col-span-4 sm:col-span-1'} p-4 ${RADIUS} bg-gradient-to-br ${caseData.gradient} relative overflow-hidden`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        <div className="relative">
+          <div className={`font-bold text-white mb-1 ${isMobile ? 'text-xl' : 'text-3xl lg:text-4xl'}`}>
+            {caseData.stats.main}
+          </div>
+          <div className={`text-white/80 font-medium ${isMobile ? 'text-xs' : 'text-sm'}`}>
+            {caseData.stats.mainLabel}
+          </div>
+        </div>
+      </div>
+      
+      {/* Other stats - all uniform size */}
+      {caseData.stats.items.map((stat, index) => (
+        <div 
+          key={index} 
+          className={`p-4 ${RADIUS} bg-white/[0.03] border border-white/[0.05]`}
+        >
+          <div className={`font-bold text-white mb-1 ${isMobile ? 'text-xl' : 'text-xl lg:text-2xl'}`}>
+            {stat.value}
+          </div>
+          <div className="text-xs text-zinc-500 leading-tight">
+            {stat.label}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Title */}
+    <h3 className={`font-bold text-white mb-4 tracking-tight leading-tight ${isMobile ? 'text-lg' : 'text-xl lg:text-2xl mb-6'}`}>
+      {caseData.title}
+    </h3>
+
+    {/* Task */}
+    <div className={isMobile ? 'mb-4' : 'mb-6'}>
+      <div className="flex items-center gap-2 mb-2">
+        <Package className="w-4 h-4 text-[#F34D1B]" />
+        <span className="text-sm font-semibold text-white uppercase tracking-wider">Задача</span>
+      </div>
+      <p className="text-sm text-zinc-400 leading-relaxed">
+        {caseData.task}
+      </p>
+    </div>
+
+    {/* Solution */}
+    <div className={isMobile ? 'mb-4' : 'mb-6'}>
+      <div className="flex items-center gap-2 mb-2">
+        <TrendingDown className="w-4 h-4 text-[#F34D1B]" />
+        <span className="text-sm font-semibold text-white uppercase tracking-wider">Решение</span>
+      </div>
+      <div className="space-y-2">
+        {caseData.solution.map((item, index) => (
+          <div key={index} className="flex items-start gap-3">
+            <CheckCircle2 className="w-4 h-4 text-[#F34D1B] mt-0.5 flex-shrink-0" />
+            <span className="text-sm text-zinc-400">{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Transport modes */}
+    <div className={`flex items-center gap-2 ${isMobile ? 'mb-4' : 'mb-6'}`}>
+      <span className="text-xs text-zinc-500 uppercase tracking-wider mr-2">Транспорт:</span>
+      {caseData.transports.map((Transport, index) => (
+        <div 
+          key={index}
+          className={`w-8 h-8 ${RADIUS_SM} bg-white/[0.04] border border-white/[0.06] flex items-center justify-center`}
+        >
+          <Transport className="w-4 h-4 text-zinc-400" strokeWidth={1.5} />
+        </div>
+      ))}
+    </div>
+
+    {/* Result */}
+    <div className={`p-4 ${RADIUS} bg-gradient-to-r from-[#F34D1B]/10 to-orange-500/5 border border-[#F34D1B]/20 ${isMobile ? 'mb-4' : 'mb-6'}`}>
+      <div className="flex items-center gap-2 mb-2">
+        <Clock className="w-4 h-4 text-[#F34D1B]" />
+        <span className="text-sm font-semibold text-white uppercase tracking-wider">Результат</span>
+      </div>
+      <p className="text-sm text-zinc-300 leading-relaxed">
+        {caseData.result}
+      </p>
+    </div>
+
+    {/* CTA */}
+    <Button 
+      size={isMobile ? "default" : "lg"}
+      className={`group relative overflow-hidden bg-gradient-to-r ${caseData.gradient} hover:opacity-90 border-0 text-white font-semibold ${isMobile ? 'px-5 py-3 text-sm' : 'px-7 py-4 text-sm'} ${RADIUS} transition-all duration-300 w-full`}
+      onClick={openApplicationModal}
+    >
+      <span className="relative z-10 flex items-center justify-center gap-2">
+        Обсудить похожую задачу
+        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+      </span>
+      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-600" />
+    </Button>
+  </div>
+);
+
+// Mobile accordion card component
+const MobileAccordionCard = ({
+  caseItem,
+  isExpanded,
+  onToggle,
+  openApplicationModal
+}: {
+  caseItem: CaseStudy;
+  isExpanded: boolean;
+  onToggle: () => void;
+  openApplicationModal: () => void;
+}) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(contentRef.current.scrollHeight);
+    }
+  }, [isExpanded]);
+
+  return (
+    <div
+      className={`w-full ${RADIUS} border transition-all duration-300 overflow-hidden ${
+        isExpanded
+          ? "bg-white/[0.04] border-[#F34D1B]/20"
+          : "bg-white/[0.025] border-white/[0.05]"
+      }`}
+      style={{
+        boxShadow: isExpanded 
+          ? '0 0 20px rgba(243,77,27,0.08), 0 0 40px rgba(243,77,27,0.04)' 
+          : 'none'
+      }}
+    >
+      {/* Card header (clickable) */}
+      <button
+        onClick={onToggle}
+        className="w-full text-left p-5 relative"
+      >
+        <div className="flex items-start gap-4">
+          {/* Icon */}
+          <div className="relative flex-shrink-0">
+            <div
+              className={`w-12 h-12 ${RADIUS} flex items-center justify-center transition-all duration-300 ${
+                isExpanded
+                  ? `bg-gradient-to-br ${caseItem.gradient}`
+                  : "bg-zinc-800/70"
+              }`}
+              style={{
+                boxShadow: isExpanded 
+                  ? '0 0 8px rgba(243,77,27,0.2), 0 0 16px rgba(243,77,27,0.1)' 
+                  : 'none'
+              }}
+            >
+              <caseItem.icon
+                className={`h-5 w-5 transition-all duration-300 ${
+                  isExpanded 
+                    ? "text-white" 
+                    : "text-zinc-400"
+                }`}
+                strokeWidth={1.5}
+              />
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span
+                className={`text-[11px] font-medium uppercase tracking-wider transition-colors duration-300 ${
+                  isExpanded 
+                    ? "text-[#F34D1B]" 
+                    : "text-zinc-500"
+                }`}
+              >
+                Кейс {caseItem.id}
+              </span>
+            </div>
+            <h3
+              className={`text-base font-semibold tracking-tight transition-colors duration-300 mb-1.5 ${
+                isExpanded ? "text-white" : "text-zinc-300"
+              }`}
+            >
+              {caseItem.shortTitle}
+            </h3>
+            <div
+              className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-300 ${
+                isExpanded ? "text-[#F34D1B]" : "text-zinc-500"
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              {caseItem.highlight}
+            </div>
+          </div>
+
+          {/* Chevron */}
+          <div className={`flex-shrink-0 w-8 h-8 ${RADIUS_SM} flex items-center justify-center transition-all duration-300 ${
+            isExpanded
+              ? "bg-white/[0.06]"
+              : "bg-white/[0.03]"
+          }`}>
+            <ChevronDown
+              className={`h-4 w-4 transition-all duration-300 ${
+                isExpanded
+                  ? "text-[#F34D1B] rotate-180"
+                  : "text-zinc-500"
+              }`}
+            />
+          </div>
+        </div>
+      </button>
+
+      {/* Expandable content */}
+      <div
+        className="overflow-hidden transition-all duration-500 ease-out"
+        style={{
+          maxHeight: isExpanded ? `${contentHeight}px` : '0px',
+          opacity: isExpanded ? 1 : 0,
+        }}
+      >
+        <div ref={contentRef} className="px-5 pb-5 pt-2 border-t border-white/[0.05]">
+          <CaseContent 
+            caseData={caseItem} 
+            isMobile={true}
+            openApplicationModal={openApplicationModal}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CasesSection = () => {
   const [activeCase, setActiveCase] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [displayCase, setDisplayCase] = useState(1);
+  const [expandedMobileCase, setExpandedMobileCase] = useState<number | null>(null);
   const { openApplicationModal } = useApplicationModal();
+  const isMobile = useIsMobile();
   const currentCase = cases.find((c) => c.id === displayCase) || cases[0];
+
+  const handleMobileToggle = (caseId: number) => {
+    setExpandedMobileCase(prev => prev === caseId ? null : caseId);
+  };
 
   const handleCaseChange = (newCase: number) => {
     if (newCase === activeCase || isAnimating) return;
@@ -167,9 +424,9 @@ const CasesSection = () => {
               Реальные результаты
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-            <span className="text-white">Кейсы </span>
-            <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
+            <span className="text-white block">Кейсы</span>
+            <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent block">
               наших клиентов
             </span>
           </h2>
@@ -180,231 +437,151 @@ const CasesSection = () => {
 
         {/* Cases visualization */}
         <div className="max-w-[1200px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,400px),1fr] gap-8 lg:gap-12 items-start">
-            {/* Left side - Cases navigation */}
+          {/* Mobile version - Accordion cards */}
+          {isMobile ? (
             <div className="flex flex-col gap-3">
-              {cases.map((caseItem) => {
-                const isActive = activeCase === caseItem.id;
-                
-                return (
-                  <button
-                    key={caseItem.id}
-                    onClick={() => handleCaseChange(caseItem.id)}
-                    className={`w-full text-left p-5 lg:p-6 ${RADIUS} border transition-all duration-300 group relative overflow-hidden ${
-                      isActive
-                        ? "bg-white/[0.04] border-[#F34D1B]/20"
-                        : "bg-white/[0.025] border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.08]"
-                    }`}
-                    style={{
-                      boxShadow: isActive 
-                        ? '0 0 20px rgba(243,77,27,0.08), 0 0 40px rgba(243,77,27,0.04)' 
-                        : 'none'
-                    }}
-                  >
-                    <div className="flex items-start gap-4 relative z-10">
-                      {/* Icon */}
-                      <div className="relative flex-shrink-0">
-                        <div
-                          className={`w-12 h-12 ${RADIUS} flex items-center justify-center transition-all duration-300 ${
-                            isActive
-                              ? `bg-gradient-to-br ${caseItem.gradient}`
-                              : "bg-zinc-800/70"
-                          }`}
-                          style={{
-                            boxShadow: isActive 
-                              ? '0 0 8px rgba(243,77,27,0.2), 0 0 16px rgba(243,77,27,0.1)' 
-                              : 'none'
-                          }}
-                        >
-                          <caseItem.icon
-                            className={`h-5 w-5 transition-all duration-300 ${
-                              isActive 
-                                ? "text-white" 
-                                : "text-zinc-400 group-hover:text-zinc-300"
-                            }`}
-                            strokeWidth={1.5}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <span
-                            className={`text-[11px] font-medium uppercase tracking-wider transition-colors duration-300 ${
-                              isActive 
-                                ? "text-[#F34D1B]" 
-                                : "text-zinc-500 group-hover:text-zinc-400"
-                            }`}
-                          >
-                            Кейс {caseItem.id}
-                          </span>
-                        </div>
-                        <h3
-                          className={`text-base font-semibold tracking-tight transition-colors duration-300 mb-1.5 ${
-                            isActive ? "text-white" : "text-zinc-300 group-hover:text-white"
-                          }`}
-                        >
-                          {caseItem.shortTitle}
-                        </h3>
-                        <div
-                          className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-300 ${
-                            isActive ? "text-[#F34D1B]" : "text-zinc-500"
-                          }`}
-                        >
-                          <Zap className="w-3.5 h-3.5" />
-                          {caseItem.highlight}
-                        </div>
-                      </div>
-
-                      {/* Arrow */}
-                      <div className={`flex-shrink-0 w-8 h-8 ${RADIUS_SM} flex items-center justify-center transition-all duration-300 ${
-                        isActive
-                          ? "bg-white/[0.06]"
-                          : "bg-white/[0.03] group-hover:bg-[#F34D1B]/10"
-                      }`}>
-                        <ArrowRight
-                          className={`h-4 w-4 transition-all duration-300 ${
-                            isActive
-                              ? "text-white/80 translate-x-0.5"
-                              : "text-zinc-500 group-hover:text-[#F34D1B] group-hover:translate-x-0.5"
-                          }`}
-                        />
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
+              {cases.map((caseItem) => (
+                <MobileAccordionCard
+                  key={caseItem.id}
+                  caseItem={caseItem}
+                  isExpanded={expandedMobileCase === caseItem.id}
+                  onToggle={() => handleMobileToggle(caseItem.id)}
+                  openApplicationModal={openApplicationModal}
+                />
+              ))}
             </div>
-
-            {/* Right side - Active case details */}
-            <div className="relative">
-              <div className={`relative ${RADIUS} border border-white/[0.03] overflow-hidden bg-white/[0.02]`}>
-                <div className="p-6 lg:p-8">
-                  {/* Header */}
-                  <div className={`transition-all duration-400 ease-out ${
-                    isAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-                  }`}>
-                    {/* Stats grid */}
-                    <div className="grid grid-cols-4 gap-4 mb-8">
-                      {/* Main stat */}
-                      <div className={`col-span-4 sm:col-span-1 p-4 ${RADIUS} bg-gradient-to-br ${currentCase.gradient} relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                        <div className="relative">
-                          <div className="text-3xl lg:text-4xl font-bold text-white mb-1">
-                            {currentCase.stats.main}
+          ) : (
+            /* Desktop version - Original layout */
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,400px),1fr] gap-8 lg:gap-12 items-start">
+                {/* Left side - Cases navigation */}
+                <div className="flex flex-col gap-3">
+                  {cases.map((caseItem) => {
+                    const isActive = activeCase === caseItem.id;
+                    
+                    return (
+                      <button
+                        key={caseItem.id}
+                        onClick={() => handleCaseChange(caseItem.id)}
+                        className={`w-full text-left p-5 lg:p-6 ${RADIUS} border transition-all duration-300 group relative overflow-hidden ${
+                          isActive
+                            ? "bg-white/[0.04] border-[#F34D1B]/20"
+                            : "bg-white/[0.025] border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.08]"
+                        }`}
+                        style={{
+                          boxShadow: isActive 
+                            ? '0 0 20px rgba(243,77,27,0.08), 0 0 40px rgba(243,77,27,0.04)' 
+                            : 'none'
+                        }}
+                      >
+                        <div className="flex items-start gap-4 relative z-10">
+                          {/* Icon */}
+                          <div className="relative flex-shrink-0">
+                            <div
+                              className={`w-12 h-12 ${RADIUS} flex items-center justify-center transition-all duration-300 ${
+                                isActive
+                                  ? `bg-gradient-to-br ${caseItem.gradient}`
+                                  : "bg-zinc-800/70"
+                              }`}
+                              style={{
+                                boxShadow: isActive 
+                                  ? '0 0 8px rgba(243,77,27,0.2), 0 0 16px rgba(243,77,27,0.1)' 
+                                  : 'none'
+                              }}
+                            >
+                              <caseItem.icon
+                                className={`h-5 w-5 transition-all duration-300 ${
+                                  isActive 
+                                    ? "text-white" 
+                                    : "text-zinc-400 group-hover:text-zinc-300"
+                                }`}
+                                strokeWidth={1.5}
+                              />
+                            </div>
                           </div>
-                          <div className="text-sm text-white/80 font-medium">
-                            {currentCase.stats.mainLabel}
+
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <span
+                                className={`text-[11px] font-medium uppercase tracking-wider transition-colors duration-300 ${
+                                  isActive 
+                                    ? "text-[#F34D1B]" 
+                                    : "text-zinc-500 group-hover:text-zinc-400"
+                                }`}
+                              >
+                                Кейс {caseItem.id}
+                              </span>
+                            </div>
+                            <h3
+                              className={`text-base font-semibold tracking-tight transition-colors duration-300 mb-1.5 ${
+                                isActive ? "text-white" : "text-zinc-300 group-hover:text-white"
+                              }`}
+                            >
+                              {caseItem.shortTitle}
+                            </h3>
+                            <div
+                              className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-300 ${
+                                isActive ? "text-[#F34D1B]" : "text-zinc-500"
+                              }`}
+                            >
+                              <Zap className="w-3.5 h-3.5" />
+                              {caseItem.highlight}
+                            </div>
+                          </div>
+
+                          {/* Arrow */}
+                          <div className={`flex-shrink-0 w-8 h-8 ${RADIUS_SM} flex items-center justify-center transition-all duration-300 ${
+                            isActive
+                              ? "bg-white/[0.06]"
+                              : "bg-white/[0.03] group-hover:bg-[#F34D1B]/10"
+                          }`}>
+                            <ArrowRight
+                              className={`h-4 w-4 transition-all duration-300 ${
+                                isActive
+                                  ? "text-white/80 translate-x-0.5"
+                                  : "text-zinc-500 group-hover:text-[#F34D1B] group-hover:translate-x-0.5"
+                              }`}
+                            />
                           </div>
                         </div>
-                      </div>
-                      
-                      {/* Other stats */}
-                      {currentCase.stats.items.map((stat, index) => (
-                        <div 
-                          key={index} 
-                          className={`p-4 ${RADIUS} bg-white/[0.03] border border-white/[0.05]`}
-                        >
-                          <div className="text-xl lg:text-2xl font-bold text-white mb-1">
-                            {stat.value}
-                          </div>
-                          <div className="text-xs text-zinc-500">
-                            {stat.label}
-                          </div>
-                        </div>
-                      ))}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Right side - Active case details */}
+                <div className="relative">
+                  <div className={`relative ${RADIUS} border border-white/[0.03] overflow-hidden bg-white/[0.02]`}>
+                    <div className="p-6 lg:p-8">
+                      <CaseContent 
+                        caseData={currentCase}
+                        isAnimating={isAnimating}
+                        isMobile={false}
+                        openApplicationModal={openApplicationModal}
+                      />
                     </div>
-
-                    {/* Title */}
-                    <h3 className="text-xl lg:text-2xl font-bold text-white mb-6 tracking-tight leading-tight">
-                      {currentCase.title}
-                    </h3>
-
-                    {/* Task */}
-                    <div className="mb-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Package className="w-4 h-4 text-[#F34D1B]" />
-                        <span className="text-sm font-semibold text-white uppercase tracking-wider">Задача</span>
-                      </div>
-                      <p className="text-sm lg:text-base text-zinc-400 leading-relaxed">
-                        {currentCase.task}
-                      </p>
-                    </div>
-
-                    {/* Solution */}
-                    <div className="mb-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <TrendingDown className="w-4 h-4 text-[#F34D1B]" />
-                        <span className="text-sm font-semibold text-white uppercase tracking-wider">Решение</span>
-                      </div>
-                      <div className="space-y-2">
-                        {currentCase.solution.map((item, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <CheckCircle2 className="w-4 h-4 text-[#F34D1B] mt-0.5 flex-shrink-0" />
-                            <span className="text-sm lg:text-base text-zinc-400">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Transport modes */}
-                    <div className="flex items-center gap-2 mb-6">
-                      <span className="text-xs text-zinc-500 uppercase tracking-wider mr-2">Транспорт:</span>
-                      {currentCase.transports.map((Transport, index) => (
-                        <div 
-                          key={index}
-                          className={`w-8 h-8 ${RADIUS_SM} bg-white/[0.04] border border-white/[0.06] flex items-center justify-center`}
-                        >
-                          <Transport className="w-4 h-4 text-zinc-400" strokeWidth={1.5} />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Result */}
-                    <div className={`p-5 ${RADIUS} bg-gradient-to-r from-[#F34D1B]/10 to-orange-500/5 border border-[#F34D1B]/20 mb-6`}>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-4 h-4 text-[#F34D1B]" />
-                        <span className="text-sm font-semibold text-white uppercase tracking-wider">Результат</span>
-                      </div>
-                      <p className="text-sm lg:text-base text-zinc-300 leading-relaxed">
-                        {currentCase.result}
-                      </p>
-                    </div>
-
-                    {/* CTA */}
-                    <Button 
-                      size="lg" 
-                      className={`group relative overflow-hidden bg-gradient-to-r ${currentCase.gradient} hover:opacity-90 border-0 text-white font-semibold px-7 py-4 text-sm ${RADIUS} transition-all duration-300 w-full sm:w-auto`}
-                      onClick={openApplicationModal}
-                    >
-                      <span className="relative z-10 flex items-center justify-center gap-2">
-                        Обсудить похожую задачу
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                      </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-600" />
-                    </Button>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Progress indicator */}
-          <div className="flex items-center gap-3 mt-8 justify-center lg:justify-start lg:max-w-[400px]">
-            {cases.map((caseItem) => (
-              <button
-                key={caseItem.id}
-                onClick={() => handleCaseChange(caseItem.id)}
-                className={`h-1.5 ${RADIUS} transition-all duration-300 ${
-                  activeCase === caseItem.id 
-                    ? "w-8 bg-gradient-to-r from-[#F34D1B] to-orange-500" 
-                    : "w-1.5 bg-zinc-700 hover:bg-zinc-600"
-                }`}
-                aria-label={`Перейти к кейсу ${caseItem.id}`}
-              />
-            ))}
-          </div>
+              
+              {/* Progress indicator - Desktop only */}
+              <div className="flex items-center gap-3 mt-8 justify-center lg:justify-start lg:max-w-[400px]">
+                {cases.map((caseItem) => (
+                  <button
+                    key={caseItem.id}
+                    onClick={() => handleCaseChange(caseItem.id)}
+                    className={`h-1.5 ${RADIUS} transition-all duration-300 ${
+                      activeCase === caseItem.id 
+                        ? "w-8 bg-gradient-to-r from-[#F34D1B] to-orange-500" 
+                        : "w-1.5 bg-zinc-700 hover:bg-zinc-600"
+                    }`}
+                    aria-label={`Перейти к кейсу ${caseItem.id}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

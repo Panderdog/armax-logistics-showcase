@@ -22,7 +22,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto flex items-center justify-between px-6 py-4 lg:px-8">
+      <nav className="container mx-auto flex items-center justify-between px-4 sm:px-6 py-4 lg:px-8">
         {/* Logo */}
         <Link 
           to="/" 
@@ -84,28 +84,41 @@ const Header = () => {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - внутри header как его продолжение */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-background">
-          <div className="space-y-1 px-4 pb-3 pt-2">
+        <div className="lg:hidden">
+          {/* Overlay за пределами header */}
+          <div 
+            className="fixed inset-0 top-0 bg-black/30 -z-10"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* Меню - часть header */}
+          <div className="px-4 sm:px-6 pt-2 pb-4 space-y-1">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
               return (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`block rounded-md px-3 py-2 text-base font-medium transition-all duration-300 ease-out text-foreground hover:bg-secondary hover:translate-x-1 hover:shadow-soft ${
-                    isActive ? 'border-l-4 border-[#223A5E]' : ''
+                  className={`group relative block px-4 py-3 text-base font-medium transition-all duration-300 ease-out rounded-lg ${
+                    isActive 
+                      ? 'text-foreground [text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]' 
+                      : 'text-foreground/75 hover:text-foreground hover:bg-secondary/30'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
+                  {/* Левая акцентная линия для активного пункта */}
+                  {isActive && (
+                    <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#E85D3E] rounded-r-full"></span>
+                  )}
                 </Link>
               );
             })}
-            <div className="pt-4">
+            <div className="pt-3">
               <Button
                 className="w-full"
+                size="default"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   openApplicationModal();
