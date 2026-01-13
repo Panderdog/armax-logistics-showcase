@@ -81,6 +81,7 @@ const News = () => {
       handleCreateNew();
       setSearchParams({});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   const filteredNews = news

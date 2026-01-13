@@ -37,7 +37,7 @@ const locationColors = {
 };
 
 // Memoized Geography component для производительности
-const MapGeography = memo(({ geo }: { geo: any }) => (
+const MapGeography = memo(({ geo }: { geo: Parameters<Parameters<typeof Geographies>[0]['children']>[0]['geographies'][0] }) => (
   <Geography
     geography={geo}
     fill="#1E293B"

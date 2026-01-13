@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { 
   Star, 
   Quote, 
@@ -155,23 +155,23 @@ const Reviews = () => {
     },
   ];
 
-  const handlePrevTestimonial = () => {
+  const handlePrevTestimonial = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
     setActiveTestimonial((prev) => 
       prev === 0 ? featuredTestimonials.length - 1 : prev - 1
     );
     setTimeout(() => setIsAnimating(false), 500);
-  };
+  }, [isAnimating, featuredTestimonials.length]);
 
-  const handleNextTestimonial = () => {
+  const handleNextTestimonial = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
     setActiveTestimonial((prev) => 
       prev === featuredTestimonials.length - 1 ? 0 : prev + 1
     );
     setTimeout(() => setIsAnimating(false), 500);
-  };
+  }, [isAnimating, featuredTestimonials.length]);
 
   // Auto-advance testimonials
   useEffect(() => {
@@ -181,7 +181,7 @@ const Reviews = () => {
       }
     }, 13200);
     return () => clearInterval(interval);
-  }, [isAnimating]);
+  }, [isAnimating, handleNextTestimonial]);
 
   const currentTestimonial = featuredTestimonials[activeTestimonial];
 

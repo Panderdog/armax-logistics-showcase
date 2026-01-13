@@ -115,6 +115,7 @@ const Services = () => {
       const img = new Image();
       img.src = service.image;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

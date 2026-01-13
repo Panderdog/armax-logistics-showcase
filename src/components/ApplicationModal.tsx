@@ -168,7 +168,8 @@ const payload = {
 
 const { error } = await supabase
   .from("applications")
-  .insert(payload as any); // глушим дурку тайпскрипта
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  .insert(payload as any);
   
       if (error) {
         throw error;
@@ -194,7 +195,7 @@ const { error } = await supabase
           }),
         });
   
-        console.log("smooth-service (modal) status:", response.status);
+        // Email отправлен успешно
       } catch (emailError) {
         console.error(
           "Ошибка отправки email через Resend (modal):",

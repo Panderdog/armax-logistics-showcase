@@ -143,9 +143,8 @@ const Contacts = () => {
           }),
         });
 
-        console.log("smooth-service status:", response.status);
-        const text = await response.text();
-        console.log("smooth-service response body:", text);
+        // Отправка email прошла успешно
+        await response.text();
       } catch (emailError) {
         console.error("Ошибка отправки email через Resend:", emailError);
       }
