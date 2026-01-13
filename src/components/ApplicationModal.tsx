@@ -208,6 +208,7 @@ const { error } = await supabase
       setFormData({ name: "", phone: PHONE_PREFIX, email: "", message: "" });
       setErrors({});
       setIsSubmitted(true);
+      (window as any).ym?.(106236010, "reachGoal", "lead_form");
   
       setTimeout(() => {
         onClose();
