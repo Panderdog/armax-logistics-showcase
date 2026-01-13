@@ -25,6 +25,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { AdminProvider } from "./contexts/AdminContext";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
+import UpdatePassword from "./pages/admin/UpdatePassword";
 import Dashboard from "./pages/admin/Dashboard";
 import Applications from "./pages/admin/Applications";
 import News from "./pages/admin/News";
@@ -79,6 +80,7 @@ const App = () => (
               
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/update-password" element={<UpdatePassword />} />
               <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
               <Route path="/admin/applications" element={<AdminLayout><Applications /></AdminLayout>} />
               <Route path="/admin/news" element={<AdminLayout><News /></AdminLayout>} />
