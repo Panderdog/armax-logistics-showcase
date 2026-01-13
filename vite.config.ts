@@ -15,4 +15,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  esbuild: {
+    target: "es2018",
+  },
+  build: {
+    target: "es2018",
+  },
 }));
