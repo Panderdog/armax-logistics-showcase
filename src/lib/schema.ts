@@ -1,12 +1,17 @@
 // Schema.org structured data for Armax Logistics
 
+// Получаем базовый URL из env или используем по умолчанию
+const SITE_URL = typeof import.meta.env.VITE_SITE_URL !== 'undefined' 
+  ? import.meta.env.VITE_SITE_URL 
+  : "https://armaxstp.com";
+
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Armax Logistics",
   "alternateName": "Армакс Логистика",
-  "url": "https://armax-logistics.com",
-  "logo": "https://armax-logistics.com/armax-logo.svg",
+  "url": SITE_URL,
+  "logo": `${SITE_URL}/armax-logo.svg`,
   "description": "Международная логистическая компания специализирующаяся на перевозках грузов по Европе и Азии",
   "telephone": "+7-812-644-02-91",
   "email": "info@armaxstp.com",
@@ -34,9 +39,9 @@ export const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Armax Logistics",
-  "image": "https://armax-logistics.com/armax-logo.svg",
-  "@id": "https://armax-logistics.com",
-  "url": "https://armax-logistics.com",
+  "image": `${SITE_URL}/armax-logo.svg`,
+  "@id": SITE_URL,
+  "url": SITE_URL,
   "telephone": "+7-812-644-02-91",
   "priceRange": "$$",
   "address": {
@@ -87,7 +92,7 @@ export const breadcrumbSchema = (items: { name: string; url: string }[]) => ({
     "@type": "ListItem",
     "position": index + 1,
     "name": item.name,
-    "item": `https://armax-logistics.com${item.url}`
+    "item": `${SITE_URL}${item.url}`
   }))
 });
 

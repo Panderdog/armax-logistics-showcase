@@ -118,9 +118,12 @@ const NewsArticle = () => {
   return (
     <>
       <SEO 
-        title={`${article.title} — Новости Armax`}
-        description={article.previewText}
-        image={article.previewImage}
+        title={article.meta_title || `${article.title} — Новости Armax`}
+        description={article.meta_description || article.previewText}
+        image={article.og_image || article.previewImage || undefined}
+        canonicalUrl={`/news/${article.slug}`}
+        ogType="article"
+        noindex={article.noindex}
       />
       
       <div className="min-h-screen overflow-hidden">

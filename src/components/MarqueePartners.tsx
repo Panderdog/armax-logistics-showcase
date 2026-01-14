@@ -18,6 +18,8 @@ const PartnerCard = ({ name, image }: { name: string; image: string }) => (
       <img
         src={image}
         alt={`${name} контейнер`}
+        width={240}
+        height={90}
         className="h-full w-auto object-contain drop-shadow-md hover:drop-shadow-lg hover:scale-105 transition-all duration-300"
         loading="lazy"
       />

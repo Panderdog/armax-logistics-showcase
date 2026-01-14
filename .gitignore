@@ -12,10 +12,17 @@ dist
 dist-ssr
 *.local
 
+# Generated files for prerendering
+src/generated/
+
 # Environment variables
 .env
 .env.local
 .env.*.local
+.env.deploy
+
+# Deploy configuration (if you decide to use external config file)
+scripts/deploy.local.sh
 
 # Editor directories and files
 .vscode/*

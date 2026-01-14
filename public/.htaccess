@@ -1,0 +1,145 @@
+# Apache configuration for SPA with prerendered pages
+# This ensures prerendered HTML files are served while maintaining SPA routing
+
+Options -MultiViews
+RewriteEngine On
+RewriteBase /
+
+# 0. Force HTTPS and non-www
+RewriteCond %{HTTP_HOST} ^www\.(.+) [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+RewriteCond %{HTTP:Front-End-Https} !on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# 1. Serve existing files and directories as-is (including prerendered pages)
+# This is CRITICAL for react-snap to work correctly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. For URLs without trailing slash that are directories, redirect to add trailing slash
+# This ensures consistent URLs (e.g., /news/my-article -> /news/my-article/)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
+RewriteRule ^(.*)$ /$1/ [R=301,L]
+
+# 3. If directory with index.html exists, serve it (prerendered page)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
+RewriteRule ^(.*)$ /$1/index.html [L]
+
+# 4. Return 410 Gone for deleted demo news articles (no longer exist)
+RewriteRule ^news/(novyj-marshrut-shanhaj-vladivostok|armax-lider-gruzoperevozok-2024|rasshirenie-skladskoj-seti-moskva)/?$ - [R=410,L]
+
+# 5. Return 404 for unknown news URLs (not prerendered)
+RewriteCond %{REQUEST_URI} ^/news/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ - [R=404,L]
+
+# 6. Return 404 for unknown service URLs (only known services allowed)
+# Known services: sea, aviation, railway, auto, consolidated, customs, warehouse, insurance
+RewriteCond %{REQUEST_URI} ^/services/(.+)$ [NC]
+RewriteCond %{REQUEST_URI} !^/services/(sea|aviation|railway|auto|consolidated|customs|warehouse|insurance)/?$ [NC]
+RewriteRule ^ - [R=404,L]
+
+# 7. Whitelist known top-level routes, 404 for everything else at root
+# Known routes: about, services, geography, news, reviews, faq, contacts, privacy, admin
+RewriteCond %{REQUEST_URI} ^/([^/]+)/?$ [NC]
+RewriteCond %{REQUEST_URI} !^/(about|services|geography|news|reviews|faq|contacts|privacy|admin)/?$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ - [R=404,L]
+
+# 8. Fallback to main index.html for SPA routing (only for whitelisted paths)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
+# Security headers
+<IfModule mod_headers.c>
+    # Unset potentially conflicting headers from parent configs
+    Header always unset Content-Security-Policy
+    Header always unset Content-Security-Policy-Report-Only
+    Header always unset X-XSS-Protection
+    
+    # Enable HSTS (strict transport security)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Control referrer information
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Permissions Policy - disable unnecessary browser features for B2B SPA
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+    
+    # Content Security Policy (Report-Only mode for testing)
+    # After 1-2 days testing: replace Content-Security-Policy-Report-Only → Content-Security-Policy
+    Header always set Content-Security-Policy-Report-Only "default-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co; frame-src 'self' https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+    
+    # Cache-Control strategy (Apache 2.2 compatible)
+    # Mark requests from /assets/ directory with environment variable
+    SetEnvIfNoCase Request_URI "^/assets/" IS_ASSETS=1
+    
+    # Long cache (1 year + immutable) ONLY for /assets/ (Vite hashed files)
+    Header set Cache-Control "public, max-age=31536000, immutable" env=IS_ASSETS
+    
+    # Shorter cache for static files OUTSIDE /assets/ (1 week)
+    <FilesMatch "\.(jpg|jpeg|png|webp|svg|gif|ico|woff2?|ttf|otf)$">
+        Header set Cache-Control "public, max-age=604800, must-revalidate" env=!IS_ASSETS
+    </FilesMatch>
+    
+    # HTML should not be cached long-term (ensures deployments take effect immediately)
+    <FilesMatch "\.(html)$">
+        Header set Cache-Control "max-age=0, no-cache, must-revalidate"
+    </FilesMatch>
+    
+    # Robots.txt and sitemap - short cache for frequent updates (1 hour)
+    <FilesMatch "^(robots\.txt|sitemap\.xml)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml
+</IfModule>
+
+# Browser caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images outside /assets/ - moderate cache
+    ExpiresByType image/jpeg "access plus 1 week"
+    ExpiresByType image/png "access plus 1 week"
+    ExpiresByType image/webp "access plus 1 week"
+    ExpiresByType image/svg+xml "access plus 1 week"
+    ExpiresByType image/x-icon "access plus 1 week"
+    
+    # CSS and JavaScript in /assets/ - long cache (handled by Cache-Control above)
+    # But Expires as fallback for older clients
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/json "access plus 1 year"
+    
+    # HTML (short cache for prerendered pages)
+    ExpiresByType text/html "access plus 0 seconds"
+    
+    # Fonts in /assets/ - long cache
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+</IfModule>
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

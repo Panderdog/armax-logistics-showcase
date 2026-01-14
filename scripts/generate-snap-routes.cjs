@@ -4,6 +4,7 @@ const path = require("path");
 
 const ROOT = process.cwd();
 const SERVICES_FILE = path.join(ROOT, "src", "data", "services.ts");
+const NEWS_JSON = path.join(ROOT, "src", "generated", "news.prerender.json");
 const PACKAGE_JSON = path.join(ROOT, "package.json");
 
 function extractServiceIds(tsSource) {
@@ -15,7 +16,40 @@ function extractServiceIds(tsSource) {
   return Array.from(ids);
 }
 
+function loadNewsRoutes() {
+  // Check if news JSON exists
+  if (!fs.existsSync(NEWS_JSON)) {
+    console.error("❌ ERROR: News export file not found!");
+    console.error(`   Expected: ${NEWS_JSON}`);
+    console.error("   Run 'npm run export-news' first to generate news data.");
+    process.exit(1);
+  }
+
+  try {
+    const newsData = JSON.parse(fs.readFileSync(NEWS_JSON, "utf8"));
+    
+    if (!Array.isArray(newsData) || newsData.length === 0) {
+      console.error("❌ ERROR: News export is empty!");
+      console.error("   Cannot generate routes without published news.");
+      console.error("   Please add at least one published news article via admin panel.");
+      process.exit(1);
+    }
+
+    // Generate routes for each news article
+    const routes = newsData.map(article => `/news/${article.slug}`);
+    console.log(`✅ Loaded ${routes.length} news routes from real data`);
+    
+    return routes;
+  } catch (error) {
+    console.error("❌ ERROR: Failed to parse news JSON:", error.message);
+    process.exit(1);
+  }
+}
+
 function main() {
+  console.log("🔄 Generating react-snap routes...");
+  
+  // Load services
   const ts = fs.readFileSync(SERVICES_FILE, "utf8");
   const ids = extractServiceIds(ts);
 
@@ -32,12 +66,13 @@ function main() {
     "/contacts",
     "/faq",
     "/privacy",
-    "/news", // если есть листинг новостей
+    "/news",
   ];
 
   const serviceRoutes = ids.map((id) => `/services/${id}`);
+  const newsRoutes = loadNewsRoutes(); // Load real news routes
 
-  const include = Array.from(new Set([...baseRoutes, ...serviceRoutes]));
+  const include = Array.from(new Set([...baseRoutes, ...serviceRoutes, ...newsRoutes]));
 
   const pkg = JSON.parse(fs.readFileSync(PACKAGE_JSON, "utf8"));
 
@@ -50,7 +85,11 @@ function main() {
 
   fs.writeFileSync(PACKAGE_JSON, JSON.stringify(pkg, null, 2) + "\n", "utf8");
 
-  console.log("[generate-snap-routes] include routes:", include);
+  console.log("✅ Generated routes for react-snap:");
+  console.log(`   - ${baseRoutes.length} base routes`);
+  console.log(`   - ${serviceRoutes.length} service routes`);
+  console.log(`   - ${newsRoutes.length} news routes`);
+  console.log(`   Total: ${include.length} routes`);
 }
 
 main();

@@ -1,4 +1,4 @@
-import { useState, useCallback, memo, useMemo } from "react";
+import { useState, useCallback, memo, useMemo, useEffect } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -8,6 +8,7 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { Ship, Plane, Train, Truck, Layers } from "lucide-react";
+import { isReactSnap } from "@/lib/reactSnap";
 import { 
   points, 
   routes, 
@@ -57,9 +58,15 @@ const LogisticsMap = () => {
   const [hoveredRoute, setHoveredRoute] = useState<string | null>(null);
   const [tooltipContent, setTooltipContent] = useState<{ content: string; x: number; y: number } | null>(null);
   const [center, setCenter] = useState<[number, number]>([50, 35]);
+  const [isSnapMode, setIsSnapMode] = useState(true);
   
   // Фильтр модальностей: null = все, иначе только выбранный mode
   const [activeMode, setActiveMode] = useState<Mode | null>(null);
+
+  // Detect react-snap on mount
+  useEffect(() => {
+    setIsSnapMode(isReactSnap());
+  }, []);
 
   const handleMoveEnd = useCallback((position: { coordinates: [number, number]; zoom: number }) => {
     setCenter(position.coordinates);
@@ -133,6 +140,28 @@ const LogisticsMap = () => {
 
   // Все доступные модальности
   const allModes: Mode[] = ["sea", "air", "rail", "road", "multi"];
+
+  // Fallback for react-snap: show a placeholder instead of loading external map data
+  if (isSnapMode) {
+    return (
+      <div className="logistics-map-container relative w-full">
+        <div 
+          className="rounded-2xl overflow-hidden border border-border/30 flex items-center justify-center min-h-[450px]"
+          style={{ background: "linear-gradient(180deg, #0F172A 0%, #020617 100%)" }}
+        >
+          <div className="text-center p-8">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center">
+              <Ship className="w-8 h-8 text-accent" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">Интерактивная карта маршрутов</h3>
+            <p className="text-muted-foreground max-w-md">
+              Откройте страницу в браузере для просмотра интерактивной карты логистических маршрутов компании
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="logistics-map-container relative w-full">

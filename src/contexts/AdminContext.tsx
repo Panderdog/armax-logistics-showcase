@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isReactSnap } from '@/lib/reactSnap';
+import { loadPrerenderNews, getPrerenderNews } from '@/lib/prerenderData';
 
 interface Application {
   id: string;
@@ -24,6 +26,10 @@ interface NewsItem {
   published: boolean;
   createdAt: string;
   updatedAt: string;
+  meta_title?: string;
+  meta_description?: string;
+  og_image?: string;
+  noindex: boolean;
 }
 
 interface AdminContextType {
@@ -175,6 +181,10 @@ function mapNewsRow(row: {
   published: boolean;
   created_at: string;
   updated_at: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  og_image?: string | null;
+  noindex?: boolean;
 }): NewsItem {
   return {
     id: row.id,
@@ -187,6 +197,10 @@ function mapNewsRow(row: {
     published: row.published,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    meta_title: row.meta_title || undefined,
+    meta_description: row.meta_description || undefined,
+    og_image: row.og_image || undefined,
+    noindex: row.noindex || false,
   };
 }
 
@@ -197,11 +211,29 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [applications, setApplications] = useState<Application[]>([]);
   const [applicationsLoading, setApplicationsLoading] = useState(true);
   
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [newsLoading, setNewsLoading] = useState(true);
+  // Initialize news - in react-snap mode, data might already be cached
+  const [news, setNews] = useState<NewsItem[]>(() => {
+    // Try to get prerendered data immediately (synchronous)
+    const prerenderData = getPrerenderNews();
+    if (prerenderData.length > 0) {
+      console.log(`[AdminContext] Initialized with ${prerenderData.length} prerender news (sync)`);
+      return prerenderData;
+    }
+    return [];
+  });
+  const [newsLoading, setNewsLoading] = useState(() => {
+    // If we have data from prerender, we're not loading
+    return getPrerenderNews().length === 0;
+  });
 
   // Check auth state on mount
   useEffect(() => {
+    // Skip auth checks during react-snap prerendering
+    if (isReactSnap()) {
+      setIsAuthLoading(false);
+      return;
+    }
+
     if (!supabase || !isSupabaseConfigured) {
       setIsAuthLoading(false);
       return;
@@ -223,6 +255,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   // Fetch applications from Supabase
   const fetchApplications = useCallback(async () => {
+    // Skip fetching during react-snap prerendering
+    if (isReactSnap()) {
+      setApplicationsLoading(false);
+      return;
+    }
+
     if (!supabase || !isSupabaseConfigured) {
       setApplicationsLoading(false);
       return;
@@ -236,7 +274,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error fetching applications:', error);
+        console.warn('Error fetching applications:', error);
         return;
       }
 
@@ -253,7 +291,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
       setApplications(mappedApplications);
     } catch (error) {
-      console.error('Error fetching applications:', error);
+      console.warn('Error fetching applications:', error);
     } finally {
       setApplicationsLoading(false);
     }
@@ -261,9 +299,21 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   // Fetch news from Supabase
   const fetchNews = useCallback(async () => {
+    // During react-snap prerendering, data is already initialized - skip fetching
+    if (isReactSnap()) {
+      return;
+    }
+
     if (!supabase || !isSupabaseConfigured) {
-      // Fallback to demo data if Supabase is not configured
-      setNews(demoNews);
+      // In DEV mode without Supabase: show demo data
+      // In PROD/BUILD mode: this is an error - should not happen
+      if (import.meta.env.DEV) {
+        console.warn('[AdminContext] Supabase not configured - using demo data for DEV');
+        setNews(demoNews);
+      } else {
+        console.error('[AdminContext] Supabase not configured in PROD mode!');
+        setNews([]);
+      }
       setNewsLoading(false);
       return;
     }
@@ -276,21 +326,35 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error fetching news:', error);
-        // Fallback to demo data on error
-        setNews(demoNews);
+        console.warn('Error fetching news:', error);
+        // In DEV: fallback to demo data; in PROD: empty array
+        if (import.meta.env.DEV) {
+          setNews(demoNews);
+        } else {
+          setNews([]);
+        }
         return;
       }
 
       if (data && data.length > 0) {
         setNews(data.map(mapNewsRow));
       } else {
-        // If no news in database, use demo data
-        setNews(demoNews);
+        // If no news in database
+        // In DEV: use demo data; in PROD: empty is fine (should have been caught by export script)
+        if (import.meta.env.DEV) {
+          console.warn('[AdminContext] No news in database - using demo data for DEV');
+          setNews(demoNews);
+        } else {
+          setNews([]);
+        }
       }
     } catch (error) {
-      console.error('Error fetching news:', error);
-      setNews(demoNews);
+      console.warn('Error fetching news:', error);
+      if (import.meta.env.DEV) {
+        setNews(demoNews);
+      } else {
+        setNews([]);
+      }
     } finally {
       setNewsLoading(false);
     }
@@ -305,7 +369,25 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   // Load news on mount (published news are public)
   useEffect(() => {
-    fetchNews();
+    // In react-snap mode, load from prerendered data
+    if (isReactSnap()) {
+      loadPrerenderNews()
+        .then(prerenderNews => {
+          if (prerenderNews.length > 0) {
+            console.log(`[AdminContext] Loaded ${prerenderNews.length} prerender news`);
+            setNews(prerenderNews);
+          }
+          setNewsLoading(false);
+        })
+        .catch(error => {
+          console.error('[AdminContext] Failed to load prerender news:', error);
+          setNews([]);
+          setNewsLoading(false);
+        });
+    } else {
+      // Normal runtime - fetch from Supabase
+      fetchNews();
+    }
   }, [fetchNews]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
@@ -428,6 +510,10 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           preview_image: newsItem.previewImage || null,
           tags: newsItem.tags,
           published: newsItem.published,
+          meta_title: newsItem.meta_title || null,
+          meta_description: newsItem.meta_description || null,
+          og_image: newsItem.og_image || null,
+          noindex: newsItem.noindex || false,
         })
         .select()
         .single();
@@ -473,6 +559,10 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       if (updatedNews.previewImage !== undefined) updateData.preview_image = updatedNews.previewImage;
       if (updatedNews.tags !== undefined) updateData.tags = updatedNews.tags;
       if (updatedNews.published !== undefined) updateData.published = updatedNews.published;
+      if (updatedNews.meta_title !== undefined) updateData.meta_title = updatedNews.meta_title;
+      if (updatedNews.meta_description !== undefined) updateData.meta_description = updatedNews.meta_description;
+      if (updatedNews.og_image !== undefined) updateData.og_image = updatedNews.og_image;
+      if (updatedNews.noindex !== undefined) updateData.noindex = updatedNews.noindex;
 
       const { data, error } = await supabase
         .from('news')

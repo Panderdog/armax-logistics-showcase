@@ -110,6 +110,7 @@ const NewsList = () => {
       <SEO 
         title="Новости — Armax Logistics"
         description="Актуальные новости компании Armax: новые маршруты, услуги, события в сфере международной логистики и грузоперевозок из Азии."
+        canonicalUrl="/news"
       />
       
       {/* Loading State */}

@@ -1,101 +1,108 @@
-import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 
 interface SEOProps {
   title: string;
   description: string;
   keywords?: string;
   ogImage?: string;
+  image?: string;
   ogType?: string;
   canonicalUrl?: string;
   structuredData?: object;
+  noindex?: boolean;
 }
 
 const SEO = ({
   title,
   description,
   keywords,
-  ogImage = "/og-image.jpg",
+  ogImage,
+  image,
   ogType = "website",
   canonicalUrl,
   structuredData,
+  noindex = false,
 }: SEOProps) => {
   const fullTitle = `${title} | Armax Logistics`;
-  const baseUrl = "https://armax-logistics.com"; // Замените на реальный URL при деплое
+  const baseUrl = import.meta.env.VITE_SITE_URL || "https://armaxstp.com";
+  const finalImage = image || ogImage || "/og-image.jpg";
 
-  useEffect(() => {
-    // Update document title
-    document.title = fullTitle;
+  // Нормализация URL: добавляем trailing slash если его нет
+  const normalizeUrl = (path: string) => {
+    if (!path) return "";
+    // Если путь уже заканчивается на /, оставляем как есть
+    if (path.endsWith("/")) return path;
+    // Если это корень, добавляем /
+    if (path === "") return "/";
+    // Иначе добавляем / в конец
+    return `${path}/`;
+  };
 
-    // Function to update or create meta tag
-    const updateMetaTag = (selector: string, attribute: string, content: string) => {
-      let element = document.querySelector(selector);
-      if (!element) {
-        element = document.createElement("meta");
-        element.setAttribute(attribute.split("=")[0], attribute.split("=")[1]);
-        document.head.appendChild(element);
-      }
-      element.setAttribute("content", content);
-    };
+  // Преобразование в абсолютный URL для изображений
+  const toAbsoluteUrl = (input: string | undefined, origin: string): string => {
+    if (!input) return `${origin}/og-image.jpg`;
 
-    // Function to update or create link tag
-    const updateLinkTag = (rel: string, href: string) => {
-      let element = document.querySelector(`link[rel="${rel}"]`);
-      if (!element) {
-        element = document.createElement("link");
-        element.setAttribute("rel", rel);
-        document.head.appendChild(element);
-      }
-      element.setAttribute("href", href);
-    };
+    const s = input.trim();
+    if (!s) return `${origin}/og-image.jpg`;
 
-    // Basic Meta Tags
-    updateMetaTag('meta[name="description"]', "name=description", description);
-    updateMetaTag('meta[name="author"]', "name=author", "Armax Logistics");
-    if (keywords) {
-      updateMetaTag('meta[name="keywords"]', "name=keywords", keywords);
-    }
+    // Already absolute
+    if (/^https?:\/\//i.test(s)) return s;
 
-    // Canonical URL
-    if (canonicalUrl) {
-      updateLinkTag("canonical", `${baseUrl}${canonicalUrl}`);
-    }
+    // Protocol-relative //example.com/img
+    if (s.startsWith("//")) return `https:${s}`;
 
-    // Open Graph / Facebook
-    updateMetaTag('meta[property="og:type"]', "property=og:type", ogType);
-    updateMetaTag('meta[property="og:title"]', "property=og:title", fullTitle);
-    updateMetaTag('meta[property="og:description"]', "property=og:description", description);
-    updateMetaTag('meta[property="og:image"]', "property=og:image", `${baseUrl}${ogImage}`);
-    updateMetaTag('meta[property="og:site_name"]', "property=og:site_name", "Armax Logistics");
-    updateMetaTag('meta[property="og:locale"]', "property=og:locale", "ru_RU");
-    if (canonicalUrl) {
-      updateMetaTag('meta[property="og:url"]', "property=og:url", `${baseUrl}${canonicalUrl}`);
-    }
+    // Relative path
+    const cleanOrigin = origin.replace(/\/+$/, "");
+    const path = s.startsWith("/") ? s : `/${s}`;
+    return `${cleanOrigin}${path}`;
+  };
 
-    // Twitter Card
-    updateMetaTag('meta[name="twitter:card"]', "name=twitter:card", "summary_large_image");
-    updateMetaTag('meta[name="twitter:title"]', "name=twitter:title", fullTitle);
-    updateMetaTag('meta[name="twitter:description"]', "name=twitter:description", description);
-    updateMetaTag('meta[name="twitter:image"]', "name=twitter:image", `${baseUrl}${ogImage}`);
+  const normalizedCanonical = canonicalUrl ? normalizeUrl(canonicalUrl) : null;
+  const fullCanonicalUrl = normalizedCanonical ? `${baseUrl}${normalizedCanonical}` : null;
+  const fullImageUrl = toAbsoluteUrl(finalImage, baseUrl);
 
-    // Additional Meta Tags
-    updateMetaTag('meta[name="robots"]', "name=robots", "index, follow");
-    updateMetaTag('meta[name="googlebot"]', "name=googlebot", "index, follow");
-    updateMetaTag('meta[name="format-detection"]', "name=format-detection", "telephone=yes");
-    updateMetaTag('meta[name="theme-color"]', "name=theme-color", "#3b82f6");
+  return (
+    <Helmet>
+      {/* Title */}
+      <title>{fullTitle}</title>
 
-    // Structured Data (JSON-LD)
-    if (structuredData) {
-      let script = document.querySelector('script[type="application/ld+json"]');
-      if (!script) {
-        script = document.createElement("script");
-        script.setAttribute("type", "application/ld+json");
-        document.head.appendChild(script);
-      }
-      script.textContent = JSON.stringify(structuredData);
-    }
-  }, [title, description, keywords, ogImage, ogType, canonicalUrl, structuredData, fullTitle, baseUrl]);
+      {/* Basic Meta Tags */}
+      <meta name="description" content={description} />
+      <meta name="author" content="Armax Logistics" />
+      {keywords && <meta name="keywords" content={keywords} />}
 
-  return null; // This component doesn't render anything
+      {/* Canonical URL */}
+      {fullCanonicalUrl && <link rel="canonical" href={fullCanonicalUrl} />}
+
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content={ogType} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={fullImageUrl} />
+      <meta property="og:site_name" content="Armax Logistics" />
+      <meta property="og:locale" content="ru_RU" />
+      {fullCanonicalUrl && <meta property="og:url" content={fullCanonicalUrl} />}
+
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={fullImageUrl} />
+
+      {/* Additional Meta Tags */}
+      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="format-detection" content="telephone=yes" />
+      <meta name="theme-color" content="#3b82f6" />
+
+      {/* Structured Data (JSON-LD) */}
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
+    </Helmet>
+  );
 };
 
 export default SEO;

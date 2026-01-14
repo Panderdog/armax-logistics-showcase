@@ -50,6 +50,10 @@ interface NewsFormData {
   content: string;
   tags: string;
   published: boolean;
+  meta_title: string;
+  meta_description: string;
+  og_image: string;
+  noindex: boolean;
 }
 
 const emptyFormData: NewsFormData = {
@@ -59,7 +63,11 @@ const emptyFormData: NewsFormData = {
   previewImage: '',
   content: '',
   tags: '',
-  published: false
+  published: false,
+  meta_title: '',
+  meta_description: '',
+  og_image: '',
+  noindex: false
 };
 
 const News = () => {
@@ -126,7 +134,11 @@ const News = () => {
         previewImage: item.previewImage || '',
         content: item.content,
         tags: item.tags.join(', '),
-        published: item.published
+        published: item.published,
+        meta_title: item.meta_title || '',
+        meta_description: item.meta_description || '',
+        og_image: item.og_image || '',
+        noindex: item.noindex || false
       });
       setSlugManuallyEdited(true);
       setIsEditorMode(true);
@@ -205,7 +217,11 @@ const News = () => {
       previewImage: formData.previewImage.trim() || undefined,
       content: formData.content.trim(),
       tags: tagsArray,
-      published: formData.published
+      published: formData.published,
+      meta_title: formData.meta_title.trim() || undefined,
+      meta_description: formData.meta_description.trim() || undefined,
+      og_image: formData.og_image.trim() || undefined,
+      noindex: formData.noindex
     };
 
     setIsSaving(true);
@@ -354,6 +370,78 @@ const News = () => {
                       className="pl-9"
                     />
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* SEO Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">SEO и метаданные</CardTitle>
+                <CardDescription>
+                  Опциональные поля для оптимизации в поисковиках. Если пусто — используются основные поля.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Meta Title */}
+                <div className="space-y-2">
+                  <Label htmlFor="meta_title">Meta Title (SEO заголовок)</Label>
+                  <Input
+                    id="meta_title"
+                    placeholder="Если пусто — будет использован основной заголовок"
+                    value={formData.meta_title}
+                    onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                    maxLength={70}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {formData.meta_title.length}/70 символов (рекомендуется до 60-70)
+                  </p>
+                </div>
+
+                {/* Meta Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="meta_description">Meta Description (SEO описание)</Label>
+                  <Textarea
+                    id="meta_description"
+                    placeholder="Если пусто — будет использован текст превью"
+                    value={formData.meta_description}
+                    onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                    rows={3}
+                    maxLength={160}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {formData.meta_description.length}/160 символов (оптимально ~150-160)
+                  </p>
+                </div>
+
+                {/* OG Image */}
+                <div className="space-y-2">
+                  <Label htmlFor="og_image">Open Graph изображение (для соцсетей)</Label>
+                  <div className="relative">
+                    <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="og_image"
+                      placeholder="Если пусто — будет использовано основное изображение"
+                      value={formData.og_image}
+                      onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
+                      className="pl-9"
+                    />
+                  </div>
+                </div>
+
+                {/* Noindex */}
+                <div className="flex items-center gap-3 pt-2">
+                  <Switch
+                    id="noindex"
+                    checked={formData.noindex}
+                    onCheckedChange={(checked) => setFormData({ ...formData, noindex: checked })}
+                  />
+                  <Label htmlFor="noindex" className="cursor-pointer">
+                    <span className="font-medium">Запретить индексацию (noindex)</span>
+                    <p className="text-xs text-muted-foreground font-normal mt-0.5">
+                      Страница не будет индексироваться поисковиками
+                    </p>
+                  </Label>
                 </div>
               </CardContent>
             </Card>

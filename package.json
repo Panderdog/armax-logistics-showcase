@@ -5,13 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-snap-routes.cjs",
-    "build": "vite build",
+    "export-news": "node scripts/export-news.cjs",
+    "inject-data": "node scripts/inject-prerender-data.cjs",
+    "generate-routes": "node scripts/generate-snap-routes.cjs",
+    "generate-sitemap": "node scripts/generate-sitemap.cjs",
+    "prebuild": "npm run export-news && npm run inject-data && npm run generate-routes && npm run generate-sitemap",
+    "build": "vite build && node scripts/copy-htaccess.cjs",
     "postbuild": "react-snap",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:dry-run": "DRY_RUN=1 bash scripts/deploy.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -92,10 +98,22 @@
     "source": "dist",
     "minifyHtml": true,
     "skipThirdPartyRequests": true,
+    "removeBlobs": true,
+    "inlineCss": false,
+    "cacheAjaxRequests": false,
+    "preconnectThirdParty": false,
+    "http2PushManifest": false,
+    "removeStyleTags": false,
     "puppeteerArgs": [
       "--no-sandbox",
       "--disable-setuid-sandbox"
     ],
+    "puppeteerExecutionTimeout": 120000,
+    "timeout": 90000,
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
     "include": [
       "/",
       "/services",
@@ -113,7 +131,8 @@
       "/services/consolidated",
       "/services/customs",
       "/services/warehouse",
-      "/services/insurance"
+      "/services/insurance",
+      "/news/new-year-asia-russia-logistics"
     ]
   }
 }
