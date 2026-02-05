@@ -166,7 +166,7 @@ const LogisticsMap = () => {
   return (
     <div className="logistics-map-container relative w-full">
       {/* Legend */}
-      <div className="absolute top-4 left-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-4 border border-border/50 shadow-lg">
+      <div className="hidden md:block absolute top-4 left-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-4 border border-border/50 shadow-lg">
         <h4 className="text-sm font-semibold text-foreground mb-3">Легенда</h4>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ const LogisticsMap = () => {
       </div>
 
       {/* Mode Filter Buttons */}
-      <div className="absolute top-4 right-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-3 border border-border/50 shadow-lg">
+      <div className="hidden md:block absolute top-4 right-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-3 border border-border/50 shadow-lg">
         <h4 className="text-xs font-semibold text-foreground mb-2">Фильтр по типу</h4>
         <div className="flex flex-col gap-1.5">
           <button
@@ -387,7 +387,7 @@ const LogisticsMap = () => {
 
       {/* Info Panel */}
       {selectedLocation && (
-        <div className="absolute bottom-4 right-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-5 border border-border/50 shadow-lg max-w-xs animate-fade-in">
+        <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 z-10 bg-background/95 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-border/50 shadow-lg max-w-[220px] md:max-w-xs animate-fade-in">
           {(() => {
             const location = getLocationById(selectedLocation);
             const connectedRoutes = getConnectedRoutes(selectedLocation);
@@ -397,12 +397,12 @@ const LogisticsMap = () => {
               <>
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h4 className="text-lg font-bold text-foreground">{location.nameRu}</h4>
-                    <p className="text-sm text-muted-foreground">{location.country}</p>
+                    <h4 className="text-base md:text-lg font-bold text-foreground">{location.nameRu}</h4>
+                    <p className="text-xs md:text-sm text-muted-foreground">{location.country}</p>
                   </div>
                   <button
                     onClick={() => setSelectedLocation(null)}
-                    className="p-1 rounded-lg hover:bg-secondary transition-colors"
+                    className="p-1 rounded-lg hover:bg-secondary transition-colors flex-shrink-0"
                   >
                     <svg className="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M18 6L6 18M6 6l12 12" />
@@ -427,7 +427,7 @@ const LogisticsMap = () => {
                         onMouseLeave={() => setHoveredRoute(null)}
                       >
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-medium text-foreground">
+                          <span className="text-xs md:text-sm font-medium text-foreground">
                             {direction} {otherPoint?.nameRu}
                           </span>
                         </div>
@@ -456,7 +456,7 @@ const LogisticsMap = () => {
       )}
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10">
+      <div className="hidden md:block absolute bottom-4 left-4 z-10">
         <p className="text-xs text-muted-foreground bg-background/80 backdrop-blur-sm px-3 py-2 rounded-lg">
           🖱️ Перетаскивайте для навигации • Клик на точку для деталей
         </p>

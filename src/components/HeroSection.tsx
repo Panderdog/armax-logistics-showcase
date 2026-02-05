@@ -7,16 +7,35 @@ const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
   const { openApplicationModal } = useApplicationModal();
 
+  // Определяем размер экрана - видео загружается ТОЛЬКО на desktop/tablet
   useEffect(() => {
-    // Preload video on mount for faster display
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsDesktop(e.matches);
+    };
+    
+    // Начальная проверка
+    handleMediaChange(mediaQuery);
+    
+    // Подписка на изменения
+    mediaQuery.addEventListener('change', handleMediaChange);
+    return () => mediaQuery.removeEventListener('change', handleMediaChange);
+  }, []);
+
+  useEffect(() => {
+    // Загружаем видео только на desktop/tablet
+    if (!isDesktop) return;
+    
     const video = document.getElementById('hero-video') as HTMLVideoElement;
     if (video) {
       video.addEventListener('loadeddata', () => setVideoLoaded(true));
       video.addEventListener('error', () => setVideoError(true));
     }
-  }, []);
+  }, [isDesktop]);
 
   useEffect(() => {
     // Hide scroll indicator after scrolling down
@@ -64,41 +83,43 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* Desktop/Tablet Background - Video with Overlay */}
-      <div className="absolute inset-0 z-0 hidden md:block">
-        {/* Poster/Fallback Background - показывается пока видео грузится или при ошибке */}
-        <div 
-          className={`absolute inset-0 bg-[url('/images/ship.webp')] bg-cover bg-center transition-opacity duration-1000 ${
-            videoLoaded && !videoError ? 'opacity-0' : 'opacity-30'
-          }`}
-          aria-hidden="true"
-        />
-        
-        {/* Video Background */}
-        {!videoError && (
-          <video
-            id="hero-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="/images/ship.webp"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-100' : 'opacity-0'
+      {/* Desktop/Tablet Background - Video with Overlay - рендерится ТОЛЬКО на desktop/tablet */}
+      {isDesktop && (
+        <div className="absolute inset-0 z-0">
+          {/* Poster/Fallback Background - показывается пока видео грузится или при ошибке */}
+          <div 
+            className={`absolute inset-0 bg-[url('/images/ship.webp')] bg-cover bg-center transition-opacity duration-1000 ${
+              videoLoaded && !videoError ? 'opacity-0' : 'opacity-30'
             }`}
-            aria-label="Фоновое видео морских грузовых перевозок и логистики"
-          >
-            <source src="/video/compress-hero-video.webm" type="video/webm" />
-            <source src="/video/compress-hero-video.mp4" type="video/mp4" />
-            Ваш браузер не поддерживает видео.
-          </video>
-        )}
-        
-        {/* Gradient Overlay - чистый и читаемый */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-[#0a0f1a]" />
-      </div>
+            aria-hidden="true"
+          />
+          
+          {/* Video Background */}
+          {!videoError && (
+            <video
+              id="hero-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              poster="/images/ship.webp"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                videoLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              aria-label="Фоновое видео морских грузовых перевозок и логистики"
+            >
+              <source src="/video/compress-hero-video.webm" type="video/webm" />
+              <source src="/video/compress-hero-video.mp4" type="video/mp4" />
+              Ваш браузер не поддерживает видео.
+            </video>
+          )}
+          
+          {/* Gradient Overlay - чистый и читаемый */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-[#0a0f1a]" />
+        </div>
+      )}
 
       {/* Bottom fade transition to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-24 md:h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />

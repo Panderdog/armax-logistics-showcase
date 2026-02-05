@@ -13,8 +13,8 @@ export const organizationSchema = {
   "url": SITE_URL,
   "logo": `${SITE_URL}/armax-logo.svg`,
   "description": "Международная логистическая компания специализирующаяся на перевозках грузов по Европе и Азии",
-  "telephone": "+7-812-644-02-91",
-  "email": "info@armaxstp.com",
+  "telephone": "+7-981-997-66-36",
+  "email": "armaxrequest@gmail.com",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Горское шоссе, 4",
@@ -23,12 +23,11 @@ export const organizationSchema = {
     "addressCountry": "RU"
   },
   "sameAs": [
-    "https://t.me/armaxlogistics",
-    "https://wa.me/78126440291"
+    "https://t.me/armaxlogistics"
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+7-812-644-02-91",
+    "telephone": "+7-981-997-66-36",
     "contactType": "customer service",
     "areaServed": ["RU", "EU", "AS"],
     "availableLanguage": ["Russian", "English"]
@@ -42,7 +41,7 @@ export const localBusinessSchema = {
   "image": `${SITE_URL}/armax-logo.svg`,
   "@id": SITE_URL,
   "url": SITE_URL,
-  "telephone": "+7-812-644-02-91",
+  "telephone": "+7-981-997-66-36",
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",

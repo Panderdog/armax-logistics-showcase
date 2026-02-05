@@ -430,9 +430,9 @@ const FAQ = () => {
                       variant: "primary",
                     },
                     {
-                      text: "+7 (812) 644-02-91",
+                      text: "+7 (981) 997-66-36",
                       variant: "secondary",
-                      href: "tel:+78126440291",
+                      href: "tel:+79819976636",
                       icon: Phone,
                     },
                   ]}

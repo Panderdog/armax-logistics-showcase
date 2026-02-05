@@ -37,7 +37,7 @@ server {
     
     # Content Security Policy (Report-Only mode for testing)
     # After 1-2 days testing: replace Content-Security-Policy-Report-Only → Content-Security-Policy
-    add_header Content-Security-Policy-Report-Only "default-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co; frame-src 'self' https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'" always;
+    add_header Content-Security-Policy-Report-Only "default-src 'self'; img-src 'self' data: https: https://yastatic.net https://*.maps.yandex.net https://*.map.yandex.net; font-src 'self' data: https: https://yastatic.net; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co; frame-src 'self' https://yandex.ru https://*.yandex.ru https://yandex.com https://*.yandex.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'" always;
 
     # Gzip compression
     gzip on;

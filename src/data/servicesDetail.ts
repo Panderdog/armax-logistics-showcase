@@ -187,7 +187,7 @@ export const servicesDetailData: Record<ServiceId, ServiceDetailData> = {
     lightColor: "text-amber-500",
     ctaButtonText: "Запросить ставку",
     ctaTitle: "Рассчитаем ЖД-перевозку под ваш маршрут",
-    ctaSubtitle: "Стоимость, сроки и формат отправки — в течение 30 минут",
+    ctaSubtitle: "Стоимость, сроки и формат отправки — в течение одного дня",
   },
   consolidated: {
     id: "consolidated",
@@ -304,7 +304,7 @@ export const servicesDetailData: Record<ServiceId, ServiceDetailData> = {
     bgColor: "bg-indigo-500",
     lightColor: "text-indigo-500",
     ctaButtonText: "Получить расчёт",
-    ctaSubtitle: "Получите расчёт стоимости ответственного хранения грузов за 30 минут",
+    ctaSubtitle: "Получите расчёт стоимости ответственного хранения грузов за один день",
   },
   insurance: {
     id: "insurance",
@@ -339,6 +339,6 @@ export const servicesDetailData: Record<ServiceId, ServiceDetailData> = {
     lightColor: "text-cyan-500",
     ctaButtonText: "Рассчитать страхование",
     ctaTitle: "Рассчитаем условия страхования",
-    ctaSubtitle: "Подберём страховое покрытие под маршрут и тип груза в течение 30 минут",
+    ctaSubtitle: "Подберём страховое покрытие под маршрут и тип груза в течение одного дня",
   },
 };

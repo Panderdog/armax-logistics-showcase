@@ -453,9 +453,9 @@ const Geography = () => {
                   <span className="text-[#F34D1B]">Ключевое направление</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
-                  Китай — наша
+                  Доставка из Китая —
                   <br />
-                  <span className="bg-gradient-to-r from-[#DE2910] via-[#F34D1B] to-[#FF6B35] bg-clip-text text-transparent">специализация</span>
+                  <span className="bg-gradient-to-r from-[#DE2910] via-[#F34D1B] to-[#FF6B35] bg-clip-text text-transparent">наша специализация</span>
                 </h2>
                 <p className="text-lg lg:text-xl text-zinc-500 font-light max-w-3xl mx-auto">
                   Работаем со всеми крупными промышленными регионами КНР. Прямые контакты с производителями, собственные склады для консолидации.
@@ -525,18 +525,6 @@ const Geography = () => {
                     </div>
                   ))}
                 </div>
-
-              {/* CTA */}
-              <div className="text-center">
-                <Button 
-                  size="lg" 
-                  className="group bg-gradient-to-r from-[#DE2910] to-[#F34D1B] hover:from-[#F34D1B] hover:to-[#FF6B35] text-white text-lg px-10 py-7 h-auto shadow-lg shadow-[#F34D1B]/25 hover:shadow-[#F34D1B]/40 transition-all duration-500" 
-                  onClick={openApplicationModal}
-                >
-                  Рассчитать доставку из Китая
-                  <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
-                </Button>
-              </div>
             </div>
           </div>
         </section>
@@ -570,7 +558,7 @@ const Geography = () => {
                   {
                     text: "Позвонить нам",
                     variant: "secondary",
-                    href: "tel:+78126440291",
+                    href: "tel:+79819976636",
                   },
                 ]}
               />

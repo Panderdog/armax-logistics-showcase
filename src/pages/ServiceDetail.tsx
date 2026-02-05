@@ -125,7 +125,7 @@ const ServiceDetail = () => {
                     variant="outline"
                     className="text-base lg:text-lg px-8 py-6 h-auto bg-white/5 border-2 border-white/20 text-white hover:bg-white hover:text-primary hover:border-white transition-all duration-500 backdrop-blur-sm"
                   >
-                    <a href="tel:+78126440291">
+                    <a href="tel:+79819976636">
                       <Phone className="mr-2 h-5 w-5" />
                       Позвонить
                     </a>
@@ -165,34 +165,64 @@ const ServiceDetail = () => {
         </section>
 
         {/* Features Section */}
-        <section className="py-20 lg:py-24 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="py-20 lg:py-28 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className={`absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-br ${service.color} opacity-[0.03] rounded-full blur-[150px]`} />
+          <div className={`absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl ${service.color} opacity-[0.025] rounded-full blur-[120px]`} />
+          
+          {/* Subtle grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)`,
+              backgroundSize: '80px 80px'
+            }}
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                  <Sparkles className="h-4 w-4" />
-                  Что входит в услугу
+                <span className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06]">
+                  <Sparkles className="h-4 w-4 text-[#F34D1B]" />
+                  <span className="text-zinc-300">Что входит в услугу</span>
                 </span>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
-                  {id === 'insurance' ? 'Как мы страхуем грузы' : 'Преимущества и возможности'}
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+                  <span className="text-white">{id === 'insurance' ? 'Как мы ' : 'Преимущества '}</span>
+                  <span className={`bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+                    {id === 'insurance' ? 'страхуем грузы' : 'и возможности'}
+                  </span>
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {service.features.map((feature, index) => {
                   const FeatureIcon = feature.icon;
                   return (
                     <div
                       key={index}
-                      className="group p-6 lg:p-8 rounded-2xl bg-card border border-border/50 hover:border-accent/30 hover:shadow-large transition-all duration-500 hover:-translate-y-1"
+                      className="group p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-500 hover:-translate-y-1"
+                      style={{
+                        boxShadow: '0 0 0 transparent',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.boxShadow = '0 20px 40px -15px rgba(0,0,0,0.3), 0 0 30px -10px rgba(243,77,27,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow = '0 0 0 transparent';
+                      }}
                     >
-                      <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${service.color} mb-5`}>
+                      <div 
+                        className={`inline-flex p-3.5 rounded-xl bg-gradient-to-br ${service.color} mb-5`}
+                        style={{
+                          boxShadow: '0 0 15px rgba(243,77,27,0.2)'
+                        }}
+                      >
                         <FeatureIcon className="h-5 w-5 text-white" strokeWidth={1.5} />
                       </div>
-                      <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+                      <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#F34D1B] transition-colors duration-300">
                         {feature.title}
                       </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
+                      <p className="text-zinc-400 text-sm leading-relaxed">
                         {feature.desc}
                       </p>
                     </div>
@@ -204,51 +234,88 @@ const ServiceDetail = () => {
         </section>
 
         {/* About Section - Two Columns */}
-        <section className="py-20 lg:py-24 bg-secondary/30">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="py-20 lg:py-28 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className={`absolute top-1/3 right-0 w-[600px] h-[600px] bg-gradient-to-br ${service.color} opacity-[0.04] rounded-full blur-[180px]`} />
+          <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr ${service.color} opacity-[0.03] rounded-full blur-[150px]`} />
+          
+          {/* Subtle grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)`,
+              backgroundSize: '80px 80px'
+            }}
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                 {/* Image */}
                 <div className="relative">
-                  <div className="relative rounded-3xl overflow-hidden aspect-[4/3] shadow-large">
+                  <div className="relative rounded-3xl overflow-hidden aspect-[4/3] border border-white/[0.08]"
+                    style={{
+                      boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 0 60px -15px rgba(243,77,27,0.15)'
+                    }}
+                  >
                     <img
                       src={service.image}
                       alt={service.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent`} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18]/60 via-transparent to-transparent" />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-[0.08] mix-blend-overlay`} />
                   </div>
                   {/* Floating badge */}
-                  <div className="absolute -bottom-6 -right-6 p-6 rounded-2xl bg-card border border-border/50 shadow-large">
-                    <div className={`p-4 rounded-xl bg-gradient-to-br ${service.color} mb-3`}>
-                      <service.icon className="h-8 w-8 text-white" strokeWidth={1.5} />
+                  <div 
+                    className="absolute -bottom-6 -right-6 p-5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08]"
+                    style={{
+                      boxShadow: '0 20px 40px -15px rgba(0,0,0,0.4), 0 0 30px -10px rgba(243,77,27,0.1)'
+                    }}
+                  >
+                    <div 
+                      className={`p-3.5 rounded-xl bg-gradient-to-br ${service.color} mb-3`}
+                      style={{
+                        boxShadow: '0 0 20px rgba(243,77,27,0.25)'
+                      }}
+                    >
+                      <service.icon className="h-7 w-7 text-white" strokeWidth={1.5} />
                     </div>
-                    <p className="text-sm font-medium text-foreground">Контроль</p>
-                    <p className="text-sm text-muted-foreground">на каждом этапе</p>
+                    <p className="text-sm font-medium text-white">Контроль</p>
+                    <p className="text-sm text-zinc-400">на каждом этапе</p>
                   </div>
                 </div>
 
                 {/* Content */}
                 <div>
-                  <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-medium text-accent bg-accent/10 rounded-full border border-accent/20">
-                    <Globe className="h-4 w-4" />
-                    О услуге
+                  <span className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06]">
+                    <Globe className={`h-4 w-4 bg-gradient-to-r ${service.color} bg-clip-text`} style={{ color: '#F34D1B' }} />
+                    <span className="text-zinc-300">О услуге</span>
                   </span>
-                  <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 tracking-tight">
-                    {service.title}
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
+                    <span className="text-white">{service.title.split(' ')[0]} </span>
+                    <span className={`bg-gradient-to-r ${service.color} bg-clip-text text-transparent`}>
+                      {service.title.split(' ').slice(1).join(' ')}
+                    </span>
                   </h2>
-                  <div className="space-y-4 text-muted-foreground leading-relaxed">
+                  <div className="space-y-4 text-zinc-400 leading-relaxed text-base lg:text-lg">
                     {service.longDescription.split('\n\n').map((paragraph, index) => (
                       <p key={index}>{paragraph}</p>
                     ))}
                   </div>
                   <Button
                     size="lg"
-                    className="mt-8 group"
+                    className={`mt-10 group relative overflow-hidden bg-gradient-to-r ${service.color} hover:opacity-90 border-0 text-white font-semibold px-8 py-6 h-auto text-base rounded-xl transition-all duration-300`}
+                    style={{
+                      boxShadow: '0 10px 40px -10px rgba(243,77,27,0.4)'
+                    }}
                     onClick={openApplicationModal}
                   >
-                    {service.ctaButtonText}
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <span className="relative z-10 flex items-center gap-2">
+                      {service.ctaButtonText}
+                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-600" />
                   </Button>
                 </div>
               </div>
@@ -308,40 +375,71 @@ const ServiceDetail = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 lg:py-24 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="py-20 lg:py-28 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-gradient-to-r ${service.color} opacity-[0.06] rounded-full blur-[180px]`} />
+          
+          {/* Subtle grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)`,
+              backgroundSize: '80px 80px'
+            }}
+          />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto">
-              <div className={`relative p-12 lg:p-16 rounded-3xl bg-gradient-to-br ${service.color} overflow-hidden`}>
+              <div 
+                className={`relative p-10 lg:p-16 rounded-3xl bg-gradient-to-br ${service.color} overflow-hidden`}
+                style={{
+                  boxShadow: '0 30px 60px -15px rgba(0,0,0,0.5), 0 0 80px -20px rgba(243,77,27,0.3)'
+                }}
+              >
                 {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[100px]" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[100px]" />
+                <div className="absolute top-0 right-0 w-80 h-80 bg-white/15 rounded-full blur-[120px]" />
+                <div className="absolute bottom-0 left-0 w-80 h-80 bg-black/20 rounded-full blur-[120px]" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-32 bg-white/5 blur-[60px]" />
+                
+                {/* Animated gradient border effect */}
+                <div className="absolute inset-0 rounded-3xl border border-white/20" />
                 
                 <div className="relative text-center">
-                  <div className="inline-flex p-4 rounded-2xl bg-white/20 mb-6">
+                  <div 
+                    className="inline-flex p-4 rounded-2xl bg-white/20 backdrop-blur-sm mb-8 border border-white/10"
+                    style={{
+                      boxShadow: '0 0 30px rgba(255,255,255,0.1)'
+                    }}
+                  >
                     <service.icon className="h-8 w-8 text-white" strokeWidth={1.5} />
                   </div>
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight">
                     {service.ctaTitle || "Готовы начать?"}
                   </h2>
-                  <p className="text-xl text-white/80 font-light mb-10 max-w-xl mx-auto">
-                    {service.ctaSubtitle || `Получите расчёт стоимости ${service.title.toLowerCase()} за 30 минут`}
+                  <p className="text-lg lg:text-xl text-white/80 font-light mb-10 max-w-xl mx-auto leading-relaxed">
+                    {service.ctaSubtitle || `Получите расчёт стоимости ${service.title.toLowerCase()} за один день`}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button
                       size="lg"
-                      className="bg-accent text-white border-2 border-accent hover:bg-accent-hover hover:text-white text-lg px-10 py-7 h-auto group shadow-glow transition-all duration-300"
+                      className="relative overflow-hidden bg-[#F34D1B] text-white hover:bg-[#F34D1B]/90 text-base lg:text-lg px-8 lg:px-10 py-6 lg:py-7 h-auto group font-semibold rounded-xl transition-all duration-300"
+                      style={{
+                        boxShadow: '0 10px 40px -10px rgba(243,77,27,0.5)'
+                      }}
                       onClick={openApplicationModal}
                     >
-                      Получить расчёт
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      <span className="relative z-10 flex items-center">
+                        Получить расчёт
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      </span>
                     </Button>
                     <Button
                       asChild
                       size="lg"
                       variant="outline"
-                      className="bg-white/10 border-2 border-white/30 text-white hover:bg-white hover:text-foreground text-lg px-10 py-7 h-auto"
+                      className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-[#0B0F18] text-base lg:text-lg px-8 lg:px-10 py-6 lg:py-7 h-auto rounded-xl transition-all duration-300"
                     >
-                      <a href="tel:+78126440291">
+                      <a href="tel:+79819976636">
                         <Phone className="mr-2 h-5 w-5" />
                         Позвонить нам
                       </a>

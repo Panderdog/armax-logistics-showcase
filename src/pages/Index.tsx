@@ -57,7 +57,7 @@ const Index = () => {
                   {
                     text: "Позвонить сейчас",
                     variant: "secondary",
-                    href: "tel:+78126440291",
+                    href: "tel:+79819976636",
                     icon: Phone,
                   },
                 ]}
@@ -65,27 +65,18 @@ const Index = () => {
                 {/* Contact options */}
                 <div className="flex flex-wrap items-center justify-center gap-8 text-white/60">
                   <a 
-                    href="tel:+78126440291" 
+                    href="tel:+79819976636" 
                     className="flex items-center gap-2 hover:text-white transition-colors group"
                   >
                     <Phone className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                    <span>+7 (812) 644-02-91</span>
+                    <span>+7 (981) 997-66-36</span>
                   </a>
                   <a 
-                    href="mailto:info@armaxstp.com" 
+                    href="mailto:armaxrequest@gmail.com" 
                     className="flex items-center gap-2 hover:text-white transition-colors group"
                   >
                     <Mail className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                    <span>info@armaxstp.com</span>
-                  </a>
-                  <a 
-                    href="https://wa.me/78126440291" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-white transition-colors group"
-                  >
-                    <MessageCircle className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                    <span>WhatsApp</span>
+                    <span>armaxrequest@gmail.com</span>
                   </a>
                   <a 
                     href="https://t.me/armaxlogistics" 

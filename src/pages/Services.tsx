@@ -48,7 +48,7 @@ const Services = () => {
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10 py-24 lg:py-32">
             <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06] animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium bg-white/[0.04] rounded-xl border border-white/[0.06] animate-fade-in">
                 <Briefcase className="w-4 h-4 text-[#F34D1B]" />
                 <span className="text-zinc-300">Услуги</span>
               </div>
@@ -97,14 +97,16 @@ const Services = () => {
                 <Link
                   key={service.id}
                   to={`/services/${service.id}`}
-                  className={`group relative rounded-3xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden`}
+                  className={`group relative rounded-3xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-[transform,box-shadow,border-color] duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden will-change-transform`}
                 >
                   {/* Background image */}
                   <div className="absolute inset-0">
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="w-full h-full object-cover opacity-35 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"
+                      loading="lazy"
+                      className="w-full h-full object-cover opacity-35 group-hover:opacity-60 group-hover:scale-105 transition-[opacity,transform] duration-700 will-change-transform"
+                      style={{ transform: 'translateZ(0)' }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F18]/85 via-[#0B0F18]/65 to-[#0B0F18]/50" />
                   </div>
@@ -122,7 +124,7 @@ const Services = () => {
                       </div>
                     </div>
 
-                    <h3 className="text-2xl lg:text-3xl font-bold text-white mb-2 group-hover:text-accent transition-colors drop-shadow-lg">
+                    <h3 className="text-2xl lg:text-3xl font-bold text-white mb-2 group-hover:text-accent transition-colors duration-300 drop-shadow-lg">
                       {service.title}
                     </h3>
                     <p className={`text-lg font-medium bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-4 drop-shadow-lg`}>
@@ -137,14 +139,14 @@ const Services = () => {
                       {service.features.map((feature, idx) => (
                         <span 
                           key={idx}
-                          className="px-3 py-1.5 text-sm bg-white/[0.08] backdrop-blur-sm text-zinc-200 rounded-lg border border-white/[0.12] drop-shadow-md whitespace-nowrap"
+                          className="px-3 py-1.5 text-sm bg-white/[0.08] text-zinc-200 rounded-lg border border-white/[0.12] drop-shadow-md whitespace-nowrap"
                         >
                           {feature}
                         </span>
                       ))}
                     </div>
 
-                    <div className="flex items-center text-accent font-medium group-hover:translate-x-2 transition-transform drop-shadow-lg">
+                    <div className="flex items-center text-accent font-medium group-hover:translate-x-2 transition-transform duration-300 drop-shadow-lg">
                       Подробнее об услуге
                       <ArrowRight className="h-5 w-5 ml-2" />
                     </div>
@@ -159,14 +161,16 @@ const Services = () => {
                 <Link
                   key={service.id}
                   to={`/services/${service.id}`}
-                  className={`group relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-all duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden`}
+                  className={`group relative p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] ${service.hoverBorder} transition-[transform,box-shadow,border-color] duration-500 hover:shadow-large hover:-translate-y-1 overflow-hidden will-change-transform`}
                 >
                   {/* Background image */}
                   <div className="absolute inset-0">
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="w-full h-full object-cover opacity-30 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700"
+                      loading="lazy"
+                      className="w-full h-full object-cover opacity-30 group-hover:opacity-55 group-hover:scale-105 transition-[opacity,transform] duration-700 will-change-transform"
+                      style={{ transform: 'translateZ(0)' }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18]/90 via-[#0B0F18]/75 to-[#0B0F18]/85" />
                   </div>
@@ -184,7 +188,7 @@ const Services = () => {
                       </div>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-accent transition-colors drop-shadow-lg">
+                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-accent transition-colors duration-300 drop-shadow-lg">
                       {service.title}
                     </h3>
                     <p className={`text-sm font-medium bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-3 drop-shadow-lg`}>
@@ -194,7 +198,7 @@ const Services = () => {
                       {service.description}
                     </p>
 
-                    <div className="flex items-center text-sm text-accent font-medium group-hover:translate-x-1 transition-transform drop-shadow-lg">
+                    <div className="flex items-center text-sm text-accent font-medium group-hover:translate-x-1 transition-transform duration-300 drop-shadow-lg">
                       Подробнее
                       <ChevronRight className="h-4 w-4 ml-1" />
                     </div>
@@ -212,7 +216,7 @@ const Services = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                 {/* Content */}
                 <div>
-                  <span className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06]">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium bg-white/[0.04] rounded-xl border border-white/[0.06]">
                     <Sparkles className="h-4 w-4 text-accent" />
                     <span className="text-zinc-300">Почему мы</span>
                   </span>
@@ -245,12 +249,12 @@ const Services = () => {
                   ].map((stat, index) => (
                     <div
                       key={index}
-                      className="group p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] transition-all duration-500 text-center"
+                      className="group p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] transition-[border-color] duration-500 text-center"
                     >
-                      <div className={`text-3xl lg:text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform`}>
+                      <div className={`text-3xl lg:text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300 will-change-transform`}>
                         {stat.value}
                       </div>
-                      <div className="text-sm text-zinc-400 group-hover:text-zinc-300 transition-colors">
+                      <div className="text-sm text-zinc-400 group-hover:text-zinc-300 transition-colors duration-300">
                         {stat.label}
                       </div>
                     </div>
@@ -284,7 +288,7 @@ const Services = () => {
                   {
                     text: "Позвонить нам",
                     variant: "secondary",
-                    href: "tel:+78126440291",
+                    href: "tel:+79819976636",
                   },
                 ]}
               />

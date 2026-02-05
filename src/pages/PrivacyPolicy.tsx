@@ -215,18 +215,19 @@ const PrivacyPolicy = () => {
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                        картографический сервис: Google Maps
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                        сервис загрузки шрифтов: Google Fonts
+                        картографический сервис: Яндекс.Карты
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                         аналитические сервисы (если будут подключены)
                       </li>
                     </ul>
-                    <p className="text-sm text-muted-foreground/80">
+                    <div className="mt-4 p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                      <p className="text-sm text-muted-foreground/90">
+                        <strong className="text-foreground">Яндекс.Карты:</strong> При загрузке карты на странице контактов ваш браузер автоматически обращается к серверам Яндекса для отображения картографических данных. При этом могут передаваться технические данные: IP-адрес, тип браузера (User-Agent), файлы cookies Яндекса. Эти данные обрабатываются в соответствии с политикой конфиденциальности Яндекса.
+                      </p>
+                    </div>
+                    <p className="text-sm text-muted-foreground/80 mt-4">
                       Передача осуществляется строго в минимально необходимом объёме и в рамках действующего законодательства.
                     </p>
                     <p className="text-sm text-muted-foreground/80 mt-2 font-medium">
@@ -255,7 +256,7 @@ const PrivacyPolicy = () => {
                       </li>
                       <li className="flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                        логов и cookies — согласно политике браузеров и Google-сервисов
+                        логов и cookies — согласно политике браузеров и сторонних сервисов
                       </li>
                     </ul>
                     <p className="text-sm text-muted-foreground/80">
@@ -329,8 +330,8 @@ const PrivacyPolicy = () => {
                       <Mail className="h-5 w-5 text-accent flex-shrink-0" />
                       <span className="text-muted-foreground">
                         Обращения принимаются по email:{" "}
-                        <a href="mailto:info@armaxstp.com" className="text-accent hover:underline font-medium">
-                          info@armaxstp.com
+                        <a href="mailto:armaxrequest@gmail.com" className="text-accent hover:underline font-medium">
+                          armaxrequest@gmail.com
                         </a>
                       </span>
                     </div>
@@ -391,22 +392,22 @@ const PrivacyPolicy = () => {
                     <h3 className="text-2xl font-bold mb-6">Armax Logistics</h3>
                     <div className="space-y-4">
                       <a 
-                        href="tel:+78126440291" 
+                        href="tel:+79819976636" 
                         className="flex items-center gap-4 text-white/80 hover:text-white transition-colors"
                       >
                         <div className="p-3 rounded-xl bg-white/10">
                           <Phone className="h-5 w-5" />
                         </div>
-                        <span>+7 (812) 644-02-91</span>
+                        <span>+7 (981) 997-66-36</span>
                       </a>
                       <a 
-                        href="mailto:info@armaxstp.com" 
+                        href="mailto:armaxrequest@gmail.com" 
                         className="flex items-center gap-4 text-white/80 hover:text-white transition-colors"
                       >
                         <div className="p-3 rounded-xl bg-white/10">
                           <Mail className="h-5 w-5" />
                         </div>
-                        <span>info@armaxstp.com</span>
+                        <span>armaxrequest@gmail.com</span>
                       </a>
                       <div className="flex items-center gap-4 text-white/80">
                         <div className="p-3 rounded-xl bg-white/10">

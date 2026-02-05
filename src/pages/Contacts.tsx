@@ -182,16 +182,16 @@ const Contacts = () => {
     {
       icon: Phone,
       title: "Телефон",
-      value: "+7 (812) 644-02-91",
-      link: "tel:+78126440291",
+      value: "+7 (981) 997-66-36",
+      link: "tel:+79819976636",
       description: "Пн-Пт: 9:00-18:00",
       gradient: "from-blue-500 to-cyan-500",
     },
     {
       icon: Mail,
       title: "Email",
-      value: "info@armaxstp.com",
-      link: "mailto:info@armaxstp.com",
+      value: "armaxrequest@gmail.com",
+      link: "mailto:armaxrequest@gmail.com",
       description: "Ответим в течение часа",
       gradient: "from-[#F34D1B] to-orange-500",
     },
@@ -206,14 +206,6 @@ const Contacts = () => {
   ];
 
   const messengers = [
-    {
-      name: "WhatsApp",
-      icon: MessageCircle,
-      link: "https://wa.me/78126440291",
-      color: "bg-[#25D366]",
-      hoverColor: "hover:bg-[#128C7E]",
-      description: "Быстрые ответы",
-    },
     {
       name: "Telegram",
       icon: Send,
@@ -234,7 +226,7 @@ const Contacts = () => {
     <>
       <SEO
         title="Контакты"
-        description="Контакты Armax Logistics: телефон +7 (812) 644-02-91, email info@armaxstp.com. Офис в Санкт-Петербурге."
+        description="Контакты Armax Logistics: телефон +7 (981) 997-66-36, email armaxrequest@gmail.com. Офис в Санкт-Петербурге."
         keywords="контакты, телефон, email, офис, Санкт-Петербург"
         canonicalUrl="/contacts"
         structuredData={localBusinessSchema}
@@ -285,7 +277,7 @@ const Contacts = () => {
                   heroRef.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
-                Расскажите о вашей задаче — предложим оптимальное решение за 30 минут
+                Расскажите о вашей задаче — предложим оптимальное решение за один день
               </p>
             </div>
           </div>
@@ -635,13 +627,13 @@ const Contacts = () => {
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#0B0F18]/20 via-transparent to-[#0B0F18]/10 z-10" />
                 <div className="aspect-[21/9]">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1998.5928156483635!2d30.308519!3d59.937485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTnCsDU2JzE0LjkiTiAzMMKwMTgnMzAuNyJF!5e0!3m2!1sru!2sru!4v1234567890123"
+                    src="https://yandex.ru/map-widget/v1/?text=Санкт-Петербург%2C%20Горское%20шоссе%2C%204&z=16&scroll=false"
                     width="100%"
                     height="100%"
-                    style={{ border: 0, filter: 'saturate(0.9) contrast(1.1)' }}
+                    style={{ border: 0, filter: 'saturate(0.9) contrast(1.1)', position: 'relative' }}
                     allowFullScreen
                     loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
+                    scrolling="no"
                   />
                 </div>
               </div>
@@ -660,15 +652,15 @@ const Contacts = () => {
                 subtitle="Позвоните нам или напишите в мессенджер — с радостью поможем"
                 buttons={[
                   {
-                    text: "+7 (812) 644-02-91",
+                    text: "+7 (981) 997-66-36",
                     variant: "primary",
-                    href: "tel:+78126440291",
+                    href: "tel:+79819976636",
                     icon: Phone,
                   },
                   {
-                    text: "info@armaxstp.com",
+                    text: "armaxrequest@gmail.com",
                     variant: "secondary",
-                    href: "mailto:info@armaxstp.com",
+                    href: "mailto:armaxrequest@gmail.com",
                     icon: Mail,
                   },
                 ]}
