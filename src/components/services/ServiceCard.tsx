@@ -7,13 +7,12 @@ interface ServiceCardProps {
   title: string;
   description: string;
   image: string;
-  link?: string;
 }
 
-const ServiceCard = ({ id, icon: Icon, title, description, image, link = "/services" }: ServiceCardProps) => {
+const ServiceCard = ({ id, icon: Icon, title, description, image }: ServiceCardProps) => {
   return (
     <Link
-      to={`${link}?service=${id}`}
+      to={`/services/${id}`}
       className="group relative flex flex-col h-full rounded-2xl overflow-hidden cursor-pointer"
     >
       {/* Background Image */}

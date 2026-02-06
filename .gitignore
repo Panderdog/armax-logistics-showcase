@@ -34,3 +34,10 @@ scripts/deploy.local.sh
 *.njsproj
 *.sln
 *.sw?
+
+# Build archives
+*.zip
+
+# Reports and temporary files
+*_report.txt
+audit_*.txt

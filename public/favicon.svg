@@ -1,20 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- Background is transparent by default -->
-  <defs>
-    <style>
-      .accent{fill:#FF7043}
-      .dark{fill:#0B1220}
-    </style>
-  </defs>
-
-  <!-- Geometric A with road/arrow motif -->
-  <!-- Outer A shape -->
-  <path class="dark" d="M32 6c1.1 0 2.1.6 2.6 1.6l20 40a3 3 0 0 1-2.7 4.3h-6.5a3 3 0 0 1-2.7-1.7l-3.7-7.8H25.1l-3.7 7.8a3 3 0 0 1-2.7 1.7H12.2a3 3 0 0 1-2.7-4.3l20-40A3 3 0 0 1 32 6Zm0 9.7L24.2 33h15.6L32 15.7Z"/>
-
-  <!-- Road stripe through the A -->
-  <rect class="accent" x="14" y="37" width="28" height="3" rx="1.5"/>
-  
-  <!-- Forward arrow detail to suggest movement -->
-  <polygon class="accent" points="42,37 48,38.5 42,40"/>
+<svg width="1000" height="1000" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1000" height="1000" fill="#0A0F18"/>
+<path d="M696.379 744.426L526.21 584.324C500.149 550.046 500.818 500.546 526.21 465.749L696.379 256H779.232L571.159 505.387V547.104L779.232 744.426H696.379Z" fill="white"/>
+<path d="M221 744.426H304.73L469.879 539.274C496.402 501.474 497.294 448.148 469.879 411.037L304.73 256H221L429.058 452.631V494.347L221 744.426Z" fill="white"/>
 </svg>
-

@@ -315,11 +315,10 @@ const Geography = () => {
         </section>
 
         {/* Routes Section - Premium Interactive Cards */}
+        {/* TEMPORARILY HIDDEN
         <section className="relative py-16 lg:py-20 overflow-hidden">
-          {/* Background */}
           <div className="absolute inset-0 bg-[#0B0F18]" />
           
-          {/* Grid pattern */}
           <div 
             className="absolute inset-0 opacity-[0.02]"
             style={{
@@ -355,12 +354,10 @@ const Geography = () => {
                   onMouseEnter={() => setActiveRoute(index)}
                   onMouseLeave={() => setActiveRoute(null)}
                 >
-                  {/* Card background with gradient border effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] to-white/[0.02] rounded-3xl" />
                   <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${route.bgGlow} blur-3xl`} />
                   
                   <div className="relative p-8 lg:p-10 bg-[#0D1220]/80 backdrop-blur-sm rounded-3xl border border-white/[0.06] group-hover:border-white/[0.12] transition-colors">
-                    {/* Route header */}
                     <div className="flex items-start justify-between mb-8">
                       <div className="flex items-center gap-4">
                         <div className={`p-4 rounded-2xl bg-gradient-to-br ${route.gradient} shadow-lg`}>
@@ -377,7 +374,6 @@ const Geography = () => {
                       </div>
                     </div>
 
-                    {/* Transport modes grid */}
                     <div className="grid grid-cols-2 gap-3">
                       {route.modes.map((mode, idx) => (
                         <div
@@ -404,7 +400,6 @@ const Geography = () => {
                       ))}
                     </div>
                     
-                    {/* CTA */}
                     <div className="mt-6 pt-6 border-t border-white/[0.06]">
                       <button 
                         className="w-full py-3 px-6 rounded-xl bg-[#F34D1B]/10 hover:bg-[#F34D1B] text-[#F34D1B] hover:text-white font-medium transition-all duration-300 flex items-center justify-center gap-2 group/btn"
@@ -423,6 +418,7 @@ const Geography = () => {
             </div>
           </div>
         </section>
+        */}
 
         {/* China Focus - Premium Section */}
         <section className="relative py-20 lg:py-24 overflow-hidden" ref={statsRef}>
