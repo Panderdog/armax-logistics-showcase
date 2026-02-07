@@ -64,10 +64,52 @@ async function exportNews() {
     }
 
     if (!data || data.length === 0) {
-      console.error('❌ ERROR: No published news found in database!');
-      console.error('   Cannot build static pages without content.');
-      console.error('   Please add at least one published news article via admin panel.');
-      process.exit(EXIT_CODES.NO_NEWS);
+      console.warn('⚠️  WARNING: No published news found in database!');
+      console.warn('   Building with empty news list.');
+      console.warn('   Consider adding news articles via admin panel.');
+      
+      // Create empty news array for build
+      const newsItems = [];
+      
+      // Ensure output directory exists
+      const outputDir = path.join(__dirname, '..', 'src', 'generated');
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
+
+      // Write empty JSON file
+      const jsonPath = path.join(outputDir, 'news.prerender.json');
+      fs.writeFileSync(jsonPath, JSON.stringify(newsItems, null, 2), 'utf8');
+
+      // Write empty TypeScript module
+      const tsContent = `// Auto-generated file - DO NOT EDIT
+// Generated at: ${new Date().toISOString()}
+// This file is created by scripts/export-news.cjs during build
+
+export const prerenderNews = [] as const;
+
+export type NewsItem = {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  previewText?: string;
+  previewImage?: string;
+  tags?: string[];
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+  meta_title?: string;
+  meta_description?: string;
+  og_image?: string;
+  noindex?: boolean;
+};
+`;
+      const tsPath = path.join(outputDir, 'news.prerender.ts');
+      fs.writeFileSync(tsPath, tsContent, 'utf8');
+      
+      console.log('✅ Created empty news files for build');
+      return; // Exit successfully
     }
 
     // Map database fields to frontend format

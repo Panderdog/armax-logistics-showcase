@@ -1,94 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://armaxstp.com/</loc>
+    <loc>https://armaxstp.com</loc>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/about/</loc>
+    <loc>https://armaxstp.com/about</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/</loc>
+    <loc>https://armaxstp.com/services</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/sea/</loc>
+    <loc>https://armaxstp.com/services/sea</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/aviation/</loc>
+    <loc>https://armaxstp.com/services/aviation</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/railway/</loc>
+    <loc>https://armaxstp.com/services/railway</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/auto/</loc>
+    <loc>https://armaxstp.com/services/auto</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/consolidated/</loc>
+    <loc>https://armaxstp.com/services/consolidated</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/customs/</loc>
+    <loc>https://armaxstp.com/services/customs</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/warehouse/</loc>
+    <loc>https://armaxstp.com/services/warehouse</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/services/insurance/</loc>
+    <loc>https://armaxstp.com/services/insurance</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/geography/</loc>
+    <loc>https://armaxstp.com/geography</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/news/</loc>
+    <loc>https://armaxstp.com/news</loc>
     <priority>0.8</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/reviews/</loc>
+    <loc>https://armaxstp.com/reviews</loc>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/faq/</loc>
+    <loc>https://armaxstp.com/faq</loc>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/contacts/</loc>
+    <loc>https://armaxstp.com/contacts</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://armaxstp.com/privacy/</loc>
+    <loc>https://armaxstp.com/privacy</loc>
     <priority>0.3</priority>
     <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>https://armaxstp.com/news/new-year-asia-russia-logistics/</loc>
-    <lastmod>2026-01-01</lastmod>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
 </urlset>

@@ -20,5 +20,25 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     target: "es2018",
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Split CSS into smaller chunks
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
+        // Optimize CSS delivery
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'assets/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
+      }
+    },
+    // Enable CSS minification
+    cssMinify: true,
   },
 }));

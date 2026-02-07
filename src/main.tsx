@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import "./index.css";
 
 // Suppress console output during react-snap prerendering for clean builds
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 if (typeof window !== "undefined" && (window as any).__REACT_SNAP__) {
   console.log = () => {};
   console.info = () => {};

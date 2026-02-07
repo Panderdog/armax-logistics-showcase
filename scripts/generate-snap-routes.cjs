@@ -19,20 +19,20 @@ function extractServiceIds(tsSource) {
 function loadNewsRoutes() {
   // Check if news JSON exists
   if (!fs.existsSync(NEWS_JSON)) {
-    console.error("❌ ERROR: News export file not found!");
-    console.error(`   Expected: ${NEWS_JSON}`);
-    console.error("   Run 'npm run export-news' first to generate news data.");
-    process.exit(1);
+    console.warn("⚠️  WARNING: News export file not found!");
+    console.warn(`   Expected: ${NEWS_JSON}`);
+    console.warn("   Building without news routes.");
+    return [];
   }
 
   try {
     const newsData = JSON.parse(fs.readFileSync(NEWS_JSON, "utf8"));
     
     if (!Array.isArray(newsData) || newsData.length === 0) {
-      console.error("❌ ERROR: News export is empty!");
-      console.error("   Cannot generate routes without published news.");
-      console.error("   Please add at least one published news article via admin panel.");
-      process.exit(1);
+      console.warn("⚠️  WARNING: News export is empty!");
+      console.warn("   Building without news routes.");
+      console.warn("   Consider adding news articles via admin panel.");
+      return [];
     }
 
     // Generate routes for each news article

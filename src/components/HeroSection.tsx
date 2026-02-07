@@ -109,8 +109,13 @@ const HeroSection = () => {
               }`}
               aria-label="Фоновое видео морских грузовых перевозок и логистики"
             >
-              <source src="/video/compress-hero-video.webm" type="video/webm" />
-              <source src="/video/compress-hero-video.mp4" type="video/mp4" />
+              {/* Источники загружаются ТОЛЬКО на desktop - критично для производительности */}
+              {isDesktop && (
+                <>
+                  <source src="/video/compress-hero-video.webm" type="video/webm" />
+                  <source src="/video/compress-hero-video.mp4" type="video/mp4" />
+                </>
+              )}
               Ваш браузер не поддерживает видео.
             </video>
           )}

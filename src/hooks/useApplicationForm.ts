@@ -165,6 +165,7 @@ export const useApplicationForm = ({
       setIsSubmitted(true);
       
       // Track conversion goal in Yandex Metrika
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).ym?.(106236010, "reachGoal", "lead_form");
 
       // Call success callback if provided

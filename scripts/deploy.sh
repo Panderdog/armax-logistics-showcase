@@ -12,9 +12,9 @@ set -euo pipefail
 #################################################
 
 # TODO: Fill these values before deploying
-REMOTE_USER="__CHANGE__"
-REMOTE_HOST="__CHANGE__"
-REMOTE_PATH="__CHANGE__"  # Example: /var/www/html or /home/user/public_html
+REMOTE_USER="srv169336"
+REMOTE_HOST="ssh-169336.srv.hoster.ru"
+REMOTE_PATH="/storage/home/srv169336/armaxstp.com"
 SSH_PORT="22"
 
 # Optional: Enable dry-run mode

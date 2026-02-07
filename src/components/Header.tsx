@@ -19,7 +19,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background lg:bg-background/80 lg:backdrop-blur-xl lg:supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto flex items-center justify-between px-4 sm:px-6 py-4 lg:px-8">
         {/* Logo */}
         <Link 
@@ -80,6 +80,8 @@ const Header = () => {
           type="button"
           className="lg:hidden p-2 rounded-lg hover:bg-secondary hover:scale-110 transition-all duration-300 ease-out"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? (
             <X className="h-6 w-6 text-foreground transition-transform duration-300" />
@@ -89,64 +91,66 @@ const Header = () => {
         </button>
       </nav>
 
-      {/* Mobile menu - внутри header как его продолжение */}
-      <div 
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-out ${
-          mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        {/* Overlay за пределами header */}
-        {mobileMenuOpen && (
-          <div 
-            className="fixed inset-0 top-0 bg-black/30 -z-10 animate-fade-in"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-        )}
-        {/* Меню - часть header */}
-        <div className="px-4 sm:px-6 pt-2 pb-4 space-y-1">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`group relative block px-4 py-3 text-base font-medium transition-all duration-300 ease-out rounded-lg ${
-                  isActive 
-                    ? 'text-foreground [text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]' 
-                    : 'text-foreground/75 hover:text-foreground hover:bg-secondary/30'
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-                {/* Левая акцентная линия для активного пункта */}
-                {isActive && (
-                  <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#E85D3E] rounded-r-full"></span>
-                )}
-              </Link>
-            );
-          })}
-          {/* Phone link in mobile menu */}
-          <a 
-            href="tel:+79819976636" 
-            className="flex items-center gap-3 px-4 py-3 text-base font-medium text-foreground/75 hover:text-foreground hover:bg-secondary/30 rounded-lg transition-all duration-300"
-          >
-            <Phone className="h-5 w-5 text-accent" strokeWidth={2} />
-            +7 (981) 997-66-36
-          </a>
-          <div className="pt-3">
-            <Button
-              className="w-full"
-              size="default"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                openApplicationModal();
-              }}
+      {/* Mobile menu - абсолютно позиционированное, чтобы не сдвигать контент */}
+      <>
+        {/* Overlay */}
+        <div 
+          className={`fixed inset-0 top-[73px] bg-black/30 z-40 lg:hidden transition-opacity duration-300 ${
+            mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+        {/* Меню */}
+        <div 
+          className={`absolute top-full left-0 right-0 bg-background border-b border-border/50 lg:hidden z-50 shadow-lg transition-all duration-300 ease-out ${
+            mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="px-4 sm:px-6 pt-2 pb-4 space-y-1">
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`group relative block px-4 py-3 text-base font-medium transition-all duration-300 ease-out rounded-lg ${
+                    isActive 
+                      ? 'text-foreground [text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]' 
+                      : 'text-foreground/75 hover:text-foreground hover:bg-secondary/30'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                  {/* Левая акцентная линия для активного пункта */}
+                  {isActive && (
+                    <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#E85D3E] rounded-r-full"></span>
+                  )}
+                </Link>
+              );
+            })}
+            {/* Phone link in mobile menu */}
+            <a 
+              href="tel:+79819976636" 
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium text-foreground/75 hover:text-foreground hover:bg-secondary/30 rounded-lg transition-all duration-300"
             >
-              Отправить заявку
-            </Button>
+              <Phone className="h-5 w-5 text-accent" strokeWidth={2} />
+              +7 (981) 997-66-36
+            </a>
+            <div className="pt-3">
+              <Button
+                className="w-full"
+                size="default"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openApplicationModal();
+                }}
+              >
+                Отправить заявку
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     </header>
   );
 };
