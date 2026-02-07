@@ -126,7 +126,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-3 group cursor-pointer">
                 <Mail className="h-5 w-5 mt-0.5 text-accent group-hover:scale-125 transition-all duration-300 ease-out" strokeWidth={2} />
-                <span className="text-[15px] text-zinc-400 group-hover:text-white transition-colors duration-300 font-light">armaxrequest@gmail.com</span>
+                <span className="text-[15px] text-zinc-400 group-hover:text-white transition-colors duration-300 font-light">request@armaxstp.com</span>
               </li>
               <li className="flex items-start gap-3 group cursor-pointer">
                 <MapPin className="h-5 w-5 mt-0.5 text-accent group-hover:scale-125 transition-all duration-300 ease-out" strokeWidth={2} />
@@ -157,7 +157,7 @@ const Footer = () => {
 
         <div className="mt-12 border-t border-white/[0.06] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[13px] text-zinc-500 font-light">
-            © 2025 Armax Logistics. Все права защищены.
+            © 2009–{new Date().getFullYear()} Armax Logistics. Все права защищены.
           </p>
           <div className="flex gap-8">
             <Link to="/privacy" className="text-[13px] text-zinc-500 hover:text-zinc-300 hover:text-accent transition-all duration-300 ease-out font-light relative group">

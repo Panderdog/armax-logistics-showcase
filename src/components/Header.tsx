@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 
 const Header = () => {
@@ -10,14 +10,12 @@ const Header = () => {
   const { openApplicationModal } = useApplicationModal();
 
   const navigation = [
-    { name: "Главная", href: "/" },
     { name: "Услуги", href: "/services" },
     { name: "О компании", href: "/about" },
     { name: "География", href: "/geography" },
-    { name: "Новости", href: "/news" },
-    { name: "Отзывы", href: "/reviews" },
-    { name: "FAQ", href: "/faq" },
     { name: "Контакты", href: "/contacts" },
+    { name: "Новости", href: "/news" },
+    { name: "FAQ", href: "/faq" },
   ];
 
   return (
@@ -60,8 +58,15 @@ const Header = () => {
           })}
         </div>
 
-        {/* CTA Button */}
-        <div className="hidden lg:block">
+        {/* Phone + CTA */}
+        <div className="hidden lg:flex lg:items-center lg:gap-5">
+          <a 
+            href="tel:+79819976636" 
+            className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 group"
+          >
+            <Phone className="h-4 w-4 text-accent group-hover:scale-110 transition-transform duration-300" strokeWidth={2} />
+            <span>+7 (981) 997-66-36</span>
+          </a>
           <Button
             size="default"
             onClick={openApplicationModal}
@@ -85,51 +90,63 @@ const Header = () => {
       </nav>
 
       {/* Mobile menu - внутри header как его продолжение */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden">
-          {/* Overlay за пределами header */}
+      <div 
+        className={`lg:hidden overflow-hidden transition-all duration-300 ease-out ${
+          mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {/* Overlay за пределами header */}
+        {mobileMenuOpen && (
           <div 
-            className="fixed inset-0 top-0 bg-black/30 -z-10"
+            className="fixed inset-0 top-0 bg-black/30 -z-10 animate-fade-in"
             onClick={() => setMobileMenuOpen(false)}
           />
-          {/* Меню - часть header */}
-          <div className="px-4 sm:px-6 pt-2 pb-4 space-y-1">
-            {navigation.map((item) => {
-              const isActive = location.pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`group relative block px-4 py-3 text-base font-medium transition-all duration-300 ease-out rounded-lg ${
-                    isActive 
-                      ? 'text-foreground [text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]' 
-                      : 'text-foreground/75 hover:text-foreground hover:bg-secondary/30'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                  {/* Левая акцентная линия для активного пункта */}
-                  {isActive && (
-                    <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#E85D3E] rounded-r-full"></span>
-                  )}
-                </Link>
-              );
-            })}
-            <div className="pt-3">
-              <Button
-                className="w-full"
-                size="default"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openApplicationModal();
-                }}
+        )}
+        {/* Меню - часть header */}
+        <div className="px-4 sm:px-6 pt-2 pb-4 space-y-1">
+          {navigation.map((item) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`group relative block px-4 py-3 text-base font-medium transition-all duration-300 ease-out rounded-lg ${
+                  isActive 
+                    ? 'text-foreground [text-shadow:0_0_0.5px_currentColor,0_0_0.5px_currentColor]' 
+                    : 'text-foreground/75 hover:text-foreground hover:bg-secondary/30'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
               >
-                Отправить заявку
-              </Button>
-            </div>
+                {item.name}
+                {/* Левая акцентная линия для активного пункта */}
+                {isActive && (
+                  <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#E85D3E] rounded-r-full"></span>
+                )}
+              </Link>
+            );
+          })}
+          {/* Phone link in mobile menu */}
+          <a 
+            href="tel:+79819976636" 
+            className="flex items-center gap-3 px-4 py-3 text-base font-medium text-foreground/75 hover:text-foreground hover:bg-secondary/30 rounded-lg transition-all duration-300"
+          >
+            <Phone className="h-5 w-5 text-accent" strokeWidth={2} />
+            +7 (981) 997-66-36
+          </a>
+          <div className="pt-3">
+            <Button
+              className="w-full"
+              size="default"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openApplicationModal();
+              }}
+            >
+              Отправить заявку
+            </Button>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 };

@@ -25,25 +25,23 @@ const SEO = ({
 }: SEOProps) => {
   const fullTitle = `${title} | Armax Logistics`;
   const baseUrl = import.meta.env.VITE_SITE_URL || "https://armaxstp.com";
-  const finalImage = image || ogImage || "/og-image.jpg";
+  const finalImage = image || ogImage || "/og-armax.png";
 
   // Нормализация URL: добавляем trailing slash если его нет
   const normalizeUrl = (path: string) => {
-    if (!path) return "";
+    if (!path || path === "") return "/";
     // Если путь уже заканчивается на /, оставляем как есть
     if (path.endsWith("/")) return path;
-    // Если это корень, добавляем /
-    if (path === "") return "/";
     // Иначе добавляем / в конец
     return `${path}/`;
   };
 
   // Преобразование в абсолютный URL для изображений
   const toAbsoluteUrl = (input: string | undefined, origin: string): string => {
-    if (!input) return `${origin}/og-image.jpg`;
+    if (!input) return `${origin}/og-armax.png`;
 
     const s = input.trim();
-    if (!s) return `${origin}/og-image.jpg`;
+    if (!s) return `${origin}/og-armax.png`;
 
     // Already absolute
     if (/^https?:\/\//i.test(s)) return s;
@@ -93,7 +91,7 @@ const SEO = ({
       <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="format-detection" content="telephone=yes" />
-      <meta name="theme-color" content="#3b82f6" />
+      <meta name="theme-color" content="#F34D1B" />
 
       {/* Structured Data (JSON-LD) */}
       {structuredData && (

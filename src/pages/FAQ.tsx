@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, HelpCircle, Phone, MessageCircle, Search, Sparkles, X, Package, FileText, CreditCard, Truck } from "lucide-react";
 import SEO from "@/components/SEO";
-import { organizationSchema } from "@/lib/schema";
+import { organizationSchema, faqPageSchema } from "@/lib/schema";
 import CTABlock from "@/components/CTABlock";
+import { useInView } from "@/hooks/useInView";
 
 interface FAQItem {
   question: string;
@@ -66,7 +67,7 @@ const FAQ = () => {
     {
       category: "delivery",
       question: "Работаете ли вы с физическими лицами?",
-      answer: "Да, работаем как с юридическими, так и с физическими лицами. Доступны все услуги: международные перевозки, таможенное оформление, страхование. Условия обсуждаются индивидуально.",
+      answer: "Нет, мы работаем только с юридическими лицами. Все наши услуги — международные перевозки, таможенное оформление, страхование — ориентированы на бизнес-клиентов.",
     },
     {
       category: "cargo",
@@ -149,14 +150,22 @@ const FAQ = () => {
     return category?.icon || HelpCircle;
   };
 
+  // Создаём FAQ schema для всех вопросов (без фильтра)
+  const faqSchema = faqPageSchema(
+    faqs.map(faq => ({
+      question: faq.question,
+      answer: faq.answer
+    }))
+  );
+
   return (
     <>
       <SEO
         title="Часто задаваемые вопросы (FAQ)"
         description="Ответы на популярные вопросы о международных перевозках, таможенном оформлении, сроках доставки, страховании грузов."
         keywords="FAQ, часто задаваемые вопросы, стоимость перевозки, таможенное оформление"
-        canonicalUrl="/faq"
-        structuredData={organizationSchema}
+        canonicalUrl="/faq/"
+        structuredData={faqSchema}
       />
       <div className="min-h-screen bg-[#0B0F18]">
         {/* Hero Section */}

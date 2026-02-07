@@ -2,6 +2,7 @@
 /**
  * Inject prerendered data into HTML as inline script
  * This ensures data is available synchronously before React mounts
+ * Prevents duplicate injections by removing existing ones first
  */
 
 const fs = require('fs');
@@ -25,7 +26,11 @@ function main() {
   console.log(`   Found ${newsData.length} news articles`);
 
   // Read index.html
-  const html = fs.readFileSync(INDEX_HTML, 'utf8');
+  let html = fs.readFileSync(INDEX_HTML, 'utf8');
+
+  // Remove any existing prerender data injection to prevent duplicates
+  const prerenderScriptRegex = /<script>\s*\/\/ Prerendered data injected at build time[\s\S]*?window\.__PRERENDER_NEWS__[\s\S]*?<\/script>/g;
+  html = html.replace(prerenderScriptRegex, '');
 
   // Create inline script with data
   const inlineScript = `

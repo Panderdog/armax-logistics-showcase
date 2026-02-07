@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
         title="Политика конфиденциальности"
         description="Политика конфиденциальности Armax Logistics. Узнайте, как мы собираем, храним и защищаем ваши персональные данные."
         keywords="политика конфиденциальности, персональные данные, защита данных"
-        canonicalUrl="/privacy"
+        canonicalUrl="/privacy/"
       />
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
@@ -330,8 +330,8 @@ const PrivacyPolicy = () => {
                       <Mail className="h-5 w-5 text-accent flex-shrink-0" />
                       <span className="text-muted-foreground">
                         Обращения принимаются по email:{" "}
-                        <a href="mailto:armaxrequest@gmail.com" className="text-accent hover:underline font-medium">
-                          armaxrequest@gmail.com
+                        <a href="mailto:request@armaxstp.com" className="text-accent hover:underline font-medium">
+                          request@armaxstp.com
                         </a>
                       </span>
                     </div>
@@ -401,13 +401,13 @@ const PrivacyPolicy = () => {
                         <span>+7 (981) 997-66-36</span>
                       </a>
                       <a 
-                        href="mailto:armaxrequest@gmail.com" 
+                        href="mailto:request@armaxstp.com" 
                         className="flex items-center gap-4 text-white/80 hover:text-white transition-colors"
                       >
                         <div className="p-3 rounded-xl bg-white/10">
                           <Mail className="h-5 w-5" />
                         </div>
-                        <span>armaxrequest@gmail.com</span>
+                        <span>request@armaxstp.com</span>
                       </a>
                       <div className="flex items-center gap-4 text-white/80">
                         <div className="p-3 rounded-xl bg-white/10">

@@ -41,8 +41,8 @@ const HeroSection = () => {
     // Hide scroll indicator after scrolling down
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      // Hide after 80-120px scroll (using 100px as middle value)
-      setShowScrollIndicator(scrollPosition < 100);
+      // Hide after 150px scroll (desktop needs more because indicator is at bottom)
+      setShowScrollIndicator(scrollPosition < 150);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -124,11 +124,12 @@ const HeroSection = () => {
       {/* Bottom fade transition to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-24 md:h-48 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/80 to-transparent z-[5]" />
       
-      {/* Scroll indicator - mobile version (premium chevrons) - aligned with trust badge */}
+      {/* Scroll indicator - mobile version (premium chevrons) - centered at bottom */}
       <div 
-        className={`absolute bottom-28 right-6 z-[6] md:hidden flex flex-col items-center gap-1 pointer-events-none transition-opacity duration-500 ${
+        className={`absolute bottom-8 left-1/2 -translate-x-1/2 z-[6] md:hidden flex flex-col items-center gap-1 pointer-events-none transition-opacity duration-500 ${
           showScrollIndicator ? 'opacity-100' : 'opacity-0'
         }`}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         aria-label="Прокрутите вниз"
       >
         <ChevronDown 
@@ -147,11 +148,11 @@ const HeroSection = () => {
 
       {/* Scroll indicator - desktop version */}
       <div 
-        className={`fixed bottom-0 left-0 right-0 z-[6] hidden md:flex justify-center pointer-events-none transition-opacity duration-500 ${
+        className={`absolute bottom-8 left-0 right-0 z-[6] hidden md:flex justify-center pointer-events-none transition-opacity duration-500 ${
           showScrollIndicator ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="flex flex-col items-center gap-2 animate-bounce -mb-6">
+        <div className="flex flex-col items-center gap-2 animate-bounce">
           <span className="text-white/40 text-xs font-medium tracking-wider uppercase">Прокрутите</span>
           <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
             <div className="w-1.5 h-3 bg-accent rounded-full animate-scroll-down" />
@@ -159,16 +160,16 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Mobile Content - Premium minimal design */}
-      <div className="container relative z-20 mx-auto px-5 md:hidden flex flex-col justify-end pb-24 hero-mobile-height">
-        <div className="max-w-lg relative">
-          {/* Local gradient overlay for text readability - premium effect */}
-          <div className="absolute -inset-x-8 -inset-y-6 bg-gradient-to-b from-primary/60 via-primary/40 to-transparent blur-2xl -z-10" />
+      {/* Unified Content — single H1 for SEO, responsive layout */}
+      <div className="container relative z-20 mx-auto px-5 md:px-6 lg:px-8 flex flex-col justify-end md:justify-center pb-24 md:pb-0 hero-mobile-height md:min-h-0 md:h-full">
+        <div className="max-w-lg md:max-w-3xl relative">
+          {/* Mobile gradient overlay for text readability */}
+          <div className="absolute -inset-x-8 -inset-y-6 bg-gradient-to-b from-primary/60 via-primary/40 to-transparent blur-2xl -z-10 md:hidden" />
           
           <div className="relative">
-            {/* Accent badge */}
+            {/* Accent badge — mobile only */}
             <div 
-              className="inline-flex items-center gap-2 mb-6 animate-fade-in"
+              className="inline-flex items-center gap-2 mb-6 animate-fade-in md:hidden"
               style={{ animationDelay: '0.1s' }}
             >
               <span className="w-8 h-[1px] bg-accent" />
@@ -177,72 +178,52 @@ const HeroSection = () => {
               </span>
             </div>
 
-            {/* Main heading - clean hierarchy */}
-            <h1 className="text-[2rem] sm:text-[2.5rem] font-bold text-white mb-5 animate-fade-in leading-[1.15] tracking-tight">
-              Международная логистика
+            {/* Single H1 — adapted visually for mobile/desktop */}
+            <h1 className="text-[2rem] sm:text-[2.5rem] md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-5 md:mb-6 animate-fade-in leading-[1.15] md:leading-[1.1] tracking-tight">
+              <span className="hidden md:inline uppercase">Armax Logistics — </span>
+              <span className="md:whitespace-nowrap">Международные перевозки</span>
               <br />
-              <span className="text-accent">для бизнеса</span>
+              <span className="text-accent">и таможенное оформление</span>
             </h1>
 
-            {/* Subtitle - refined typography */}
+            {/* Subtitle */}
             <p 
-              className="text-base sm:text-lg text-white/80 mb-8 animate-fade-in font-normal leading-[1.6] max-w-sm"
+              className="text-base sm:text-lg md:text-lg lg:text-xl xl:text-2xl text-white/80 md:text-white/90 mb-8 md:mb-10 animate-fade-in font-normal md:font-light leading-[1.6] md:leading-relaxed max-w-sm md:max-w-none"
               style={{ animationDelay: '0.15s' }}
             >
-              Импорт и экспорт по направлениям Азии и Европы. Таможенное оформление под ключ.
+              <span className="md:block">B2B-логистика полного цикла: доставка грузов, консолидация,</span>
+              {' '}склад, оформление и сопровождение ВЭД — в одном контуре.
             </p>
           </div>
 
-            {/* Single CTA - organic and premium */}
-            <div 
-              className="animate-fade-in"
-              style={{ animationDelay: '0.25s' }}
-            >
-              <Button
-                size="lg"
-                className="text-[15px] px-7 py-5 h-auto group bg-accent hover:bg-accent/90 shadow-[0_8px_30px_-8px_hsl(14_90%_53%/0.4)] hover:shadow-[0_12px_40px_-8px_hsl(14_90%_53%/0.5)] transition-all duration-400 rounded-xl"
-                onClick={openApplicationModal}
-              >
-                Рассчитать доставку
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Button>
-            </div>
-
-            {/* Trust indicator - subtle */}
-            <div 
-              className="mt-10 flex items-center gap-3 animate-fade-in"
-              style={{ animationDelay: '0.4s' }}
-            >
-              <div className="flex -space-x-1">
-                <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                <div className="w-2 h-2 rounded-full bg-emerald-400/60" />
-                <div className="w-2 h-2 rounded-full bg-emerald-400/30" />
-              </div>
-              <span className="text-xs text-white/50 font-medium">
-                Более 16 лет на рынке логистики
-              </span>
-            </div>
-        </div>
-      </div>
-
-      {/* Desktop/Tablet Content */}
-      <div className="container relative z-10 mx-auto px-6 lg:px-8 hidden md:flex md:items-center md:h-full">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 animate-fade-in leading-[1.1] tracking-tight">
-            ARMAX LOGISTICS — <span className="text-accent">интеллект в движении</span>
-          </h1>
-          <p className="text-lg lg:text-xl xl:text-2xl text-white/90 mb-10 animate-fade-in font-light leading-relaxed" style={{ animationDelay: '0.15s' }}>
-            Умные решения для импортной логистики<br />и таможенного оформления
-          </p>
-          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          {/* CTA Button */}
+          <div 
+            className="animate-fade-in"
+            style={{ animationDelay: '0.25s' }}
+          >
             <Button
               size="lg"
-              className="text-base lg:text-lg px-8 lg:px-10 py-6 lg:py-7 h-auto group shadow-glow hover:shadow-[0_20px_60px_-10px_hsl(14_90%_53%/0.5)] hover:scale-105 transition-all duration-500"
+              className="text-[15px] md:text-base lg:text-lg px-7 md:px-8 lg:px-10 py-5 md:py-6 lg:py-7 h-auto group shadow-glow hover:shadow-[0_20px_60px_-10px_hsl(14_90%_53%/0.5)] md:hover:scale-105 transition-all duration-500 rounded-xl"
               onClick={openApplicationModal}
             >
               Рассчитать доставку
-              <ArrowRight className="ml-3 h-5 w-5 lg:h-6 lg:w-6 transition-transform duration-300 group-hover:translate-x-2" />
+              <ArrowRight className="ml-2 md:ml-3 h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6 transition-transform duration-300 group-hover:translate-x-1 md:group-hover:translate-x-2" />
             </Button>
+          </div>
+
+          {/* Trust indicator — mobile only */}
+          <div 
+            className="mt-10 flex items-center gap-3 animate-fade-in md:hidden"
+            style={{ animationDelay: '0.4s' }}
+          >
+            <div className="flex -space-x-1">
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="w-2 h-2 rounded-full bg-emerald-400/60" />
+              <div className="w-2 h-2 rounded-full bg-emerald-400/30" />
+            </div>
+            <span className="text-xs text-white/50 font-medium">
+              Более 16 лет на рынке логистики
+            </span>
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ export const organizationSchema = {
   "logo": `${SITE_URL}/armax-logo.svg`,
   "description": "Международная логистическая компания специализирующаяся на перевозках грузов по Европе и Азии",
   "telephone": "+7-981-997-66-36",
-  "email": "armaxrequest@gmail.com",
+  "email": "request@armaxstp.com",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Горское шоссе, 4",
@@ -92,6 +92,19 @@ export const breadcrumbSchema = (items: { name: string; url: string }[]) => ({
     "position": index + 1,
     "name": item.name,
     "item": `${SITE_URL}${item.url}`
+  }))
+});
+
+export const faqPageSchema = (faqs: { question: string; answer: string }[]) => ({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
   }))
 });
 

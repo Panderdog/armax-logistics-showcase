@@ -191,7 +191,7 @@ const Reviews = () => {
         title="Отзывы клиентов"
         description="Отзывы о работе Armax Logistics от наших клиентов. Реальные кейсы успешных логистических проектов."
         keywords="отзывы, отзывы клиентов, кейсы, проекты, успешные перевозки"
-        canonicalUrl="/reviews"
+        canonicalUrl="/reviews/"
         structuredData={organizationSchema}
       />
       <div className="min-h-screen bg-[#0B0F18]">

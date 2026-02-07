@@ -26,7 +26,7 @@ const Services = () => {
         title="Наши услуги"
         description="Комплексные логистические услуги: международные автоперевозки, морские контейнерные перевозки, авиадоставка грузов, таможенное оформление."
         keywords="автоперевозки, морские перевозки, авиадоставка, таможенное оформление, FTL, LTL, FCL, контейнерные перевозки"
-        canonicalUrl="/services"
+        canonicalUrl="/services/"
         structuredData={organizationSchema}
       />
 
@@ -135,7 +135,7 @@ const Services = () => {
                     </p>
 
                     {/* Features */}
-                    <div className="flex flex-wrap gap-2 mb-6 overflow-hidden">
+                    <div className="flex flex-wrap gap-2 mb-6">
                       {service.features.map((feature, idx) => (
                         <span 
                           key={idx}

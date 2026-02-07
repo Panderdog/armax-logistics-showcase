@@ -1,37 +1,12 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useApplicationModal } from '@/contexts/ApplicationModalContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, ArrowLeft, Tag, ArrowRight, Newspaper, Clock, Share2, Sparkles } from 'lucide-react';
 import SEO from '@/components/SEO';
-import { useEffect, useState, useRef } from 'react';
-
-// Hook for intersection observer animation
-const useInView = (threshold = 0.1) => {
-  const ref = useRef<HTMLElement>(null);
-  const [isInView, setIsInView] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isInView };
-};
+import { useInView } from '@/hooks/useInView';
 
 // Simple markdown-like parser for content
 function parseContent(content: string): string {
@@ -74,9 +49,9 @@ const NewsArticle = () => {
   const allNews = getPublishedNews();
   
   // Animation refs
-  const contentRef = useInView(0.1);
-  const relatedRef = useInView(0.1);
-  const ctaRef = useInView(0.15);
+  const contentRef = useInView({ threshold: 0.1 });
+  const relatedRef = useInView({ threshold: 0.1 });
+  const ctaRef = useInView({ threshold: 0.15 });
   
   // Get other news (exclude current)
   const otherNews = allNews
@@ -121,7 +96,7 @@ const NewsArticle = () => {
         title={article.meta_title || `${article.title} — Новости Armax`}
         description={article.meta_description || article.previewText}
         image={article.og_image || article.previewImage || undefined}
-        canonicalUrl={`/news/${article.slug}`}
+        canonicalUrl={`/news/${article.slug}/`}
         ogType="article"
         noindex={article.noindex}
       />

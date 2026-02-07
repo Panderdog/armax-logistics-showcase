@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
-import { organizationSchema } from "@/lib/schema";
+import { serviceSchema, breadcrumbSchema } from "@/lib/schema";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 import { servicesDetailData } from "@/data/servicesDetail";
 import { ServiceId } from "@/data/services";
@@ -50,14 +50,27 @@ const ServiceDetail = () => {
   // Рекомендуемые услуги (исключаем текущую)
   const relatedServices = servicesList.filter(s => s.id !== id).slice(0, 4);
 
+  // Создаём структурированные данные для услуги
+  const combinedSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      serviceSchema(service.title, service.description),
+      breadcrumbSchema([
+        { name: "Главная", url: "/" },
+        { name: "Услуги", url: "/services" },
+        { name: service.title, url: `/services/${id}` }
+      ])
+    ]
+  };
+
   return (
     <>
       <SEO
         title={service.title}
         description={service.description}
         keywords={`${service.title}, международные перевозки, логистика, Armax Logistics`}
-        canonicalUrl={`/services/${id}`}
-        structuredData={organizationSchema}
+        canonicalUrl={`/services/${id}/`}
+        structuredData={combinedSchema}
       />
       
       <div className="min-h-screen bg-[#0B0F18]">
@@ -141,16 +154,16 @@ const ServiceDetail = () => {
                   </p>
                 </div>
               ) : service.stats && (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                   {service.stats.map((stat, index) => (
                     <div
                       key={index}
-                      className="group p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-500 text-center"
+                      className="group p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-500 text-center"
                     >
-                      <div className={`text-3xl lg:text-4xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-2`}>
+                      <div className={`text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r ${service.color} bg-clip-text text-transparent mb-2`}>
                         {stat.value}
                       </div>
-                      <div className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
+                      <div className="text-xs sm:text-sm text-white/60 group-hover:text-white/80 transition-colors">
                         {stat.label}
                       </div>
                     </div>
@@ -200,16 +213,7 @@ const ServiceDetail = () => {
                   return (
                     <div
                       key={index}
-                      className="group p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-500 hover:-translate-y-1"
-                      style={{
-                        boxShadow: '0 0 0 transparent',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = '0 20px 40px -15px rgba(0,0,0,0.3), 0 0 30px -10px rgba(243,77,27,0.1)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = '0 0 0 transparent';
-                      }}
+                      className="group p-6 lg:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.1] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3),0_0_30px_-10px_rgba(243,77,27,0.1)] transition-all duration-500 hover:-translate-y-1"
                     >
                       <div 
                         className={`inline-flex p-3.5 rounded-xl bg-gradient-to-br ${service.color} mb-5`}
@@ -369,6 +373,58 @@ const ServiceDetail = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Related Services Section */}
+        <section className="py-20 lg:py-24 bg-[#0B0F18] relative overflow-hidden">
+          {/* Background effects */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-r from-[#F34D1B]/[0.02] to-orange-500/[0.02] rounded-full blur-[120px]" />
+          
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-medium bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/[0.06]">
+                  <Sparkles className="h-4 w-4 text-[#F34D1B]" />
+                  <span className="text-zinc-300">Другие услуги</span>
+                </span>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+                  <span className="text-white">Вам также может </span>
+                  <span className="bg-gradient-to-r from-[#F34D1B] via-orange-400 to-[#F34D1B] bg-clip-text text-transparent">
+                    быть интересно
+                  </span>
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {relatedServices.map((relatedService, index) => {
+                  const RelatedIcon = relatedService.icon;
+                  return (
+                    <Link
+                      key={relatedService.id}
+                      to={`/services/${relatedService.id}`}
+                      className="group p-6 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-[#F34D1B]/30 transition-all duration-500 hover:-translate-y-1"
+                      style={{
+                        animationDelay: `${index * 0.1}s`
+                      }}
+                    >
+                      <div className="flex flex-col h-full">
+                        <div className="inline-flex p-3.5 rounded-xl bg-gradient-to-br from-[#F34D1B] to-orange-500 mb-4 w-fit">
+                          <RelatedIcon className="h-5 w-5 text-white" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#F34D1B] transition-colors duration-300">
+                          {relatedService.title}
+                        </h3>
+                        <div className="mt-auto pt-4 flex items-center gap-2 text-sm text-zinc-400 group-hover:text-[#F34D1B] transition-colors duration-300">
+                          <span>Подробнее</span>
+                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Globe, Ship, Truck, Plane, Train, ArrowRight, MapPin, Sparkles, TrendingUp, Shield, Users, Clock, Zap, Building2 } from "lucide-react";
 import SEO from "@/components/SEO";
 import { organizationSchema } from "@/lib/schema";
@@ -6,26 +6,12 @@ import { Button } from "@/components/ui/button";
 import LogisticsMap from "@/components/LogisticsMap";
 import { useApplicationModal } from "@/contexts/ApplicationModalContext";
 import CTABlock from "@/components/CTABlock";
+import { useInView } from "@/hooks/useInView";
 
 const Geography = () => {
   const { openApplicationModal } = useApplicationModal();
   const [activeRoute, setActiveRoute] = useState<number | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const statsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-    if (statsRef.current) observer.observe(statsRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const { ref: statsRef, isInView: isVisible } = useInView({ threshold: 0.2 });
 
   const routes = [
     {
@@ -143,7 +129,7 @@ const Geography = () => {
         title="География перевозок"
         description="Armax Logistics специализируется на перевозках из Азии: Китай, Вьетнам, Южная Корея. Надёжная логистика с оптимальными сроками."
         keywords="перевозки из Китая, логистика из Азии, доставка из Вьетнама, перевозки из Кореи"
-        canonicalUrl="/geography"
+        canonicalUrl="/geography/"
         structuredData={organizationSchema}
       />
       <div className="min-h-screen bg-[#0B0F18]">

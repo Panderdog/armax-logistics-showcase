@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { X, ArrowRight, CheckCircle, AlertCircle } from "lucide-react";
-import { toast } from "sonner";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { useApplicationForm } from "@/hooks/useApplicationForm";
 
 const PHONE_PREFIX = "+7 ";
 
@@ -44,39 +43,38 @@ const formatPhone = (value: string) => {
   return formatted;
 };
 
-interface FormErrors {
-  name?: string;
-  phone?: string;
-  email?: string;
-  message?: string;
-}
-
 interface ApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: PHONE_PREFIX,
-    email: "",
-    message: "",
+  // Form state and submission logic
+  const {
+    formData,
+    errors,
+    isSubmitting,
+    isSubmitted,
+    submitError,
+    handleSubmit,
+    handleInputChange,
+    resetForm,
+    setFormData,
+  } = useApplicationForm({
+    initialPhone: PHONE_PREFIX,
+    onSuccess: () => {
+      setTimeout(() => {
+        onClose();
+      }, 3000);
+    },
   });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
-      setFormData({ name: "", phone: PHONE_PREFIX, email: "", message: "" });
-      setErrors({});
-      setIsSubmitted(false);
-      setSubmitError(null);
+      resetForm(true); // Keep phone prefix
     }
-  }, [isOpen]);
+  }, [isOpen, resetForm]);
 
   // Handle escape key press
   useEffect(() => {
@@ -101,142 +99,6 @@ const ApplicationModal = ({ isOpen, onClose }: ApplicationModalProps) => {
     };
   }, [isOpen]);
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Пожалуйста, введите ваше имя";
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Имя должно содержать минимум 2 символа";
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Пожалуйста, введите номер телефона";
-    } else {
-      const phoneDigits = formData.phone.replace(/\D/g, "");
-      const localDigits = phoneDigits.startsWith("7")
-        ? phoneDigits.slice(1)
-        : phoneDigits.startsWith("8")
-        ? phoneDigits.slice(1)
-        : phoneDigits;
-      if (localDigits.length !== 10) {
-        newErrors.phone = "Введите корректный номер телефона";
-      }
-    }
-
-    if (formData.email.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email.trim())) {
-        newErrors.email = "Введите корректный email адрес";
-      }
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Пожалуйста, опишите ваш запрос";
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Сообщение должно содержать минимум 10 символов";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitError(null);
-  
-    if (!validateForm()) {
-      return;
-    }
-  
-    setIsSubmitting(true);
-  
-    try {
-      if (!supabase || !isSupabaseConfigured) {
-        throw new Error(
-          "База данных не настроена. Пожалуйста, свяжитесь с нами по телефону."
-        );
-      }
-  
-      // 1. Сохраняем заявку в Supabase
-const payload = {
-  name: formData.name.trim(),
-  email: formData.email.trim() || null,
-  phone: formData.phone.trim(),
-  message: formData.message.trim(),
-};
-
-const { error } = await supabase
-  .from("applications")
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  .insert(payload as any);
-  
-      if (error) {
-        throw error;
-      }
-  
-      // 2. Шлём уведомление на почту через edge-функцию smooth-service
-      try {
-        const functionUrl =
-          "https://ztkvnqoxkdxpjlwcgarx.supabase.co/functions/v1/smooth-service";
-  
-        const response = await fetch(functionUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            name: formData.name.trim(),
-            email: formData.email.trim() || null,
-            phone: formData.phone.trim(),
-            message: formData.message.trim(),
-          }),
-        });
-  
-        // Email отправлен успешно
-      } catch (emailError) {
-        console.error(
-          "Ошибка отправки email через Resend (modal):",
-          emailError
-        );
-      }
-  
-      // 3. Всё как было — успех, очистка формы и закрытие модалки
-      toast.success("Спасибо! Мы свяжемся с вами в ближайшее время.");
-      setFormData({ name: "", phone: PHONE_PREFIX, email: "", message: "" });
-      setErrors({});
-      setIsSubmitted(true);
-      (window as any).ym?.(106236010, "reachGoal", "lead_form");
-  
-      setTimeout(() => {
-        onClose();
-        setIsSubmitted(false);
-      }, 3000);
-    } catch (error) {
-      console.error("Error submitting application:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже.";
-      setSubmitError(errorMessage);
-      toast.error("Ошибка при отправке заявки");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData({ ...formData, [field]: value });
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: undefined });
-    }
-    if (submitError) {
-      setSubmitError(null);
-    }
-  };
-
   const ensureCursorAfterPrefix = (input: HTMLInputElement) => {
     const position = PHONE_PREFIX.length;
     const selectionStart = input.selectionStart ?? position;
@@ -249,7 +111,8 @@ const { error } = await supabase
 
   const handlePhoneChange = (value: string) => {
     const formatted = formatPhone(value);
-    handleInputChange("phone", formatted);
+    // Update form data through the hook's setFormData
+    setFormData((prev: typeof formData) => ({ ...prev, phone: formatted }));
   };
 
   const handlePhoneFocus = (e: FocusEvent<HTMLInputElement>) => {

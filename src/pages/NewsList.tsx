@@ -7,52 +7,7 @@ import { Calendar, ArrowRight, Newspaper, Sparkles, X } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { useApplicationModal } from '@/contexts/ApplicationModalContext';
 import CTABlock from '@/components/CTABlock';
-
-// Hook for intersection observer animation
-const useInView = (threshold = 0.1) => {
-  const ref = useRef<HTMLElement>(null);
-  const [isInView, setIsInView] = useState(false);
-
-  useEffect(() => {
-    const currentRef = ref.current;
-    
-    // Fallback: make visible after a short delay if observer doesn't fire
-    const fallbackTimer = setTimeout(() => {
-      setIsInView(true);
-    }, 300);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          clearTimeout(fallbackTimer);
-          observer.disconnect();
-        }
-      },
-      { threshold, rootMargin: '100px' }
-    );
-
-    if (currentRef) {
-      observer.observe(currentRef);
-      
-      // Check if element is already in viewport
-      const rect = currentRef.getBoundingClientRect();
-      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-      if (isInViewport) {
-        setIsInView(true);
-        clearTimeout(fallbackTimer);
-        observer.disconnect();
-      }
-    }
-
-    return () => {
-      clearTimeout(fallbackTimer);
-      observer.disconnect();
-    };
-  }, [threshold]);
-
-  return { ref, isInView };
-};
+import { useInView } from '@/hooks/useInView';
 
 const NewsList = () => {
   const { getPublishedNews, newsLoading } = useAdmin();
@@ -62,10 +17,10 @@ const NewsList = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Animation refs
-  const heroRef = useInView(0.1);
-  const featuredRef = useInView(0.15);
-  const gridRef = useInView(0.1);
-  const ctaRef = useInView(0.2);
+  const heroRef = useInView({ threshold: 0.1 });
+  const featuredRef = useInView({ threshold: 0.15 });
+  const gridRef = useInView({ threshold: 0.1 });
+  const ctaRef = useInView({ threshold: 0.2 });
 
   // Ref for scrolling to news section
   const newsSectionRef = useRef<HTMLElement>(null);
@@ -110,7 +65,7 @@ const NewsList = () => {
       <SEO 
         title="Новости — Armax Logistics"
         description="Актуальные новости компании Armax: новые маршруты, услуги, события в сфере международной логистики и грузоперевозок из Азии."
-        canonicalUrl="/news"
+        canonicalUrl="/news/"
       />
       
       {/* Loading State */}

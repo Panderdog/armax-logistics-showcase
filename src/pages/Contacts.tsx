@@ -1,182 +1,38 @@
 import type React from "react";
-import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, MessageCircle, Clock, Send, ArrowRight, CheckCircle, AlertCircle, Globe, Sparkles, Building2 } from "lucide-react";
-import { toast } from "sonner";
 import SEO from "@/components/SEO";
 import { localBusinessSchema } from "@/lib/schema";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import CTABlock from "@/components/CTABlock";
-
-interface FormErrors {
-  name?: string;
-  phone?: string;
-  email?: string;
-  message?: string;
-}
-
-// Custom hook for intersection observer animations
-const useInView = (threshold = 0.1) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isInView };
-};
+import { useInView } from "@/hooks/useInView";
+import { useApplicationForm } from "@/hooks/useApplicationForm";
 
 const Contacts = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    message: "",
+  // Form state and submission logic
+  const {
+    formData,
+    errors,
+    isSubmitting,
+    isSubmitted,
+    submitError,
+    handleSubmit,
+    handleInputChange,
+  } = useApplicationForm({
+    onSuccess: () => {
+      // Reset after 5 seconds
+      setTimeout(() => {
+        // Form will auto-reset via isSubmitted state
+      }, 5000);
+    },
   });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Animation refs
-  const heroRef = useInView(0.2);
-  const contactCardsRef = useInView(0.1);
-  const formSectionRef = useInView(0.1);
-  const mapRef = useInView(0.1);
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Пожалуйста, введите ваше имя";
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Имя должно содержать минимум 2 символа";
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Пожалуйста, введите номер телефона";
-    } else {
-      const phoneDigits = formData.phone.replace(/\D/g, "");
-      if (phoneDigits.length < 10) {
-        newErrors.phone = "Введите корректный номер телефона";
-      }
-    }
-
-    if (formData.email.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email.trim())) {
-        newErrors.email = "Введите корректный email адрес";
-      }
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Пожалуйста, опишите ваш запрос";
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = "Сообщение должно содержать минимум 10 символов";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitError(null);
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      if (!supabase || !isSupabaseConfigured) {
-        throw new Error(
-          "База данных не настроена. Пожалуйста, свяжитесь с нами по телефону."
-        );
-      }
-
-            // @ts-expect-error - Yandex Maps typings issue
-      const { error } = await supabase.from("applications").insert({
-        name: formData.name.trim(),
-        email: formData.email.trim() || null,
-        phone: formData.phone.trim(),
-        message: formData.message.trim(),
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      try {
-        const functionUrl =
-          "https://ztkvnqoxkdxpjlwcgarx.supabase.co/functions/v1/smooth-service";
-
-        const response = await fetch(functionUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            name: formData.name.trim(),
-            email: formData.email.trim() || null,
-            phone: formData.phone.trim(),
-            message: formData.message.trim(),
-          }),
-        });
-
-        // Отправка email прошла успешно
-        await response.text();
-      } catch (emailError) {
-        console.error("Ошибка отправки email через Resend:", emailError);
-      }
-
-      toast.success("Спасибо! Мы свяжемся с вами в ближайшее время.");
-      setFormData({ name: "", phone: "", email: "", message: "" });
-      setErrors({});
-      setIsSubmitted(true);
-
-      setTimeout(() => setIsSubmitted(false), 5000);
-    } catch (error) {
-      console.error("Error submitting application:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже.";
-      setSubmitError(errorMessage);
-      toast.error("Ошибка при отправке заявки");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData({ ...formData, [field]: value });
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: undefined });
-    }
-    if (submitError) {
-      setSubmitError(null);
-    }
-  };
+  const heroRef = useInView({ threshold: 0.2 });
+  const contactCardsRef = useInView({ threshold: 0.1 });
+  const formSectionRef = useInView({ threshold: 0.1 });
+  const mapRef = useInView({ threshold: 0.1 });
 
   const contactMethods = [
     {
@@ -190,8 +46,8 @@ const Contacts = () => {
     {
       icon: Mail,
       title: "Email",
-      value: "armaxrequest@gmail.com",
-      link: "mailto:armaxrequest@gmail.com",
+      value: "request@armaxstp.com",
+      link: "mailto:request@armaxstp.com",
       description: "Ответим в течение часа",
       gradient: "from-[#F34D1B] to-orange-500",
     },
@@ -226,9 +82,9 @@ const Contacts = () => {
     <>
       <SEO
         title="Контакты"
-        description="Контакты Armax Logistics: телефон +7 (981) 997-66-36, email armaxrequest@gmail.com. Офис в Санкт-Петербурге."
+        description="Контакты Armax Logistics: телефон +7 (981) 997-66-36, email request@armaxstp.com. Офис в Санкт-Петербурге."
         keywords="контакты, телефон, email, офис, Санкт-Петербург"
-        canonicalUrl="/contacts"
+        canonicalUrl="/contacts/"
         structuredData={localBusinessSchema}
       />
       <div className="min-h-screen bg-[#0B0F18]">
@@ -381,8 +237,8 @@ const Contacts = () => {
                   ))}
                 </div>
 
-                {/* Working hours card */}
-                <div className="p-8 rounded-3xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-sm">
+                {/* Working hours card - hidden on mobile */}
+                <div className="hidden lg:block p-8 rounded-3xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-sm">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="p-3 rounded-xl bg-[#F34D1B]/10">
                       <Clock className="h-6 w-6 text-[#F34D1B]" strokeWidth={1.5} />
@@ -406,8 +262,8 @@ const Contacts = () => {
                   </div>
                 </div>
 
-                {/* Office address card */}
-                <div className="relative p-8 rounded-3xl overflow-hidden group">
+                {/* Office address card - hidden on mobile */}
+                <div className="hidden lg:block relative p-8 rounded-3xl overflow-hidden group">
                   {/* Background gradient */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F34D1B] to-orange-600" />
                   <div className="absolute inset-0 bg-[url('/images/tlk.webp')] bg-cover bg-center opacity-20" />
@@ -658,9 +514,9 @@ const Contacts = () => {
                     icon: Phone,
                   },
                   {
-                    text: "armaxrequest@gmail.com",
+                    text: "request@armaxstp.com",
                     variant: "secondary",
-                    href: "mailto:armaxrequest@gmail.com",
+                    href: "mailto:request@armaxstp.com",
                     icon: Mail,
                   },
                 ]}

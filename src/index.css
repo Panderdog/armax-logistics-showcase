@@ -195,7 +195,7 @@ All colors MUST be HSL.
     --secondary-foreground: 220 13% 13%;
 
     --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%; /* #6B7280 - Medium gray */
+    --muted-foreground: 220 9% 30%; /* Darker gray */
 
     /* Accent: Elegant Coral with gold undertones */
     --accent: 14 90% 53%; /* #E85D3E - Refined coral */
@@ -576,6 +576,36 @@ All colors MUST be HSL.
     animation-delay: 0.6s;
   }
 
+  /* Fade in animation for elements */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  /* Scale in animation for success states */
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
   /* Respect reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
     .animate-scroll-pulse {
@@ -591,6 +621,11 @@ All colors MUST be HSL.
     .animate-chevron-3 {
       animation: none;
       opacity: 0.6;
+    }
+    
+    .animate-fade-in,
+    .animate-scale-in {
+      animation: none;
     }
     
     @keyframes scroll-line {

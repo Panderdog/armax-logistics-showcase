@@ -4,7 +4,6 @@ import { ServicesGrid } from "@/components/services";
 import MarqueePartners from "@/components/MarqueePartners";
 import NewsCarousel from "@/components/NewsCarousel";
 import ProcessSection from "@/components/ProcessSection";
-import TestimonialsPreview from "@/components/TestimonialsPreview";
 import CasesSection from "@/components/CasesSection";
 import CTABlock from "@/components/CTABlock";
 import SEO from "@/components/SEO";
@@ -18,7 +17,7 @@ const Index = () => {
         title="Armax — международная логистика и таможенное оформление (Азия, Европа)"
         description="Импорт и экспорт по направлениям Азии и Европы. Таможенное оформление под ключ. Рассчитайте доставку и получите предложение под ваш груз."
         keywords="международные перевозки, логистика, грузоперевозки, Европа, Азия, Armax Logistics, транспортная компания, доставка грузов, таможенное оформление, декларирование, импорт, экспорт"
-        canonicalUrl="/"
+        canonicalUrl=""
         structuredData={organizationSchema}
       />
       <div>
@@ -27,7 +26,6 @@ const Index = () => {
         <ServicesGrid />
         <MarqueePartners />
         <ProcessSection />
-        <TestimonialsPreview />
         <CasesSection />
         <NewsCarousel />
         
@@ -72,11 +70,11 @@ const Index = () => {
                     <span>+7 (981) 997-66-36</span>
                   </a>
                   <a 
-                    href="mailto:armaxrequest@gmail.com" 
+                    href="mailto:request@armaxstp.com" 
                     className="flex items-center gap-2 hover:text-white transition-colors group"
                   >
                     <Mail className="h-5 w-5 text-accent group-hover:scale-110 transition-transform" />
-                    <span>armaxrequest@gmail.com</span>
+                    <span>request@armaxstp.com</span>
                   </a>
                   <a 
                     href="https://t.me/armaxlogistics" 

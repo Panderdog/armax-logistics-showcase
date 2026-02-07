@@ -39,7 +39,7 @@ const About = () => {
         title="О компании"
         description="Armax Logistics — международная логистическая компания с 15+ летним опытом. 20+ стран партнёров, надёжная сеть перевозок, 99% своевременных доставок."
         keywords="о компании, Armax Logistics, история компании, логистическая компания, опыт перевозок"
-        canonicalUrl="/about"
+        canonicalUrl="/about/"
         structuredData={organizationSchema}
       />
       <div className="min-h-screen bg-[#0B0F18]">

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FileText, Package, Clock, Award } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
 
 interface StatItem {
   value: number;
@@ -80,26 +81,7 @@ const AnimatedCounter = ({
 };
 
 const StatsSection = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  const { ref: sectionRef, isInView: isVisible } = useInView({ threshold: 0.2 });
 
   return (
     <section
