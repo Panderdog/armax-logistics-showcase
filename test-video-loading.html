@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест загрузки видео</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0f1624;
+            color: white;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #1a2332;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #ff6b35;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #10b981; }
+        .error { background: #ef4444; }
+        .info { background: #3b82f6; }
+        video {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 Тест: Условная загрузка видео</h1>
+    
+    <div class="test-section">
+        <h2>📱 Информация об устройстве</h2>
+        <div id="device-info"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎬 Видео с data-src (НЕ загружается автоматически)</h2>
+        <video id="hero-video" muted loop playsinline preload="none" poster="/images/ship.webp">
+            <source data-src="/video/compress-hero-video.webm" type="video/webm" />
+            <source data-src="/video/compress-hero-video.mp4" type="video/mp4" />
+        </video>
+        <div id="video-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Загруженные ресурсы</h2>
+        <div id="resources"></div>
+    </div>
+
+    <script>
+        // 1. Определяем тип устройства
+        const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+        const isMobile = !isDesktop;
+        const userAgent = navigator.userAgent;
+        const isReactSnap = userAgent.includes('ReactSnap');
+
+        document.getElementById('device-info').innerHTML = `
+            <div class="status info">
+                <strong>Ширина экрана:</strong> ${window.innerWidth}px<br>
+                <strong>Тип устройства:</strong> ${isDesktop ? '💻 Desktop/Tablet' : '📱 Mobile'}<br>
+                <strong>UserAgent:</strong> ${userAgent.substring(0, 80)}...<br>
+                <strong>ReactSnap:</strong> ${isReactSnap ? 'Да' : 'Нет'}
+            </div>
+        `;
+
+        // 2. Условная загрузка видео (только на desktop)
+        const video = document.getElementById('hero-video');
+        const statusDiv = document.getElementById('video-status');
+
+        if (isReactSnap) {
+            statusDiv.innerHTML = `<div class="status info">⏸️ ReactSnap обнаружен - видео НЕ загружается</div>`;
+        } else if (isMobile) {
+            statusDiv.innerHTML = `<div class="status success">✅ Mobile устройство - видео НЕ загружается (экономия ~3.8 МБ)</div>`;
+        } else {
+            statusDiv.innerHTML = `<div class="status info">⏳ Desktop/Tablet - загружаем видео...</div>`;
+            
+            // Копируем data-src в src
+            const sources = video.querySelectorAll('source');
+            sources.forEach(source => {
+                const dataSrc = source.getAttribute('data-src');
+                if (dataSrc) {
+                    source.setAttribute('src', dataSrc);
+                }
+            });
+            
+            video.load();
+            
+            video.addEventListener('loadeddata', () => {
+                statusDiv.innerHTML = `<div class="status success">✅ Видео загружено и готово к воспроизведению</div>`;
+                video.play();
+            });
+            
+            video.addEventListener('error', () => {
+                statusDiv.innerHTML = `<div class="status error">❌ Ошибка загрузки видео</div>`;
+            });
+        }
+
+        // 3. Мониторинг загруженных ресурсов
+        setTimeout(() => {
+            const resources = performance.getEntriesByType('resource');
+            const videoResources = resources.filter(r => r.name.includes('video/'));
+            
+            const resourcesDiv = document.getElementById('resources');
+            
+            if (videoResources.length === 0) {
+                resourcesDiv.innerHTML = `<div class="status success">✅ Видео файлы НЕ загружены - оптимизация работает!</div>`;
+            } else {
+                const resourceList = videoResources.map(r => {
+                    const size = (r.transferSize / 1024).toFixed(1);
+                    return `<li>${r.name.split('/').pop()} - ${size} КБ</li>`;
+                }).join('');
+                
+                resourcesDiv.innerHTML = `
+                    <div class="status info">📦 Загружено видео файлов: ${videoResources.length}</div>
+                    <ul>${resourceList}</ul>
+                `;
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -27,14 +27,29 @@ const HeroSection = () => {
   }, []);
 
   useEffect(() => {
+    // НЕ загружаем видео во время pre-rendering (react-snap)
+    if (navigator.userAgent.includes('ReactSnap')) return;
+    
     // Загружаем видео только на desktop/tablet
     if (!isDesktop) return;
     
     const video = document.getElementById('hero-video') as HTMLVideoElement;
-    if (video) {
-      video.addEventListener('loadeddata', () => setVideoLoaded(true));
-      video.addEventListener('error', () => setVideoError(true));
-    }
+    if (!video) return;
+
+    // Динамически добавляем source элементы ТОЛЬКО на desktop
+    const sources = video.querySelectorAll('source');
+    sources.forEach(source => {
+      const dataSrc = source.getAttribute('data-src');
+      if (dataSrc && !source.getAttribute('src')) {
+        source.setAttribute('src', dataSrc);
+      }
+    });
+
+    // Загружаем видео после установки src
+    video.load();
+    
+    video.addEventListener('loadeddata', () => setVideoLoaded(true));
+    video.addEventListener('error', () => setVideoError(true));
   }, [isDesktop]);
 
   useEffect(() => {
@@ -102,20 +117,16 @@ const HeroSection = () => {
               loop
               muted
               playsInline
-              preload="metadata"
+              preload="none"
               poster="/images/ship.webp"
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                 videoLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               aria-label="Фоновое видео морских грузовых перевозок и логистики"
             >
-              {/* Источники загружаются ТОЛЬКО на desktop - критично для производительности */}
-              {isDesktop && (
-                <>
-                  <source src="/video/compress-hero-video.webm" type="video/webm" />
-                  <source src="/video/compress-hero-video.mp4" type="video/mp4" />
-                </>
-              )}
+              {/* data-src вместо src - браузер НЕ загружает до явного указания */}
+              <source data-src="/video/compress-hero-video.webm" type="video/webm" />
+              <source data-src="/video/compress-hero-video.mp4" type="video/mp4" />
               Ваш браузер не поддерживает видео.
             </video>
           )}
