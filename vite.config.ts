@@ -24,7 +24,45 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Split CSS into smaller chunks
+          // Optimize bundle splitting for better TBT (Total Blocking Time)
+          // Split large vendor libraries into separate chunks for parallel parsing
+          
+          // React core - загружается первым
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            return 'react-core';
+          }
+          
+          // React Router - отдельный чанк для навигации
+          if (id.includes('node_modules/react-router')) {
+            return 'react-router';
+          }
+          
+          // Radix UI - большая UI библиотека
+          if (id.includes('node_modules/@radix-ui')) {
+            return 'radix-ui';
+          }
+          
+          // React Query - управление состоянием
+          if (id.includes('node_modules/@tanstack/react-query')) {
+            return 'react-query';
+          }
+          
+          // Lenis + smooth scroll
+          if (id.includes('node_modules/lenis')) {
+            return 'lenis';
+          }
+          
+          // Chart libraries (recharts)
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
+            return 'charts';
+          }
+          
+          // Lucide icons
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons';
+          }
+          
+          // Остальные зависимости
           if (id.includes('node_modules')) {
             return 'vendor';
           }
@@ -40,5 +78,7 @@ export default defineConfig(({ mode }) => ({
     },
     // Enable CSS minification
     cssMinify: true,
+    // Increase chunk size warning limit (we're intentionally splitting)
+    chunkSizeWarningLimit: 1000,
   },
 }));

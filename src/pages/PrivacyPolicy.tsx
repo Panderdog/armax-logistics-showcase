@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="relative py-20 lg:py-28 bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-20" />
+          <div className="absolute inset-0 bg-[url('/nightport.webp')] bg-cover bg-center opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary/80" />
           
           <div className="container mx-auto px-6 lg:px-8 relative z-10">

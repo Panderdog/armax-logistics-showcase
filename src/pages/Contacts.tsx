@@ -94,7 +94,7 @@ const Contacts = () => {
           className="relative min-h-[calc(100vh-var(--header-height))] flex items-center overflow-hidden"
         >
           {/* Background effects */}
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center opacity-40" />
+          <div className="absolute inset-0 bg-[url('/nightport.webp')] bg-cover bg-center opacity-40" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F18]/70 via-[#0B0F18]/50 to-[#0B0F18]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18]/80 via-transparent to-[#0B0F18]/30" />
           

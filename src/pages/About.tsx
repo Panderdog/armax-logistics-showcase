@@ -296,7 +296,7 @@ const About = () => {
 
         {/* CTA Section */}
         <section className="relative py-20 lg:py-24 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/nightport.jpg')] bg-cover bg-center bg-fixed" />
+          <div className="absolute inset-0 bg-[url('/nightport.webp')] bg-cover bg-center bg-fixed" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F18] via-[#0B0F18]/95 to-[#0B0F18]/85" />
 
           <div className="container mx-auto px-6 lg:px-8 relative z-10">

@@ -53,15 +53,37 @@ const HeroSection = () => {
   }, [isDesktop]);
 
   useEffect(() => {
-    // Hide scroll indicator after scrolling down
+    // Optimized scroll handler with RAF debouncing (reduces TBT)
+    let rafId: number | null = null;
+    let lastScrollY = 0;
+    
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      // Hide after 150px scroll (desktop needs more because indicator is at bottom)
-      setShowScrollIndicator(scrollPosition < 150);
+      // Only schedule RAF if one isn't already pending
+      if (rafId !== null) return;
+      
+      rafId = requestAnimationFrame(() => {
+        const scrollPosition = window.scrollY;
+        
+        // Only update state if it actually changed (prevents unnecessary re-renders)
+        if (scrollPosition !== lastScrollY) {
+          const shouldShow = scrollPosition < 150;
+          setShowScrollIndicator(shouldShow);
+          lastScrollY = scrollPosition;
+        }
+        
+        rafId = null;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Use passive listener for better scroll performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   return (

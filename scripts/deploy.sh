@@ -121,6 +121,17 @@ log_success "SSH connection successful"
 
 log_info "Building project..."
 
+# Set environment variable to use system Puppeteer (fixes react-snap timeout)
+export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+export PUPPETEER_EXECUTABLE_PATH=$(which chromium 2>/dev/null || which chromium-browser 2>/dev/null || which google-chrome 2>/dev/null || which chrome 2>/dev/null || which google-chrome-stable 2>/dev/null || echo "")
+
+# If no Chrome found, try node_modules puppeteer
+if [ -z "$PUPPETEER_EXECUTABLE_PATH" ] || [ ! -f "$PUPPETEER_EXECUTABLE_PATH" ]; then
+  log_warning "System Chrome not found, using bundled Puppeteer..."
+  # Use the newer puppeteer from node_modules root (not react-snap's old one)
+  export PUPPETEER_EXECUTABLE_PATH=""
+fi
+
 if ! npm run build; then
   log_error "Build failed"
   exit 1
