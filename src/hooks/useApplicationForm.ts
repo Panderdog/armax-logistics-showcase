@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
@@ -46,7 +46,7 @@ export const useApplicationForm = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const resetForm = (keepPhone = false) => {
+  const resetForm = useCallback((keepPhone = false) => {
     setFormData({
       name: "",
       phone: keepPhone ? initialPhone : "",
@@ -56,23 +56,23 @@ export const useApplicationForm = ({
     setErrors({});
     setIsSubmitted(false);
     setSubmitError(null);
-  };
+  }, [initialPhone]);
 
-  const validateForm = (): boolean => {
+  const validateForm = useCallback((data: FormData): FormErrors => {
     const newErrors: FormErrors = {};
 
     // Name validation
-    if (!formData.name.trim()) {
+    if (!data.name.trim()) {
       newErrors.name = "Пожалуйста, введите ваше имя";
-    } else if (formData.name.trim().length < 2) {
+    } else if (data.name.trim().length < 2) {
       newErrors.name = "Имя должно содержать минимум 2 символа";
     }
 
     // Phone validation
-    if (!formData.phone.trim()) {
+    if (!data.phone.trim()) {
       newErrors.phone = "Пожалуйста, введите номер телефона";
     } else {
-      const phoneDigits = formData.phone.replace(/\D/g, "");
+      const phoneDigits = data.phone.replace(/\D/g, "");
       const localDigits = phoneDigits.startsWith("7")
         ? phoneDigits.slice(1)
         : phoneDigits.startsWith("8")
@@ -84,29 +84,41 @@ export const useApplicationForm = ({
     }
 
     // Email validation (optional field)
-    if (formData.email.trim()) {
+    if (data.email.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email.trim())) {
+      if (!emailRegex.test(data.email.trim())) {
         newErrors.email = "Введите корректный email адрес";
       }
     }
 
     // Message validation
-    if (!formData.message.trim()) {
+    if (!data.message.trim()) {
       newErrors.message = "Пожалуйста, опишите ваш запрос";
-    } else if (formData.message.trim().length < 10) {
+    } else if (data.message.trim().length < 10) {
       newErrors.message = "Сообщение должно содержать минимум 10 символов";
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    return newErrors;
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Use functional update to get the current form data
+    let currentFormData: FormData | null = null;
+    setFormData((data) => {
+      currentFormData = data;
+      return data;
+    });
+
+    if (!currentFormData) return;
+
     setSubmitError(null);
 
-    if (!validateForm()) {
+    // Validate with current data
+    const validationErrors = validateForm(currentFormData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -121,10 +133,10 @@ export const useApplicationForm = ({
 
       // 1. Save application to Supabase
       const payload = {
-        name: formData.name.trim(),
-        email: formData.email.trim() || null,
-        phone: formData.phone.trim(),
-        message: formData.message.trim(),
+        name: currentFormData.name.trim(),
+        email: currentFormData.email.trim() || null,
+        phone: currentFormData.phone.trim(),
+        message: currentFormData.message.trim(),
       };
 
       const { error } = await supabase
@@ -149,10 +161,10 @@ export const useApplicationForm = ({
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({
-            name: formData.name.trim(),
-            email: formData.email.trim() || null,
-            phone: formData.phone.trim(),
-            message: formData.message.trim(),
+            name: currentFormData.name.trim(),
+            email: currentFormData.email.trim() || null,
+            phone: currentFormData.phone.trim(),
+            message: currentFormData.message.trim(),
           }),
         });
       } catch (emailError) {
@@ -181,17 +193,18 @@ export const useApplicationForm = ({
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [validateForm, onSuccess]);
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData({ ...formData, [field]: value });
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: undefined });
-    }
-    if (submitError) {
-      setSubmitError(null);
-    }
-  };
+  const handleInputChange = useCallback((field: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => {
+      if (prev[field]) {
+        return { ...prev, [field]: undefined };
+      }
+      return prev;
+    });
+    setSubmitError((prev) => (prev ? null : prev));
+  }, []);
 
   return {
     formData,
