@@ -11,7 +11,12 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 RewriteCond %{HTTP:Front-End-Https} !on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-# 1. Serve existing files and directories as-is (including prerendered pages)
+# 1. Redirect prerendered pages for non-existent news articles to /news
+# These articles are referenced in content but don't exist in the database
+# Must be before the "serve existing files" rule to override prerendered files
+RewriteRule ^news/tamozhennyh-tranzit-rf-2026/?$ /news [R=301,L]
+
+# 2. Serve existing files and directories as-is (including prerendered pages)
 # This is CRITICAL for react-snap to work correctly
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
@@ -32,11 +37,11 @@ RewriteRule ^(.*)$ /$1/index.html [L]
 # 4. Return 410 Gone for deleted demo news articles (no longer exist)
 RewriteRule ^news/(novyj-marshrut-shanhaj-vladivostok|armax-lider-gruzoperevozok-2024|rasshirenie-skladskoj-seti-moskva)/?$ - [R=410,L]
 
-# 5. Return 404 for unknown news URLs (not prerendered)
-RewriteCond %{REQUEST_URI} ^/news/ [NC]
+# 5. Serve SPA for all /news/ paths (react-snap is disabled; React router handles invalid slugs)
+RewriteCond %{REQUEST_URI} ^/news/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ - [R=404,L]
+RewriteRule ^ /index.html [L]
 
 # 6. Return 404 for unknown service URLs (only known services allowed)
 # Known services: sea, aviation, railway, auto, consolidated, customs, warehouse, insurance

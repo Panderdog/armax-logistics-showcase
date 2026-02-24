@@ -130,7 +130,7 @@ const Dashboard = () => {
               <CardDescription>Недавно поступившие обращения клиентов</CardDescription>
             </div>
             <Link 
-              to="/admin/applications"
+              to="/admin_panderdogpapa/applications"
               className="text-sm font-medium text-accent hover:text-accent/80 transition-colors"
             >
               Все заявки →
@@ -175,7 +175,7 @@ const Dashboard = () => {
               <CardDescription>Недавно добавленные публикации</CardDescription>
             </div>
             <Link 
-              to="/admin/news"
+              to="/admin_panderdogpapa/news"
               className="text-sm font-medium text-accent hover:text-accent/80 transition-colors"
             >
               Все новости →
@@ -222,7 +222,7 @@ const Dashboard = () => {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <Link 
-              to="/admin/applications"
+              to="/admin_panderdogpapa/applications"
               className="flex items-center gap-4 p-4 rounded-lg border border-border hover:border-accent/50 hover:bg-secondary/50 transition-all group"
             >
               <div className="p-3 rounded-lg bg-blue-500/10 text-blue-500 group-hover:bg-blue-500/20 transition-colors">
@@ -237,7 +237,7 @@ const Dashboard = () => {
             </Link>
 
             <Link 
-              to="/admin/news?action=create"
+              to="/admin_panderdogpapa/news?action=create"
               className="flex items-center gap-4 p-4 rounded-lg border border-border hover:border-accent/50 hover:bg-secondary/50 transition-all group"
             >
               <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-500 group-hover:bg-emerald-500/20 transition-colors">

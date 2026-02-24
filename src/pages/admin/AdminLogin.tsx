@@ -25,7 +25,7 @@ const AdminLogin = () => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/admin_panderdogpapa" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +36,7 @@ const AdminLogin = () => {
     const result = await login(email, password);
     
     if (result.success) {
-      navigate('/admin');
+      navigate('/admin_panderdogpapa');
     } else {
       setError(result.error || 'Неверный email или пароль');
     }

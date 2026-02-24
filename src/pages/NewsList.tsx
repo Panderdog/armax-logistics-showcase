@@ -80,7 +80,7 @@ const NewsList = () => {
       <div className="min-h-screen bg-[#0B0F18] overflow-hidden">
         {/* Hero Section */}
         <section 
-          ref={heroRef.ref as React.RefObject<HTMLElement>}
+          ref={heroRef.ref}
           className="relative py-28 lg:py-40 overflow-hidden"
         >
           {/* Layered background effects */}
@@ -89,7 +89,7 @@ const NewsList = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F18] via-[#0F1520] to-[#0B0F18]" />
             
             {/* Subtle image overlay */}
-            <div className="absolute inset-0 bg-[url('/images/news-hero.webp')] bg-cover bg-center opacity-[0.2]" />
+            <div className="absolute inset-0 bg-[url('/images/news/news-hero.webp')] bg-cover bg-center opacity-[0.2]" />
             
             {/* Noise texture */}
             <div 
@@ -237,7 +237,7 @@ const NewsList = () => {
             {featuredNews && (
               <section 
                 ref={(el) => {
-                  (featuredRef.ref as React.MutableRefObject<HTMLElement | null>).current = el;
+                  featuredRef.ref(el);
                   (newsSectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
                 }}
                 className="py-20 lg:py-28 bg-[#0a0f1a] relative overflow-hidden"
@@ -360,7 +360,7 @@ const NewsList = () => {
             {/* News Grid */}
             {otherNews.length > 0 && (
               <section 
-                ref={gridRef.ref as React.RefObject<HTMLElement>}
+                ref={gridRef.ref}
                 className="py-24 lg:py-32 bg-[#0d1219] relative"
               >
                 {/* Background pattern */}
@@ -504,7 +504,7 @@ const NewsList = () => {
 
             {/* CTA Section */}
             <section 
-              ref={ctaRef.ref as React.RefObject<HTMLElement>}
+              ref={ctaRef.ref}
               className="py-24 lg:py-32 bg-[#0a0f1a] relative overflow-hidden"
             >
               <div className="container mx-auto px-6 lg:px-8">

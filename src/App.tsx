@@ -69,7 +69,7 @@ const PageLoader = () => (
 // Layout wrapper that conditionally shows Header/Footer
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAdminRoute = location.pathname.startsWith('/admin_panderdogpapa');
 
   if (isAdminRoute) {
     return <>{children}</>;
@@ -109,11 +109,11 @@ const AppContent = () => {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             
             {/* Admin routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/update-password" element={<UpdatePassword />} />
-            <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
-            <Route path="/admin/applications" element={<AdminLayout><Applications /></AdminLayout>} />
-            <Route path="/admin/news" element={<AdminLayout><News /></AdminLayout>} />
+            <Route path="/admin_panderdogpapa/login" element={<AdminLogin />} />
+            <Route path="/admin_panderdogpapa/update-password" element={<UpdatePassword />} />
+            <Route path="/admin_panderdogpapa" element={<AdminLayout><Dashboard /></AdminLayout>} />
+            <Route path="/admin_panderdogpapa/applications" element={<AdminLayout><Applications /></AdminLayout>} />
+            <Route path="/admin_panderdogpapa/news" element={<AdminLayout><News /></AdminLayout>} />
             
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

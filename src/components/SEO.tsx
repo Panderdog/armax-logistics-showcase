@@ -27,13 +27,10 @@ const SEO = ({
   const baseUrl = import.meta.env.VITE_SITE_URL || "https://armaxstp.com";
   const finalImage = image || ogImage || "/og-armax.png";
 
-  // Нормализация URL: добавляем trailing slash если его нет
+  // Нормализация URL: убираем trailing slash (кроме корня /)
   const normalizeUrl = (path: string) => {
     if (!path || path === "") return "/";
-    // Если путь уже заканчивается на /, оставляем как есть
-    if (path.endsWith("/")) return path;
-    // Иначе добавляем / в конец
-    return `${path}/`;
+    return path.endsWith("/") ? path.slice(0, -1) : path;
   };
 
   // Преобразование в абсолютный URL для изображений
@@ -60,7 +57,7 @@ const SEO = ({
   const fullImageUrl = toAbsoluteUrl(finalImage, baseUrl);
 
   return (
-    <Helmet>
+    <Helmet defer={false}>
       {/* Title */}
       <title>{fullTitle}</title>
 

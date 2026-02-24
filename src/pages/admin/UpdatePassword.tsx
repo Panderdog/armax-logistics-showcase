@@ -88,7 +88,7 @@ const UpdatePassword = () => {
       
       // Redirect to admin login after 2 seconds
       setTimeout(() => {
-        navigate('/admin/login');
+        navigate('/admin_panderdogpapa/login');
       }, 2000);
     } catch (err) {
       setError('Произошла ошибка при обновлении пароля');
@@ -121,7 +121,7 @@ const UpdatePassword = () => {
           </CardHeader>
           <CardContent>
             <Button 
-              onClick={() => navigate('/admin/login')} 
+              onClick={() => navigate('/admin_panderdogpapa/login')} 
               className="w-full"
             >
               Вернуться к входу
@@ -147,7 +147,7 @@ const UpdatePassword = () => {
           </CardHeader>
           <CardContent>
             <Button 
-              onClick={() => navigate('/admin/login')} 
+              onClick={() => navigate('/admin_panderdogpapa/login')} 
               className="w-full"
             >
               Вернуться к входу
@@ -268,7 +268,7 @@ const UpdatePassword = () => {
           <div className="mt-6 pt-6 border-t border-border text-center">
             <Button
               variant="ghost"
-              onClick={() => navigate('/admin/login')}
+              onClick={() => navigate('/admin_panderdogpapa/login')}
               className="text-sm text-muted-foreground hover:text-foreground"
             >
               Вернуться к входу

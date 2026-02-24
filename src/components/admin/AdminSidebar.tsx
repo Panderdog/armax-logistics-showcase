@@ -27,17 +27,17 @@ const AdminSidebar = () => {
   const newApplicationsCount = applications.filter(app => app.status === 'new').length;
 
   const navigation: NavItem[] = [
-    { name: 'Обзор', href: '/admin', icon: LayoutDashboard },
-    { name: 'Заявки', href: '/admin/applications', icon: FileText, badge: newApplicationsCount },
-    { name: 'Новости', href: '/admin/news', icon: Newspaper },
-    { name: 'Услуги', href: '/admin/services', icon: Package, disabled: true },
-    { name: 'Тарифы', href: '/admin/pricing', icon: DollarSign, disabled: true },
-    { name: 'Страницы', href: '/admin/pages', icon: Files, disabled: true },
+    { name: 'Обзор', href: '/admin_panderdogpapa', icon: LayoutDashboard },
+    { name: 'Заявки', href: '/admin_panderdogpapa/applications', icon: FileText, badge: newApplicationsCount },
+    { name: 'Новости', href: '/admin_panderdogpapa/news', icon: Newspaper },
+    { name: 'Услуги', href: '/admin_panderdogpapa/services', icon: Package, disabled: true },
+    { name: 'Тарифы', href: '/admin_panderdogpapa/pricing', icon: DollarSign, disabled: true },
+    { name: 'Страницы', href: '/admin_panderdogpapa/pages', icon: Files, disabled: true },
   ];
 
   const isActive = (href: string) => {
-    if (href === '/admin') {
-      return location.pathname === '/admin';
+    if (href === '/admin_panderdogpapa') {
+      return location.pathname === '/admin_panderdogpapa';
     }
     return location.pathname.startsWith(href);
   };
@@ -46,7 +46,7 @@ const AdminSidebar = () => {
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-card">
       {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b border-border px-6">
-        <Link to="/admin" className="flex items-center">
+        <Link to="/admin_panderdogpapa" className="flex items-center">
           <img src="/logo.svg" alt="Armax" className="h-8 w-auto" />
         </Link>
       </div>

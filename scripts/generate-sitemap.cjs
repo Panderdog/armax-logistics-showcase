@@ -41,6 +41,8 @@ function formatDate(dateString) {
 function generateSitemap() {
   console.log('📄 Generating sitemap.xml...');
 
+  const today = new Date().toISOString().split('T')[0];
+
   // Read news from JSON
   let newsItems = [];
   if (fs.existsSync(NEWS_JSON)) {
@@ -59,6 +61,7 @@ function generateSitemap() {
   for (const page of STATIC_PAGES) {
     xml += '  <url>\n';
     xml += `    <loc>${SITE_URL}${page.url}</loc>\n`;
+    xml += `    <lastmod>${today}</lastmod>\n`;
     if (page.priority) xml += `    <priority>${page.priority}</priority>\n`;
     if (page.changefreq) xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
     xml += '  </url>\n';

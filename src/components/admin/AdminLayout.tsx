@@ -11,7 +11,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { isAuthenticated } = useAdmin();
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin_panderdogpapa/login" replace />;
   }
 
   return (

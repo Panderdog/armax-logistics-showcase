@@ -11,7 +11,7 @@
     "generate-sitemap": "node scripts/generate-sitemap.cjs",
     "prebuild": "npm run export-news && npm run inject-data && npm run generate-routes && npm run generate-sitemap",
     "build": "vite build && node scripts/copy-htaccess.cjs",
-    "postbuild": "node scripts/react-snap-wrapper.cjs && node scripts/optimize-css-loading.cjs",
+    "postbuild": "node scripts/react-snap-wrapper.cjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -133,7 +133,10 @@
       "/services/consolidated",
       "/services/customs",
       "/services/warehouse",
-      "/services/insurance"
+      "/services/insurance",
+      "/news/obyazatelnye-navigacionnye-plomby-eaes-2026",
+      "/news/novye-stavki-tamozhennyh-sborov-import-rf-2026",
+      "/news/mezhdunarodnaya-logistika-i-tamozhennoe-oformlenie-importa-v-rf-2026"
     ]
   }
 }

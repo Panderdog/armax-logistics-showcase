@@ -21,6 +21,8 @@ function parseContent(content: string): string {
     .replace(/^### (.+)$/gm, '<h3 class="text-xl lg:text-2xl font-bold mt-12 mb-5 text-white">$1</h3>')
     .replace(/^## (.+)$/gm, '<h2 class="text-2xl lg:text-3xl font-bold mt-14 mb-6 text-white">$1</h2>')
     .replace(/^# (.+)$/gm, '<h1 class="text-3xl lg:text-4xl font-bold mt-16 mb-8 text-white">$1</h1>')
+    // Markdown links [text](url) — must be before bold/italic
+    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer nofollow" class="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors">$1</a>')
     // Bold and italic
     .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -230,7 +232,7 @@ const NewsArticle = () => {
 
         {/* Article Content */}
         <section 
-          ref={contentRef.ref as React.RefObject<HTMLElement>}
+          ref={contentRef.ref}
           className="py-16 lg:py-24 bg-[#0a0f1a] relative"
         >
           {/* Subtle side decoration */}
@@ -291,7 +293,7 @@ const NewsArticle = () => {
         {/* Other News */}
         {otherNews.length > 0 && (
           <section 
-            ref={relatedRef.ref as React.RefObject<HTMLElement>}
+            ref={relatedRef.ref}
             className="py-24 lg:py-32 bg-[#0a0f1a] relative overflow-hidden"
           >
             <div className="container mx-auto px-6 lg:px-8 relative z-10">
@@ -400,7 +402,7 @@ const NewsArticle = () => {
 
         {/* CTA Section */}
         <section 
-          ref={ctaRef.ref as React.RefObject<HTMLElement>}
+          ref={ctaRef.ref}
           className="py-24 lg:py-32 bg-[#0d1219] relative overflow-hidden"
         >
           <div className="container mx-auto px-6 lg:px-8">

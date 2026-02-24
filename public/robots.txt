@@ -1,5 +1,17 @@
 User-agent: *
 Allow: /
 
+# Sitemap
 Sitemap: https://armaxstp.com/sitemap.xml
-Host: armaxstp.com
+
+# Disallow admin paths (if any)
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /api/
+
+# Allow search engines to crawl all images
+User-agent: Googlebot-Image
+Allow: /
+
+# Crawl delay
+Crawl-delay: 0

@@ -4,7 +4,7 @@
  * This script runs BEFORE build to ensure react-snap has real data
  */
 
-const { createClient } = require('@supabase/supabase-js');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
@@ -47,21 +47,40 @@ async function exportNews() {
     process.exit(EXIT_CODES.NO_CONFIG);
   }
 
-  // Create Supabase client
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
   try {
-    // Fetch published news
-    const { data, error } = await supabase
-      .from('news')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
+    // Fetch published news via Supabase REST API directly (avoids fetch CJS issues)
+    const data = await new Promise((resolve, reject) => {
+      const url = new URL(`${supabaseUrl}/rest/v1/news`);
+      url.searchParams.set('published', 'eq.true');
+      url.searchParams.set('order', 'created_at.desc');
 
-    if (error) {
-      console.error('❌ ERROR: Failed to fetch news from Supabase:', error.message);
-      process.exit(EXIT_CODES.FETCH_ERROR);
-    }
+      const options = {
+        hostname: url.hostname,
+        path: url.pathname + url.search,
+        method: 'GET',
+        headers: {
+          'apikey': supabaseServiceKey,
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const req = https.request(options, (res) => {
+        let body = '';
+        res.on('data', (chunk) => { body += chunk; });
+        res.on('end', () => {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            try { resolve(JSON.parse(body)); }
+            catch (e) { reject(new Error(`Invalid JSON response: ${body}`)); }
+          } else {
+            reject(new Error(`HTTP ${res.statusCode}: ${body}`));
+          }
+        });
+      });
+
+      req.on('error', reject);
+      req.end();
+    });
 
     if (!data || data.length === 0) {
       console.warn('⚠️  WARNING: No published news found in database!');
