@@ -1,4 +1,4 @@
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useApplicationModal } from '@/contexts/ApplicationModalContext';
@@ -43,6 +43,7 @@ function parseContent(content: string): string {
 
 const NewsArticle = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const { getNewsBySlug, getPublishedNews, newsFetched } = useAdmin();
   const { openApplicationModal } = useApplicationModal();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -73,6 +74,17 @@ const NewsArticle = () => {
   if (!article) {
     return <Navigate to="/news" replace />;
   }
+
+  // Intercept clicks on internal links inside article content
+  // (content is rendered via dangerouslySetInnerHTML with plain <a> tags)
+  const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const link = (e.target as HTMLElement).closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('http') || href.startsWith('//')) return;
+    e.preventDefault();
+    navigate(href);
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
@@ -295,6 +307,7 @@ const NewsArticle = () => {
               <div 
                 className="prose-custom"
                 dangerouslySetInnerHTML={{ __html: parseContent(article.content) }}
+                onClick={handleContentClick}
               />
             </article>
           </div>
