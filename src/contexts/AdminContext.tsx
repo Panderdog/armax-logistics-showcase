@@ -45,6 +45,7 @@ interface AdminContextType {
   deleteApplication: (id: string) => Promise<void>;
   news: NewsItem[];
   newsLoading: boolean;
+  newsFetched: boolean;
   refreshNews: () => Promise<void>;
   addNews: (news: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   updateNews: (id: string, news: Partial<NewsItem>) => Promise<void>;
@@ -225,6 +226,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     // If we have data from prerender, we're not loading
     return getPrerenderNews().length === 0;
   });
+  // Tracks whether the first Supabase fetch has completed (separate from newsLoading)
+  const [newsFetched, setNewsFetched] = useState(false);
 
   // Check auth state on mount
   useEffect(() => {
@@ -315,6 +318,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         setNews([]);
       }
       setNewsLoading(false);
+      setNewsFetched(true);
       return;
     }
 
@@ -357,6 +361,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       }
     } finally {
       setNewsLoading(false);
+      setNewsFetched(true);
     }
   }, []);
 
@@ -634,6 +639,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       deleteApplication,
       news,
       newsLoading,
+      newsFetched,
       refreshNews: fetchNews,
       addNews,
       updateNews,

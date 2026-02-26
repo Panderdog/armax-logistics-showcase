@@ -21,8 +21,9 @@ function parseContent(content: string): string {
     .replace(/^### (.+)$/gm, '<h3 class="text-xl lg:text-2xl font-bold mt-12 mb-5 text-white">$1</h3>')
     .replace(/^## (.+)$/gm, '<h2 class="text-2xl lg:text-3xl font-bold mt-14 mb-6 text-white">$1</h2>')
     .replace(/^# (.+)$/gm, '<h1 class="text-3xl lg:text-4xl font-bold mt-16 mb-8 text-white">$1</h1>')
-    // Markdown links [text](url) — must be before bold/italic
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer nofollow" class="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors">$1</a>')
+    // Markdown links [text](url) — internal links without nofollow, external with nofollow
+    .replace(/\[(.+?)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer nofollow" class="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors">$1</a>')
+    .replace(/\[(.+?)\]\((\/[^)]*)\)/g, '<a href="$2" class="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors">$1</a>')
     // Bold and italic
     .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -42,7 +43,7 @@ function parseContent(content: string): string {
 
 const NewsArticle = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { getNewsBySlug, getPublishedNews } = useAdmin();
+  const { getNewsBySlug, getPublishedNews, newsFetched } = useAdmin();
   const { openApplicationModal } = useApplicationModal();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -62,6 +63,12 @@ const NewsArticle = () => {
 
   // Estimate reading time
   const readingTime = article ? Math.max(1, Math.ceil(article.content.split(/\s+/).length / 200)) : 0;
+
+  // Wait for Supabase fetch to complete before redirecting —
+  // prevents false 404 on articles added after the last build
+  if (!article && !newsFetched) {
+    return null;
+  }
 
   if (!article) {
     return <Navigate to="/news" replace />;
@@ -92,6 +99,43 @@ const NewsArticle = () => {
     }
   };
 
+  const baseUrl = 'https://armaxstp.com';
+  const articleUrl = `${baseUrl}/news/${article.slug}/`;
+  const imageUrl = article.og_image || article.previewImage
+    ? (article.og_image || article.previewImage)?.startsWith('http')
+      ? (article.og_image || article.previewImage)
+      : `${baseUrl}${article.og_image || article.previewImage}`
+    : `${baseUrl}/og-armax.png`;
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.meta_title || article.title,
+    description: article.meta_description || article.previewText,
+    image: imageUrl,
+    url: articleUrl,
+    datePublished: article.createdAt,
+    dateModified: article.updatedAt || article.createdAt,
+    author: {
+      '@type': 'Organization',
+      name: 'Armax Logistics',
+      url: baseUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Armax Logistics',
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/og-armax.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': articleUrl,
+    },
+  };
+
   return (
     <>
       <SEO 
@@ -101,6 +145,7 @@ const NewsArticle = () => {
         canonicalUrl={`/news/${article.slug}/`}
         ogType="article"
         noindex={article.noindex}
+        structuredData={articleSchema}
       />
       
       <div className="min-h-screen overflow-hidden">
