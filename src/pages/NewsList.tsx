@@ -63,7 +63,7 @@ const NewsList = () => {
   return (
     <>
       <SEO 
-        title="Новости — Armax Logistics"
+        title="Новости"
         description="Актуальные новости компании Armax: новые маршруты, услуги, события в сфере международной логистики и грузоперевозок из Азии."
         canonicalUrl="/news/"
       />
@@ -254,7 +254,7 @@ const NewsList = () => {
                     {/* Image - Large Featured */}
                     <Link 
                       to={`/news/${featuredNews.slug}`} 
-                      className="lg:col-span-7 group relative"
+                      className="lg:col-span-5 group relative"
                       onMouseEnter={() => setHoveredCard(featuredNews.id)}
                       onMouseLeave={() => setHoveredCard(null)}
                     >
@@ -294,7 +294,7 @@ const NewsList = () => {
 
                     {/* Content */}
                     <div 
-                      className="lg:col-span-5 space-y-6"
+                      className="lg:col-span-7 space-y-6"
                       style={{
                         opacity: featuredRef.isInView ? 1 : 0,
                         transform: featuredRef.isInView ? 'translateX(0)' : 'translateX(30px)',
