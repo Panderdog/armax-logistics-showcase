@@ -27,9 +27,9 @@ const SEO = ({
   const baseUrl = import.meta.env.VITE_SITE_URL || "https://armaxstp.com";
   const finalImage = image || ogImage || "/og-armax.png";
 
-  // Нормализация URL: убираем trailing slash (кроме корня /)
+  // Нормализация URL: убираем trailing slash для согласованности с сервером
   const normalizeUrl = (path: string) => {
-    if (!path || path === "") return "/";
+    if (!path || path === "" || path === "/") return "/";
     return path.endsWith("/") ? path.slice(0, -1) : path;
   };
 

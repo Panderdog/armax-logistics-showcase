@@ -57,10 +57,11 @@ function generateSitemap() {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-  // Add static pages
+  // Add static pages (no trailing slash to match canonical URLs)
   for (const page of STATIC_PAGES) {
+    const loc = page.url === '' ? `${SITE_URL}/` : `${SITE_URL}${page.url}`;
     xml += '  <url>\n';
-    xml += `    <loc>${SITE_URL}${page.url}</loc>\n`;
+    xml += `    <loc>${loc}</loc>\n`;
     xml += `    <lastmod>${today}</lastmod>\n`;
     if (page.priority) xml += `    <priority>${page.priority}</priority>\n`;
     if (page.changefreq) xml += `    <changefreq>${page.changefreq}</changefreq>\n`;

@@ -2,6 +2,7 @@
 # This ensures prerendered HTML files are served while maintaining SPA routing
 
 Options -MultiViews
+DirectorySlash Off
 RewriteEngine On
 RewriteBase /
 
@@ -11,26 +12,17 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 RewriteCond %{HTTP:Front-End-Https} !on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-# 1. Redirect prerendered pages for non-existent news articles to /news
-# These articles are referenced in content but don't exist in the database
-# Must be before the "serve existing files" rule to override prerendered files
-RewriteRule ^news/tamozhennyh-tranzit-rf-2026/?$ /news [R=301,L]
+# 1. Strip trailing slash from non-root URLs (canonical URLs without trailing slash)
+RewriteCond %{REQUEST_URI} ^/(.+)/$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-# 2. Serve existing files and directories as-is (including prerendered pages)
-# This is CRITICAL for react-snap to work correctly
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
+# 2. Serve existing files as-is
+RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
-# 2. For URLs without trailing slash that are directories, redirect to add trailing slash
-# This ensures consistent URLs (e.g., /news/my-article -> /news/my-article/)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_URI} !/$
-RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
-RewriteRule ^(.*)$ /$1/ [R=301,L]
-
-# 3. If directory with index.html exists, serve it (prerendered page)
-RewriteCond %{REQUEST_FILENAME} !-f
+# 3. If directory with index.html exists, serve it (prerendered page) without trailing slash redirect
+RewriteCond %{REQUEST_FILENAME} -d
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
 RewriteRule ^(.*)$ /$1/index.html [L]
 
